@@ -8,6 +8,7 @@ import { IncomeSection } from "./sections/IncomeSection"
 import { ResultsSection } from "./sections/ResultsSection"
 import { useState } from "react"
 import { useCalculatorContext } from '../../core/context/CalculatorContext'
+import { ModalPortal } from '../../shared/components/ModalPortal'
 
 const CalculatorContent = () => {
   const { state, dispatch } = useCalculatorContext()
@@ -52,12 +53,16 @@ const CalculatorContent = () => {
         </div>
       </main>
 
-      <ReceiptModal isOpen={receiptOpen} onClose={() => setReceiptOpen(false)} />
-      <ConfirmResetModal
-        isOpen={confirmResetOpen}
-        onConfirm={confirmReset}
-        onCancel={() => setConfirmResetOpen(false)}
-      />
+      <ModalPortal>
+        <ReceiptModal isOpen={receiptOpen} onClose={() => setReceiptOpen(false)} />
+      </ModalPortal>
+      <ModalPortal>
+        <ConfirmResetModal
+          isOpen={confirmResetOpen}
+          onConfirm={confirmReset}
+          onCancel={() => setConfirmResetOpen(false)}
+        />
+      </ModalPortal>
     </div>
   )
 }
