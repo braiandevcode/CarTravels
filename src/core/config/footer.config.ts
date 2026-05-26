@@ -9,12 +9,12 @@ export const legalLinks: LegalLink[] = [
 
 export const socialLinks: SocialLink[] = [
   {
-    href: "https://github.com/braiandevcode",
+    href: import.meta.env.VITE_GITHUB,
     label: "GitHub",
     icon: SiGithub,
   },
   {
-    href: "https://www.instagram.com/freelancer.dev.bp/",
+    href: import.meta.env.VITE_IG,,
     label: "Instagram",
     icon: SiInstagram,
   },

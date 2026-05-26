@@ -20,18 +20,19 @@ These are the possible scenarios that a "driver" usually deals with:
 
 * 3.A: If they made trips to one or more "Factories", calculating how many trips were made to each one (these negotiated prices "depend" on each "agency" and the "driver" themselves knows this to set the trip price).
 * 3.B: In reference to point "3.A", "normally" an "agency" fulfills a "contract" with an "X" factory, where the amount is fixed and its calculation should be: (X factory, Y trips * Z trip price).
-* 3.C: Summing up each accumulated price among all the factories, for example: accumulated price of factory X + accumulated price of factory Y.
-* 3.D: Regarding point "3.C", the returned "result" will be the reference to subtract: "agency - result".
+* 3.C: Summing up each accumulated price among all the factories, for example: accumulated price of factory X + accumulated price of factory Y. The difference between the real price total and the discount total is then subtracted from the day's total to calculate the adjusted base: `adjustedTotal = total - (factoryTotal - discountTotal)`.
+* 3.D: Regarding point "3.C", the "difference" adjusts the distributable base. The agency no longer directly subtracts factory accumulators — the adjustment happens at the total level before applying percentages.
 * 3.E: The summarized usual calculation flow that the "driver" does is as follows:
 - total: X amount
-- agency: "total x 20%" (the percentage could be dynamic/variable)
-- driver: "total x 30%" (the percentage could be dynamic/variable)
+- If there are factory trips: `difference = factoryTotal - discountTotal`, then `adjustedTotal = total - difference`
+- If no factory trips: `adjustedTotal = total`
+- agency: `adjustedTotal × agencyPercent / 100`
+- driver: `adjustedTotal × driverPercent / 100`
 - gas: X amount
 - petrol: X amount
-- result: agency - accumulated result in factory/factories (this calculation is done if at least one trip was made to a factory)
-- Car: "(total x 50%) - (gas + petrol)" (the percentage could be dynamic/variable). This calculation is done if the agency "rents" the car used by the "driver".
-- Upon finishing the entire calculation, they must rewrite: the amounts corresponding to the "agency", "driver", "car" (if required) from the overall total.
-* 4. Writing down the payment amount for the "car" "rental" (if the car used by the driver belongs to the "agency" and is rented from them, it must be added to the calculation).
+- vehicle (if rented): `(adjustedTotal × carPercent / 100) - (gas + petrol)`. Enabled via a toggle — does not modify percentages automatically.
+- finalAgency = agencyAmount (no factory adjustments applied)
+- Factory totals (`factoryTotal`, `discountTotal`) are displayed for reference only in the receipt breakdown.
 
 
 
