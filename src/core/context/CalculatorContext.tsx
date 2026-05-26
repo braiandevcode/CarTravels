@@ -74,18 +74,7 @@ const calculatorReducer = (state: CalculatorState, action: Action): CalculatorSt
       if (newValue === state.carRented) {
         return state
       }
-      if (newValue === false) {
-        return {
-          ...state,
-          carRented: false,
-          agencyPercent: state.agencyPercent + state.carPercent,
-        }
-      }
-      return {
-        ...state,
-        carRented: true,
-        agencyPercent: state.agencyPercent - state.carPercent,
-      }
+      return { ...state, carRented: newValue }
     }
     case 'SET_GAS':
       return { ...state, gas: action.payload }
