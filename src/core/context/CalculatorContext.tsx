@@ -70,19 +70,22 @@ const calculatorReducer = (state: CalculatorState, action: Action): CalculatorSt
     case 'SET_CAR_PERCENT':
       return { ...state, carPercent: action.payload }
     case 'SET_CAR_RENTED': {
-      const newValue:boolean = action.payload
+      const newValue: boolean = action.payload
       if (newValue === state.carRented) {
         return state
       }
       if (newValue === false) {
-        const combinedAgency = state.agencyPercent + state.carPercent
         return {
           ...state,
           carRented: false,
-          agencyPercent: combinedAgency,
+          agencyPercent: state.agencyPercent + state.carPercent,
         }
       }
-      return { ...state, carRented: newValue }
+      return {
+        ...state,
+        carRented: true,
+        agencyPercent: state.agencyPercent - state.carPercent,
+      }
     }
     case 'SET_GAS':
       return { ...state, gas: action.payload }
