@@ -5,16 +5,17 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean
 }
 
-export function Button({
-  variant = 'primary',
-  fullWidth = true,
-  className = '',
-  children,
-  ...props
-}: ButtonProps) {
-  const base = 'rounded-xl font-semibold transition-all duration-200 active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 font-display tracking-wide'
+interface Variant{
+  primary: string;
+  secondary: string;
+  ghost: string;
+  danger: string;
+}
 
-  const variants = {
+const Button = ({variant = 'primary', fullWidth = true, className = '', children, ...props}: ButtonProps) => {
+  const base: string = 'rounded-xl font-semibold transition-all duration-200 active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 font-display tracking-wide'
+
+  const variants: Variant = {
     primary: 'btn-primary-glow text-slate-900 font-bold shadow-sm',
     secondary: 'bg-bg-card border border-border-subtle text-text-primary hover:bg-bg-hover hover:border-border-emphasis shadow-sm',
     ghost: 'bg-transparent text-text-secondary border border-border-subtle hover:bg-bg-card hover:text-text-primary hover:border-border-emphasis',
@@ -30,3 +31,5 @@ export function Button({
     </button>
   )
 }
+
+export default Button;

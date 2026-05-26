@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { X, AlertTriangle } from 'lucide-react'
-import { Button } from '../../../shared/ui/Button'
+import Button  from '../../../shared/ui/Button'
 
 interface ConfirmResetModalProps {
   isOpen: boolean
@@ -8,9 +8,9 @@ interface ConfirmResetModalProps {
   onCancel: () => void
 }
 
-const TITLE_ID = 'confirm-reset-title'
+const TITLE_ID: string = 'confirm-reset-title'
 
-export function ConfirmResetModal({ isOpen, onConfirm, onCancel }: ConfirmResetModalProps) {
+const ConfirmResetModal = ({ isOpen, onConfirm, onCancel }: ConfirmResetModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -19,11 +19,11 @@ export function ConfirmResetModal({ isOpen, onConfirm, onCancel }: ConfirmResetM
     const modal = modalRef.current
     if (!modal) return
 
-    const focusableElements = modal.querySelectorAll<HTMLElement>(
+    const focusableElements: NodeListOf<HTMLElement> = modal.querySelectorAll<HTMLElement>(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     )
-    const firstElement = focusableElements[0]
-    const lastElement = focusableElements[focusableElements.length - 1]
+    const firstElement: HTMLElement = focusableElements[0]
+    const lastElement: HTMLElement = focusableElements[focusableElements.length - 1]
 
     firstElement?.focus()
 
@@ -91,3 +91,5 @@ export function ConfirmResetModal({ isOpen, onConfirm, onCancel }: ConfirmResetM
     </div>
   )
 }
+
+export default ConfirmResetModal;

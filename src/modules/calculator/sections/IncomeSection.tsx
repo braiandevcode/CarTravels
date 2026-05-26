@@ -1,8 +1,8 @@
-import { useCalculatorContext } from '../../../core/context/CalculatorContext'
-import { Input } from '../../../shared/ui/Input'
+import useCalculatorContext  from '../../../core/context/CalculatorContext'
+import Input  from '../../../shared/ui/Input'
 import { TrendingUp } from 'lucide-react'
 
-export function IncomeSection() {
+const IncomeSection = () => {
   const { state, dispatch } = useCalculatorContext()
 
   return (
@@ -36,3 +36,6 @@ export function IncomeSection() {
     </section>
   )
 }
+
+
+export default IncomeSection;

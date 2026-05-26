@@ -8,9 +8,9 @@ interface PercentageInputProps {
   hint?: string
 }
 
-export function PercentageInput({ label, value, onChange, hint }: PercentageInputProps) {
-  const inputId = useId()
-  const hintId = `${inputId}-hint`
+const PercentageInput = ({ label, value, onChange, hint }: PercentageInputProps) => {
+  const inputId:string = useId()
+  const hintId: string = `${inputId}-hint`
 
   return (
     <div className="flex flex-col gap-1.5">
@@ -38,3 +38,5 @@ export function PercentageInput({ label, value, onChange, hint }: PercentageInpu
     </div>
   )
 }
+
+export default PercentageInput;

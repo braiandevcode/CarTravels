@@ -8,12 +8,12 @@ interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'>
   numeric?: boolean
 }
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(
+const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, prefix, error, formattedValue, numeric, className = '', inputMode, id: externalId, ...props }, ref) => {
-    const generatedId = useId()
-    const inputId = externalId || generatedId
-    const errorId = `${inputId}-error`
-    const formattedId = `${inputId}-formatted`
+    const generatedId: string = useId()
+    const inputId: string = externalId || generatedId
+    const errorId: string = `${inputId}-error`
+    const formattedId:string = `${inputId}-formatted`
 
     return (
       <div className="flex flex-col gap-1.5">
@@ -58,3 +58,5 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 )
 
 Input.displayName = 'Input'
+
+export default Input;

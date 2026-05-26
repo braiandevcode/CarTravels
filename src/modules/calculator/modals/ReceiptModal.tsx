@@ -1,18 +1,19 @@
 import { useMemo, useEffect, useRef } from 'react'
-import { useCalculatorContext } from '../../../core/context/CalculatorContext'
+import useCalculatorContext  from '../../../core/context/CalculatorContext'
 import { calculateResult } from '../../../core/hooks/useCalculator'
 import { useReceiptExport } from '../../../core/hooks/useReceiptExport'
-import { Button } from '../../../shared/ui/Button'
+import Button  from '../../../shared/ui/Button'
 import { X, Download, Share2, AlertTriangle } from 'lucide-react'
+import type { CalculatorResult } from '../../../core/types/calculator'
 
 interface ReceiptModalProps {
   isOpen: boolean
   onClose: () => void
 }
 
-export function ReceiptModal({ isOpen, onClose }: ReceiptModalProps) {
+const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) =>{
   const { state } = useCalculatorContext()
-  const result = useMemo(() => calculateResult(state), [state])
+  const result: CalculatorResult = useMemo(() => calculateResult(state), [state])
   const { shareImage, downloadPDF } = useReceiptExport()
   const modalRef = useRef<HTMLDivElement>(null)
 
@@ -39,7 +40,7 @@ export function ReceiptModal({ isOpen, onClose }: ReceiptModalProps) {
     return () => document.removeEventListener('keydown', handleEscape)
   }, [isOpen, onClose])
 
-  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>): void => {
     if (e.target === e.currentTarget) {
       onClose()
     }
@@ -51,11 +52,11 @@ export function ReceiptModal({ isOpen, onClose }: ReceiptModalProps) {
     const modal = modalRef.current
     if (!modal) return
 
-    const focusableElements = modal.querySelectorAll<HTMLElement>(
+    const focusableElements: NodeListOf<HTMLElement> = modal.querySelectorAll<HTMLElement>(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     )
-    const firstElement = focusableElements[0]
-    const lastElement = focusableElements[focusableElements.length - 1]
+    const firstElement: HTMLElement = focusableElements[0]
+    const lastElement: HTMLElement = focusableElements[focusableElements.length - 1]
 
     firstElement?.focus()
 
@@ -77,13 +78,13 @@ export function ReceiptModal({ isOpen, onClose }: ReceiptModalProps) {
 
   if (!isOpen) return null
 
-  const handleShare = () => shareImage('receipt-content')
+  const handleShare = (): Promise<void> => shareImage('receipt-content')
 
-  const handleDownload = async () => {
+  const handleDownload = async (): Promise<void> => {
     await downloadPDF('receipt-content', `resumen-${Date.now()}.pdf`)
   }
 
-  const MODAL_TITLE_ID = 'receipt-modal-title'
+  const MODAL_TITLE_ID: string = 'receipt-modal-title'
 
   return (
     <div
@@ -129,7 +130,7 @@ export function ReceiptModal({ isOpen, onClose }: ReceiptModalProps) {
             <div className="flex justify-between items-baseline p-2 rounded-lg bg-bg-input">
               <span className="text-text-secondary font-medium">Total del día</span>
               <span className="text-xl font-black text-text-primary font-display">
-                ${state.total.toLocaleString()}
+                ${result.adjustedTotal.toLocaleString()}
               </span>
             </div>
 
@@ -183,7 +184,7 @@ export function ReceiptModal({ isOpen, onClose }: ReceiptModalProps) {
             )}
 
             {state.carRented && result.carAmount !== null && (() => {
-              const grossCar = state.total * (state.carPercent / 100)
+              const grossCar = result.adjustedTotal * (state.carPercent / 100)
               const totalExpenses = state.gas + state.petrol
               return (
                 <>
@@ -310,3 +311,5 @@ export function ReceiptModal({ isOpen, onClose }: ReceiptModalProps) {
     </div>
   )
 }
+
+export default ReceiptModal;

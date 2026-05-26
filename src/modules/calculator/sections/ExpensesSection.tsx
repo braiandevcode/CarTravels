@@ -1,10 +1,10 @@
-import { useCalculatorContext } from '../../../core/context/CalculatorContext'
-import { Input } from '../../../shared/ui/Input'
+import useCalculatorContext  from '../../../core/context/CalculatorContext'
+import  Input  from '../../../shared/ui/Input'
 import { DollarSign } from 'lucide-react'
 
-export function ExpensesSection() {
+const ExpensesSection = ()  => {
   const { state, dispatch } = useCalculatorContext()
-  const totalExpenses = state.gas + state.petrol
+  const totalExpenses: number = state.gas + state.petrol
 
   return (
     <section aria-label="Gastos del día" className="rounded-2xl card-glass card-accent-top p-5 md:p-6 animate-fade-in-up stagger-3">
@@ -24,7 +24,7 @@ export function ExpensesSection() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Input
-          label="Gas (GNV)"
+          label="Gas"
           prefix="$"
           numeric
           placeholder="0"
@@ -42,7 +42,7 @@ export function ExpensesSection() {
           placeholder="0"
           value={state.petrol || ''}
           onChange={(e) => {
-            const raw = e.target.value.replace(/\D/g, '')
+            const raw: string = e.target.value.replace(/\D/g, '')
             dispatch({ type: 'SET_PETROL', payload: Number(raw) })
           }}
           formattedValue={state.petrol}
@@ -51,3 +51,5 @@ export function ExpensesSection() {
     </section>
   )
 }
+
+export default ExpensesSection;

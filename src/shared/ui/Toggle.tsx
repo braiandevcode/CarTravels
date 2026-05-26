@@ -6,8 +6,8 @@ interface ToggleProps {
   onChange: (enabled: boolean) => void
 }
 
-export function Toggle({ label, enabled, onChange }: ToggleProps) {
-  const labelId = useId()
+const Toggle = ({ label, enabled, onChange }: ToggleProps) => {
+  const labelId:string = useId()
 
   return (
     <div className="flex items-center justify-between">
@@ -37,3 +37,4 @@ export function Toggle({ label, enabled, onChange }: ToggleProps) {
     </div>
   )
 }
+export default Toggle;

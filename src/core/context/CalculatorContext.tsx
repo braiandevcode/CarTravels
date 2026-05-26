@@ -1,27 +1,17 @@
 import { createContext, useContext, useReducer, useEffect, type ReactNode } from 'react'
 import type { CalculatorState, FactoryTrip } from '../types/calculator'
+import { initialState } from '../config/calculates.config'
 
-const initialState: CalculatorState = {
-  total: 0,
-  agencyPercent: 70,
-  driverPercent: 30,
-  carPercent: 50,
-  carRented: false,
-  gas: 0,
-  petrol: 0,
-  factories: [],
-  showFactories: false,
-}
 
-const STORAGE_KEY = 'cartravels-state-v1'
+const STORAGE_KEY:string = 'cartravels-state-v1'
 
-function loadStoredState(): CalculatorState | null {
+const loadStoredState = (): CalculatorState | null => {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY)
+    const stored:string | null = localStorage.getItem(STORAGE_KEY)
     if (stored) {
       const parsed = JSON.parse(stored)
 
-      const isOldFormat =
+      const isOldFormat: boolean =
         parsed.carRented === false &&
         typeof parsed.agencyPercent === 'number' &&
         typeof parsed.carPercent === 'number' &&
@@ -47,7 +37,7 @@ function loadStoredState(): CalculatorState | null {
   return null
 }
 
-function saveStateToStorage(state: CalculatorState) {
+const saveStateToStorage = (state: CalculatorState) => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
   } catch {
@@ -69,7 +59,7 @@ type Action =
   | { type: 'REMOVE_FACTORY'; payload: string }
   | { type: 'RESET' }
 
-function calculatorReducer(state: CalculatorState, action: Action): CalculatorState {
+const calculatorReducer = (state: CalculatorState, action: Action): CalculatorState => {
   switch (action.type) {
     case 'SET_TOTAL':
       return { ...state, total: action.payload }
@@ -80,7 +70,7 @@ function calculatorReducer(state: CalculatorState, action: Action): CalculatorSt
     case 'SET_CAR_PERCENT':
       return { ...state, carPercent: action.payload }
     case 'SET_CAR_RENTED': {
-      const newValue = action.payload
+      const newValue:boolean = action.payload
       if (newValue === state.carRented) {
         return state
       }
@@ -141,10 +131,11 @@ export function CalculatorProvider({ children }: { children: ReactNode }) {
   )
 }
 
-export function useCalculatorContext() {
+const useCalculatorContext = () =>{
   const ctx = useContext(CalculatorContext)
   if (!ctx) {
     throw new Error('useCalculatorContext must be used within CalculatorProvider')
   }
   return ctx
 }
+export default useCalculatorContext;

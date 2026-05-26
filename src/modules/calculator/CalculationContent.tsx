@@ -1,29 +1,29 @@
 import { RotateCcw } from "lucide-react"
-import { ConfirmResetModal } from "./modals/ConfirmResetModal"
-import { ReceiptModal } from "./modals/ReceiptModal"
-import { ConfigSection } from "./sections/ConfigSection"
-import { ExpensesSection } from "./sections/ExpensesSection"
-import { FactoriesSection } from "./sections/FactoriesSection"
-import { IncomeSection } from "./sections/IncomeSection"
 import { ResultsSection } from "./sections/ResultsSection"
 import { useState } from "react"
-import { useCalculatorContext } from '../../core/context/CalculatorContext'
-import { ModalPortal } from '../../shared/components/ModalPortal'
+import useCalculatorContext  from '../../core/context/CalculatorContext'
+import ModalPortal from "../../shared/components/ModalPortal"
+import ConfigSection from "./sections/ConfigSection"
+import IncomeSection from "./sections/IncomeSection"
+import ExpensesSection from "./sections/ExpensesSection"
+import FactoriesSection from "./sections/FactoriesSection"
+import ReceiptModal from "./modals/ReceiptModal"
+import ConfirmResetModal from "./modals/ConfirmResetModal"
 
 const CalculatorContent = () => {
   const { state, dispatch } = useCalculatorContext()
-  const [receiptOpen, setReceiptOpen] = useState(false)
-  const [confirmResetOpen, setConfirmResetOpen] = useState(false)
+  const [receiptOpen, setReceiptOpen] = useState<boolean>(false)
+  const [confirmResetOpen, setConfirmResetOpen] = useState<boolean>(false)
 
-  const hasData = state.total > 0 || state.gas > 0 || state.petrol > 0 || state.factories.length > 0
+  const hasData: boolean = state.total > 0 || state.gas > 0 || state.petrol > 0 || state.factories.length > 0
 
-  const handleReset = () => {
+  const handleReset = ():void => {
     if (hasData) {
       setConfirmResetOpen(true)
     }
   }
 
-  const confirmReset = () => {
+  const confirmReset = ():void => {
     dispatch({ type: 'RESET' })
     setConfirmResetOpen(false)
   }

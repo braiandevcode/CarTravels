@@ -3,28 +3,6 @@ import type { CalculatorState, CalculatorResult, FactoryDetail } from '../types/
 export function calculateResult(state: CalculatorState): CalculatorResult {
   const { total, agencyPercent, driverPercent, carPercent, carRented, gas, petrol, factories } = state
 
-  const driverAmount: number = total * (driverPercent / 100)
-
-  let agencyAmount: number
-  let agencyDisplayPercent: number
-  let carAmount: number | null
-  let finalAgency: number
-  let percentTotal: number
-
-  if (carRented) {
-    agencyAmount = total * (agencyPercent / 100)
-    agencyDisplayPercent = agencyPercent
-    carAmount = (total * (carPercent / 100)) - (gas + petrol)
-    finalAgency = agencyAmount
-    percentTotal = agencyPercent + driverPercent + carPercent
-  } else {
-    agencyDisplayPercent = agencyPercent
-    agencyAmount = total * (agencyDisplayPercent / 100)
-    carAmount = null
-    finalAgency = agencyAmount
-    percentTotal = agencyPercent + driverPercent
-  }
-
   const factoryDetails: FactoryDetail[] = factories.map((f) => ({
     name: f.name,
     trips: f.trips,
@@ -37,13 +15,34 @@ export function calculateResult(state: CalculatorState): CalculatorResult {
   const factoryTotal = factoryDetails.reduce((sum, f) => sum + f.factorySubtotal, 0)
   const discountTotal = factoryDetails.reduce((sum, f) => sum + f.discountSubtotal, 0)
 
-  if (factoryTotal > 0) {
-    finalAgency = (finalAgency + factoryTotal) - discountTotal
+  const difference = factoryTotal - discountTotal
+  const adjustedTotal = factoryTotal > 0 ? total - difference : total
+
+  const driverAmount: number = adjustedTotal * (driverPercent / 100)
+
+  let agencyAmount: number
+  let agencyDisplayPercent: number
+  let carAmount: number | null
+  let percentTotal: number
+
+  if (carRented) {
+    agencyAmount = adjustedTotal * (agencyPercent / 100)
+    agencyDisplayPercent = agencyPercent
+    carAmount = (adjustedTotal * (carPercent / 100)) - (gas + petrol)
+    percentTotal = agencyPercent + driverPercent + carPercent
+  } else {
+    agencyDisplayPercent = agencyPercent
+    agencyAmount = adjustedTotal * (agencyDisplayPercent / 100)
+    carAmount = null
+    percentTotal = agencyPercent + driverPercent
   }
+
+  const finalAgency = agencyAmount
 
   const isPercentValid = percentTotal === 100
 
   return {
+    adjustedTotal,
     agencyAmount,
     agencyDisplayPercent,
     driverAmount,

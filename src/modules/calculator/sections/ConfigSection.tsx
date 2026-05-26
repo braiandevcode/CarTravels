@@ -1,21 +1,22 @@
 import { useMemo } from 'react'
-import { useCalculatorContext } from '../../../core/context/CalculatorContext'
-import { Toggle } from '../../../shared/ui/Toggle'
-import { PercentageInput } from '../../../shared/ui/PercentageInput'
+import useCalculatorContext  from '../../../core/context/CalculatorContext'
+import Toggle from '../../../shared/ui/Toggle'
+import PercentageInput  from '../../../shared/ui/PercentageInput'
 import { Settings, AlertCircle, CheckCircle2 } from 'lucide-react'
 
-export function ConfigSection() {
+const ConfigSection = () => {
   const { state, dispatch } = useCalculatorContext()
+  const PERCENT_TOTAL = 100;
 
-  const percentTotal = useMemo(() => {
+  const percentTotal: number = useMemo(() => {
     if (state.carRented) {
       return state.agencyPercent + state.driverPercent + state.carPercent
     }
     return state.agencyPercent + state.driverPercent
   }, [state.carRented, state.agencyPercent, state.driverPercent, state.carPercent])
 
-  const isValid = percentTotal === 100
-  const difference = 100 - percentTotal
+  const isValid:boolean = percentTotal === PERCENT_TOTAL
+  const difference: number = PERCENT_TOTAL - percentTotal
 
   return (
     <section aria-label="Configuración" className="rounded-2xl card-glass card-accent-top p-5 md:p-6 animate-fade-in-up stagger-1">
@@ -112,3 +113,6 @@ export function ConfigSection() {
     </section>
   )
 }
+
+
+export default ConfigSection;

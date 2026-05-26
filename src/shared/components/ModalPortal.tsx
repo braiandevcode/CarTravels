@@ -5,6 +5,8 @@ interface ModalPortalProps {
   children: ReactNode
 }
 
-export function ModalPortal({ children }: ModalPortalProps) {
+const ModalPortal = ({ children }: ModalPortalProps) => {
   return createPortal(children, document.body)
 }
+
+export default ModalPortal;

@@ -1,8 +1,9 @@
 import { useMemo } from 'react'
-import { useCalculatorContext } from '../../../core/context/CalculatorContext'
+import useCalculatorContext from '../../../core/context/CalculatorContext'
 import { calculateResult } from '../../../core/hooks/useCalculator'
-import { Button } from '../../../shared/ui/Button'
+import Button from '../../../shared/ui/Button'
 import { BarChart3, Eye, AlertTriangle } from 'lucide-react'
+import type { CalculatorResult } from '../../../core/types/calculator'
 
 interface ResultsSectionProps {
   onViewReceipt: () => void
@@ -11,7 +12,7 @@ interface ResultsSectionProps {
 export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
   const { state } = useCalculatorContext()
 
-  const result = useMemo(() => calculateResult(state), [state])
+  const result:CalculatorResult = useMemo(() => calculateResult(state), [state])
 
   if (state.total === 0) {
     return (
@@ -42,7 +43,7 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
       <div className="flex flex-col gap-2 text-sm md:text-base">
         <div className="flex justify-between py-2 px-3 rounded-lg bg-bg-input">
           <span className="text-text-secondary font-medium">Total del día</span>
-          <span className="font-bold text-text-primary font-display text-lg">${state.total.toLocaleString()}</span>
+          <span className="font-bold text-text-primary font-display text-lg">${result.adjustedTotal.toLocaleString()}</span>
         </div>
 
         <div className="subtle-divider my-2" />
@@ -72,8 +73,8 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
         )}
 
         {state.carRented && result.carAmount !== null && (() => {
-          const grossCar = state.total * (state.carPercent / 100)
-          const totalExpenses = state.gas + state.petrol
+          const grossCar: number = result.adjustedTotal * (state.carPercent / 100)
+          const totalExpenses: number = state.gas + state.petrol
           return (
             <>
               <div className="subtle-divider my-2" />

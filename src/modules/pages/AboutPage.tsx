@@ -1,66 +1,14 @@
 import {
   ArrowLeft,
-  Clock,
   Calculator,
-  Shield,
   Sparkles,
   CheckCircle,
-  Zap,
-  Download,
-  FileText,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { Button } from '../../shared/ui/Button'
+import Button  from '../../shared/ui/Button'
+import { benefits, features } from '../../core/config/aboutPage.config'
 
-const features = [
-  {
-    icon: Calculator,
-    title: 'Cálculos Automáticos',
-    description:
-      'Olvidate de hacer cuentas manualmente. Ingresá tus datos y nosotros nos encargamos de todo el resto. Distribución de porcentajes, gastos, fábricas: todo calculado al instante.',
-  },
-  {
-    icon: Clock,
-    title: 'Ahorrá Tiempo',
-    description:
-      'Lo que antes te llevaba 15-20 minutos al finalizar tu jornada, ahora lo hacés en menos de 2 minutos. Más tiempo para vos, menos tiempo para papeleo.',
-  },
-  {
-    icon: Shield,
-    title: 'Sin Errores',
-    description:
-      'Adiós a los errores de cálculo. El sistema valida automáticamente que tus porcentajes sumen 100% y realiza todas las operaciones con precisión matemática.',
-  },
-  {
-    icon: FileText,
-    title: 'Recibos Profesionales',
-    description:
-      'Generá recibos en PDF listos para descargar o compartir. Todo organizado, claro y profesional. Ideal para presentar a tu agencia.',
-  },
-  {
-    icon: Download,
-    title: 'Funciona sin Internet',
-    description:
-      'Una vez que cargás la página, podés usarla sin conexión. Perfecto para zonas con mala señal o cuando te quedás sin datos.',
-  },
-  {
-    icon: Zap,
-    title: 'Rápido y Ligero',
-    description:
-      'Diseñado para ser veloz incluso en teléfonos antiguos. Sin publicidades intrusivas, sin apps pesadas para instalar.',
-  },
-]
-
-const benefits = [
-  'Calculá tu jornada en segundos',
-  'Distribución automática de porcentajes',
-  'Manejo de múltiples fábricas',
-  'Control de gastos (Gas y Nafta)',
-  'Generá recibos en PDF',
-  '100% gratis para usar',
-]
-
-export function AboutPage() {
+const AboutPage = () => {
   return (
     <div className="min-h-[calc(100vh-140px)]">
       <div className="mx-auto max-w-5xl px-4 py-8 md:px-6 md:py-10">
@@ -199,3 +147,5 @@ export function AboutPage() {
     </div>
   )
 }
+
+export default AboutPage;

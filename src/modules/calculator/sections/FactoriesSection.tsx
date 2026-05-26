@@ -1,15 +1,15 @@
-import { useCalculatorContext } from '../../../core/context/CalculatorContext'
-import { Input } from '../../../shared/ui/Input'
-import { Button } from '../../../shared/ui/Button'
-import { Toggle } from '../../../shared/ui/Toggle'
+import useCalculatorContext  from '../../../core/context/CalculatorContext'
+import Input  from '../../../shared/ui/Input'
+import Button  from '../../../shared/ui/Button'
+import Toggle  from '../../../shared/ui/Toggle'
 import { Factory, Trash2, Plus } from 'lucide-react'
 
-let factoryIdCounter = 0
+let factoryIdCounter:number = 0
 
-export function FactoriesSection() {
+const FactoriesSection = () => {
   const { state, dispatch } = useCalculatorContext()
 
-  const addFactory = () => {
+  const addFactory = (): void => {
     factoryIdCounter++
     dispatch({
       type: 'ADD_FACTORY',
@@ -37,8 +37,8 @@ export function FactoriesSection() {
       {state.showFactories && (
         <div className="flex flex-col gap-4 animate-fade-in">
           {state.factories.map((factory) => {
-            const factorySubtotal = factory.trips * factory.pricePerTrip
-            const discountSubtotal = factory.trips * factory.discountPerTrip
+            const factorySubtotal: number = factory.trips * factory.pricePerTrip
+            const discountSubtotal: number = factory.trips * factory.discountPerTrip
 
             return (
               <div
@@ -78,7 +78,7 @@ export function FactoriesSection() {
                     placeholder="0"
                     value={factory.trips || ''}
                     onChange={(e) => {
-                      const raw = e.target.value.replace(/\D/g, '')
+                      const raw: string = e.target.value.replace(/\D/g, '')
                       dispatch({
                         type: 'UPDATE_FACTORY',
                         payload: { ...factory, trips: Number(raw) },
@@ -95,7 +95,7 @@ export function FactoriesSection() {
                     placeholder="0"
                     value={factory.pricePerTrip || ''}
                     onChange={(e) => {
-                      const raw = e.target.value.replace(/\D/g, '')
+                      const raw: string = e.target.value.replace(/\D/g, '')
                       dispatch({
                         type: 'UPDATE_FACTORY',
                         payload: { ...factory, pricePerTrip: Number(raw) },
@@ -109,7 +109,7 @@ export function FactoriesSection() {
                     placeholder="0"
                     value={factory.discountPerTrip || ''}
                     onChange={(e) => {
-                      const raw = e.target.value.replace(/\D/g, '')
+                      const raw: string = e.target.value.replace(/\D/g, '')
                       dispatch({
                         type: 'UPDATE_FACTORY',
                         payload: { ...factory, discountPerTrip: Number(raw) },
@@ -145,3 +145,7 @@ export function FactoriesSection() {
     </section>
   )
 }
+
+
+
+export default FactoriesSection;

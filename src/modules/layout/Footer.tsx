@@ -1,28 +1,10 @@
-import { Shield, FileText, Car } from 'lucide-react'
-import { SiGithub, SiInstagram } from 'react-icons/si'
 import { Link } from 'react-router-dom'
+import { legalLinks, socialLinks } from '../../core/config/footer.config'
+import { Car } from 'lucide-react'
 
 const currentYear: number = new Date().getFullYear()
 
 const Footer = () => {
-  const legalLinks = [
-    { to: '/terms', label: 'Términos y Condiciones', icon: FileText },
-    { to: '/privacy', label: 'Política de Privacidad', icon: Shield },
-  ]
-
-  const socialLinks = [
-    {
-      href: 'https://github.com',
-      label: 'GitHub',
-      icon: SiGithub,
-    },
-    {
-      href: 'https://www.instagram.com/freelancer.dev.bp/',
-      label: 'Instagram',
-      icon: SiInstagram,
-    },
-  ]
-
   return (
     <footer className="bg-bg-card border-t border-border-subtle mt-auto">
       <div className="mx-auto max-w-5xl px-4 py-8 md:px-6">

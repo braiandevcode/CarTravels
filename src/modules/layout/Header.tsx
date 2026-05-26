@@ -1,16 +1,11 @@
 import { Car, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import { NavLink, useNavigate, type NavigateFunction } from 'react-router-dom'
+import { navLinks } from '../../core/config/header.config'
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const navigate: NavigateFunction = useNavigate()
-
-  const navLinks = [
-    { to: '/', label: 'Inicio' },
-    { to: '/faq', label: 'Preguntas Frecuentes' },
-    { to: '/about', label: 'Acerca de' },
-  ]
 
   const handleLogoClick = () => {
     navigate('/')

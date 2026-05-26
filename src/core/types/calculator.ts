@@ -28,6 +28,7 @@ export interface FactoryDetail {
 }
 
 export interface CalculatorResult {
+  adjustedTotal: number
   agencyAmount: number
   agencyDisplayPercent: number
   driverAmount: number
