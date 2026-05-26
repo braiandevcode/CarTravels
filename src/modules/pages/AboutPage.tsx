@@ -1,0 +1,201 @@
+import {
+  ArrowLeft,
+  Clock,
+  Calculator,
+  Shield,
+  Sparkles,
+  CheckCircle,
+  Zap,
+  Download,
+  FileText,
+} from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Button } from '../../shared/ui/Button'
+
+const features = [
+  {
+    icon: Calculator,
+    title: 'Cálculos Automáticos',
+    description:
+      'Olvidate de hacer cuentas manualmente. Ingresá tus datos y nosotros nos encargamos de todo el resto. Distribución de porcentajes, gastos, fábricas: todo calculado al instante.',
+  },
+  {
+    icon: Clock,
+    title: 'Ahorrá Tiempo',
+    description:
+      'Lo que antes te llevaba 15-20 minutos al finalizar tu jornada, ahora lo hacés en menos de 2 minutos. Más tiempo para vos, menos tiempo para papeleo.',
+  },
+  {
+    icon: Shield,
+    title: 'Sin Errores',
+    description:
+      'Adiós a los errores de cálculo. El sistema valida automáticamente que tus porcentajes sumen 100% y realiza todas las operaciones con precisión matemática.',
+  },
+  {
+    icon: FileText,
+    title: 'Recibos Profesionales',
+    description:
+      'Generá recibos en PDF listos para descargar o compartir. Todo organizado, claro y profesional. Ideal para presentar a tu agencia.',
+  },
+  {
+    icon: Download,
+    title: 'Funciona sin Internet',
+    description:
+      'Una vez que cargás la página, podés usarla sin conexión. Perfecto para zonas con mala señal o cuando te quedás sin datos.',
+  },
+  {
+    icon: Zap,
+    title: 'Rápido y Ligero',
+    description:
+      'Diseñado para ser veloz incluso en teléfonos antiguos. Sin publicidades intrusivas, sin apps pesadas para instalar.',
+  },
+]
+
+const benefits = [
+  'Calculá tu jornada en segundos',
+  'Distribución automática de porcentajes',
+  'Manejo de múltiples fábricas',
+  'Control de gastos (Gas y Nafta)',
+  'Generá recibos en PDF',
+  '100% gratis para usar',
+]
+
+export function AboutPage() {
+  return (
+    <div className="min-h-[calc(100vh-140px)]">
+      <div className="mx-auto max-w-5xl px-4 py-8 md:px-6 md:py-10">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-accent-teal transition-colors cursor-pointer mb-6 group"
+        >
+          <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" aria-hidden="true" />
+          Volver al inicio
+        </Link>
+
+        <section className="text-center mb-16 animate-fade-in-up">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-amber/10 border border-accent-amber/20 mb-6">
+            <Sparkles className="h-4 w-4 text-accent-amber" aria-hidden="true" />
+            <span className="text-sm font-medium text-accent-amber font-display tracking-wide">
+              Diseñado para choferes
+            </span>
+          </div>
+
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-text-primary font-display tracking-tight mb-6">
+            Dejá de Hacer
+            <br />
+            <span className="bg-gradient-to-r from-accent-amber to-accent-teal bg-clip-text text-transparent">
+              Cuentas Manuales
+            </span>
+          </h1>
+
+          <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto mb-10">
+            carTravels simplifica el cálculo de tu jornada laboral. Ingresá tus datos,
+            y nosotros nos encargamos de distribuir cada peso entre agencia, conductor
+            y vehículo. Sin errores, sin complicaciones.
+          </p>
+
+          <Link to="/">
+            <Button variant="primary" fullWidth={false} className="text-lg px-10 py-4">
+              Empezar a Usar
+            </Button>
+          </Link>
+        </section>
+
+        <section className="mb-16 animate-fade-in-up stagger-1">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div className="order-2 lg:order-1">
+              <h2 className="text-3xl font-black text-text-primary font-display tracking-tight mb-4">
+                Pensado para Vos
+              </h2>
+              <p className="text-text-secondary mb-6 leading-relaxed">
+                Sabemos que al finalizar una jornada larga, lo último que querés es
+                ponerte a hacer cuentas en una libreta. carTravels fue creado
+                específicamente para choferes de agencias de autos y taxis.
+              </p>
+              <ul className="space-y-3">
+                {benefits.map((benefit, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <CheckCircle
+                      className="h-5 w-5 text-accent-teal flex-shrink-0 mt-0.5"
+                      aria-hidden="true"
+                    />
+                    <span className="text-text-secondary">{benefit}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="order-1 lg:order-2">
+              <div className="card-glass rounded-2xl p-8 card-accent-top">
+                <div className="text-center">
+                  <div className="inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-accent-amber/20 to-accent-teal/20 border border-accent-amber/20 mb-6">
+                    <Calculator className="h-10 w-10 text-accent-amber" aria-hidden="true" />
+                  </div>
+                  <h3 className="text-2xl font-black text-text-primary font-display mb-2">
+                    Simple y Efectivo
+                  </h3>
+                  <p className="text-text-secondary">
+                    Sin curvas de aprendizaje. Sin configuraciones complejas.
+                    Abrís, ingresás tus datos, y listo.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="mb-16 animate-fade-in-up stagger-2">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-black text-text-primary font-display tracking-tight mb-3">
+              Todo lo que Necesitás
+            </h2>
+            <p className="text-text-secondary max-w-xl mx-auto">
+              Funcionalidades diseñadas específicamente para tu trabajo diario.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {features.map((feature, index) => (
+              <div
+                key={index}
+                className="card-glass rounded-xl p-6 hover:border-accent-teal/30 transition-all duration-300 group"
+              >
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-teal/10 border border-accent-teal/20 mb-4 group-hover:bg-accent-teal/15 transition-colors">
+                  <feature.icon
+                    className="h-6 w-6 text-accent-teal"
+                    aria-hidden="true"
+                  />
+                </div>
+                <h3 className="text-lg font-bold text-text-primary font-display mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-sm text-text-secondary leading-relaxed">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="animate-fade-in-up stagger-3">
+          <div className="card-glass rounded-2xl p-8 md:p-12 text-center card-accent-top border-accent-amber/30">
+            <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-amber/15 border border-accent-amber/20 mb-6">
+              <Sparkles className="h-7 w-7 text-accent-amber" aria-hidden="true" />
+            </div>
+            <h2 className="text-3xl md:text-4xl font-black text-text-primary font-display tracking-tight mb-4">
+              Listo para Empezar?
+            </h2>
+            <p className="text-lg text-text-secondary max-w-xl mx-auto mb-8">
+              Dejá las libretas y las calculadoras manuales atrás.
+              Probá carTravels ahora y simplificá tu jornada.
+            </p>
+            <Link to="/">
+              <Button variant="primary" fullWidth={false} className="text-lg px-10 py-4">
+                Ir a la Calculadora
+              </Button>
+            </Link>
+          </div>
+        </section>
+      </div>
+    </div>
+  )
+}

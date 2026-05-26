@@ -1,0 +1,206 @@
+@import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+@theme {
+  --font-display: 'Chakra Petch', system-ui, sans-serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
+
+  --color-bg-deep: #0a0f1a;
+  --color-bg-card: #111827;
+  --color-bg-card-subtle: #0d1421;
+  --color-bg-input: #0f172a;
+  --color-bg-hover: #1e293b;
+
+  --color-accent-amber: #f59e0b;
+  --color-accent-amber-soft: #fbbf24;
+  --color-accent-teal: #14b8a6;
+  --color-accent-teal-soft: #2dd4bf;
+  --color-accent-red: #ef4444;
+  --color-accent-red-soft: #f87171;
+  --color-accent-blue: #3b82f6;
+
+  --color-border-subtle: #1f2937;
+  --color-border-emphasis: #374151;
+  --color-border-amber: #78350f;
+
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+
+  --shadow-glow-amber: 0 0 20px rgba(245, 158, 11, 0.25), 0 0 40px rgba(245, 158, 11, 0.1);
+  --shadow-glow-teal: 0 0 20px rgba(20, 184, 166, 0.25);
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+  --shadow-card-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: var(--shadow-glow-amber);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.4), 0 0 60px rgba(245, 158, 11, 0.15);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.stagger-1 { animation-delay: 50ms; }
+.stagger-2 { animation-delay: 100ms; }
+.stagger-3 { animation-delay: 150ms; }
+.stagger-4 { animation-delay: 200ms; }
+.stagger-5 { animation-delay: 250ms; }
+
+body {
+  margin: 0;
+  background-color: var(--color-bg-deep);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.card-glass {
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(13, 20, 33, 0.95) 100%);
+  border: 1px solid var(--color-border-subtle);
+  box-shadow: var(--shadow-card);
+  transition: all 0.3s ease;
+}
+
+.card-glass:hover {
+  border-color: var(--color-border-emphasis);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.card-accent-top {
+  position: relative;
+}
+
+.card-accent-top::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-accent-amber) 0%, var(--color-accent-teal) 100%);
+  border-radius: 16px 16px 0 0;
+}
+
+.input-glass {
+  background: var(--color-bg-input);
+  border: 2px solid var(--color-border-subtle);
+  transition: all 0.2s ease;
+}
+
+.input-glass:focus {
+  border-color: var(--color-accent-amber);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15), var(--shadow-glow-amber);
+  outline: none;
+}
+
+.btn-primary-glow {
+  background: linear-gradient(135deg, var(--color-accent-amber) 0%, var(--color-accent-amber-soft) 100%);
+  transition: all 0.2s ease;
+}
+
+.btn-primary-glow:hover {
+  box-shadow: var(--shadow-glow-amber);
+  transform: translateY(-1px);
+}
+
+.btn-primary-glow:active {
+  transform: translateY(0);
+}
+
+.subtle-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--color-border-subtle) 20%, var(--color-border-subtle) 80%, transparent 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  body {
+    background: white;
+    color: #0f172a;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-white {
+    background: white !important;
+    color: #0f172a !important;
+    border-color: #e2e8f0 !important;
+  }
+}
