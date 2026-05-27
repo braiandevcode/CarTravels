@@ -4,6 +4,20 @@ Calculadora de jornada diseñada para choferes de agencias de autos y taxis. Sim
 
 ---
 
+## Tabla de Contenidos
+
+- [Objetivo](#objetivo)
+- [Comandos Rápidos](#comandos-rápidos)
+- [Stack Tecnológico](#stack-tecnológico)
+- [Librerías Principales](#librerías-principales)
+- [Estructura de Archivos](#estructura-de-archivos)
+- [Características Principales](#características-principales)
+- [Capturas de Pantalla](#capturas-de-pantalla)
+- [Despliegue en Vercel](#despliegue-en-vercel)
+- [Licencia](#licencia)
+
+---
+
 ## Objetivo
 
 `carTravels` resuelve el problema tedioso y propenso a errores que enfrentan los choferes al finalizar su jornada:
@@ -166,6 +180,19 @@ carTravels/
 - Responsive mobile-first
 - Animaciones suaves y micro-interacciones
 - Accesibilidad: `prefers-reduced-motion`, focus traps, ARIA labels
+
+---
+
+## Capturas de Pantalla
+
+<div align="center">
+  <img src="./public/images/001.png" alt="Pantalla principal" width="400" style="max-width: 100%; height: auto; margin: 8px; border-radius: 8px;" />
+  <img src="./public/images/002.png" alt="Configuración de porcentajes" width="400" style="max-width: 100%; height: auto; margin: 8px; border-radius: 8px;" />
+  <img src="./public/images/003.png" alt="Gestión de gastos" width="400" style="max-width: 100%; height: auto; margin: 8px; border-radius: 8px;" />
+  <img src="./public/images/004.png" alt="Viajes a fábricas" width="400" style="max-width: 100%; height: auto; margin: 8px; border-radius: 8px;" />
+  <img src="./public/images/005.png" alt="Resultados y desglose" width="400" style="max-width: 100%; height: auto; margin: 8px; border-radius: 8px;" />
+  <img src="./public/images/006.png" alt="Comprobante PDF" width="400" style="max-width: 100%; height: auto; margin: 8px; border-radius: 8px;" />
+</div>
 
 ---
 
