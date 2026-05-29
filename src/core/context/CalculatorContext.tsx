@@ -62,42 +62,46 @@ type Action =
   | { type: 'ADD_VALE'; payload: ValeTrip }
   | { type: 'UPDATE_VALE'; payload: ValeTrip }
   | { type: 'REMOVE_VALE'; payload: string }
+  | { type: 'CALCULATE' }
   | { type: 'RESET' }
 
 const calculatorReducer = (state: CalculatorState, action: Action): CalculatorState => {
   switch (action.type) {
     case 'SET_TOTAL':
-      return { ...state, total: action.payload }
+      return { ...state, total: action.payload, calculated: false }
     case 'SET_AGENCY_PERCENT':
-      return { ...state, agencyPercent: action.payload }
+      return { ...state, agencyPercent: action.payload, calculated: false }
     case 'SET_DRIVER_PERCENT':
-      return { ...state, driverPercent: action.payload }
+      return { ...state, driverPercent: action.payload, calculated: false }
     case 'SET_CAR_PERCENT':
-      return { ...state, carPercent: action.payload }
+      return { ...state, carPercent: action.payload, calculated: false }
     case 'SET_CAR_RENTED': {
       const newValue: boolean = action.payload
       if (newValue === state.carRented) {
         return state
       }
-      return { ...state, carRented: newValue }
+      return { ...state, carRented: newValue, calculated: false }
     }
     case 'SET_GAS':
-      return { ...state, gas: action.payload }
+      return { ...state, gas: action.payload, calculated: false }
     case 'SET_PETROL':
-      return { ...state, petrol: action.payload }
+      return { ...state, petrol: action.payload, calculated: false }
     case 'SET_SHOW_VALES':
-      return { ...state, showVales: action.payload, vales: action.payload ? state.vales : [] }
+      return { ...state, showVales: action.payload, vales: action.payload ? state.vales : [], calculated: false }
     case 'ADD_VALE':
-      return { ...state, vales: [...state.vales, action.payload] }
+      return { ...state, vales: [...state.vales, action.payload], calculated: false }
     case 'UPDATE_VALE':
       return {
         ...state,
         vales: state.vales.map((v) => (v.id === action.payload.id ? action.payload : v)),
+        calculated: false,
       }
     case 'REMOVE_VALE':
-      return { ...state, vales: state.vales.filter((v) => v.id !== action.payload) }
+      return { ...state, vales: state.vales.filter((v) => v.id !== action.payload), calculated: false }
+    case 'CALCULATE':
+      return { ...state, calculated: true }
     case 'RESET':
-      return initialState
+      return { ...initialState, calculated: false }
     default:
       return state
   }

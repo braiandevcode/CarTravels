@@ -81,7 +81,9 @@ const ConfigSection = () => {
 
           {!isValid && (
             <span className="text-xs text-text-secondary">
-              {difference > 0 ? `Faltan ${difference}%` : `Sobran ${Math.abs(difference)}%`}
+              {difference > 0
+                ? `Sumá ${difference}% más en total`
+                : `Sacá ${Math.abs(difference)}% en total`}
             </span>
           )}
         </div>
@@ -89,7 +91,7 @@ const ConfigSection = () => {
 
       {!isValid && (
         <div className="text-xs text-text-muted/80 pl-1">
-          Ajustá los porcentajes para generar el recibo
+          Tocá los números de arriba para ajustar
         </div>
       )}
     </div>

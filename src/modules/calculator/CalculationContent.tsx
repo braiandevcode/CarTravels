@@ -39,16 +39,6 @@ const CalculatorContent = () => {
   const sections = [
     {
       step: 1,
-      title: 'Configuración',
-      icon: (
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-amber/15">
-          <Settings className="h-4.5 w-4.5 text-accent-amber" aria-hidden="true" />
-        </div>
-      ),
-      content: <ConfigSection />,
-    },
-    {
-      step: 2,
       title: 'Ingreso del Día',
       icon: (
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-teal/15">
@@ -58,17 +48,7 @@ const CalculatorContent = () => {
       content: <IncomeSection />,
     },
     {
-      step: 3,
-      title: 'Gastos del Día',
-      icon: (
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-red/15">
-          <DollarSign className="h-4.5 w-4.5 text-accent-red" aria-hidden="true" />
-        </div>
-      ),
-      content: <ExpensesSection />,
-    },
-    {
-      step: 4,
+      step: 2,
       title: 'Viajes con Vale',
       icon: (
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-amber/15">
@@ -76,6 +56,26 @@ const CalculatorContent = () => {
         </div>
       ),
       content: <ValesSection />,
+    },
+    {
+      step: 3,
+      title: 'Reparto',
+      icon: (
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-amber/15">
+          <Settings className="h-4.5 w-4.5 text-accent-amber" aria-hidden="true" />
+        </div>
+      ),
+      content: <ConfigSection />,
+    },
+    {
+      step: 4,
+      title: 'Gastos',
+      icon: (
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-red/15">
+          <DollarSign className="h-4.5 w-4.5 text-accent-red" aria-hidden="true" />
+        </div>
+      ),
+      content: <ExpensesSection />,
     },
     {
       step: 5,

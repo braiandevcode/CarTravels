@@ -128,7 +128,7 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
 
           <div className="border border-border-subtle rounded-xl p-4 space-y-3 text-sm bg-bg-card-subtle">
             <div className="flex justify-between items-baseline p-2 rounded-lg bg-bg-input">
-              <span className="text-text-secondary font-medium">Total del día</span>
+              <span className="text-text-secondary font-medium">Ganancia del día</span>
               <span className="text-xl font-black text-text-primary font-display">
                 ${result.adjustedTotal.toLocaleString()}
               </span>
@@ -142,14 +142,14 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
               </span>
 
               <div className="flex justify-between p-2 rounded-lg hover:bg-bg-input/50 transition-colors">
-                <span className="text-text-secondary">Agencia ({result.agencyDisplayPercent}%)</span>
-                <span className="font-semibold text-accent-teal font-display">
+                <span className="text-text-secondary">Para la agencia ({result.agencyDisplayPercent}%)</span>
+                <span className="font-semibold text-accent-amber font-display">
                   +${result.agencyAmount.toLocaleString()}
                 </span>
               </div>
 
               <div className="flex justify-between p-2 rounded-lg hover:bg-bg-input/50 transition-colors">
-                <span className="text-text-secondary">Conductor ({state.driverPercent}%)</span>
+                <span className="text-text-secondary">Tu parte ({state.driverPercent}%)</span>
                 <span className="font-semibold text-accent-teal font-display">
                   +${result.driverAmount.toLocaleString()}
                 </span>
@@ -216,13 +216,13 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
                 <div className="space-y-2">
                   <div className="flex justify-between px-2">
                     <span className="text-xs font-semibold text-text-muted uppercase tracking-wider font-display">
-                      Vales y descuentos
+                      Vales
                     </span>
                   </div>
 
                   {result.fabricaTotal > 0 && (
                     <div className="flex justify-between p-2 text-sm bg-accent-teal/5 rounded-lg">
-                      <span className="text-text-secondary">+ Total precio real fábricas</span>
+                      <span className="text-text-secondary">+ Precio real fábricas</span>
                       <span className="text-accent-teal font-display font-semibold">
                         +${result.fabricaTotal.toLocaleString()}
                       </span>
@@ -231,9 +231,18 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
 
                   {result.descuentoTotal > 0 && (
                     <div className="flex justify-between p-2 text-sm bg-accent-red/5 rounded-lg">
-                      <span className="text-text-secondary">- Total descuentos fábricas</span>
+                      <span className="text-text-secondary">- Descuentos fábricas</span>
                       <span className="text-accent-red font-display font-semibold">
                         -${result.descuentoTotal.toLocaleString()}
+                      </span>
+                    </div>
+                  )}
+
+                  {result.gananciaFabricaTotal > 0 && (
+                    <div className="flex justify-between p-2 text-sm bg-accent-amber/5 rounded-lg">
+                      <span className="text-text-secondary">Te llevás de fábrica</span>
+                      <span className="text-accent-amber font-display font-semibold">
+                        +${result.gananciaFabricaTotal.toLocaleString()}
                       </span>
                     </div>
                   )}
@@ -281,17 +290,17 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
                   </div>
 
                   <div className="flex justify-between pt-2 px-2 border-t border-border-subtle">
-                    <span className="text-text-secondary font-medium font-display">Agencia final</span>
+                    <span className="text-text-secondary font-medium font-display">Queda para la agencia</span>
                     <div className="flex flex-col items-end">
                       <span
                         className={`font-semibold font-display ${result.finalAgency >= 0 ? 'text-accent-teal' : 'text-accent-red'}`}
                       >
                         ${result.finalAgency.toLocaleString()}
                       </span>
-                      <span className="text-[11px] text-text-muted/70 font-mono">
-                        {result.agencyDisplayPercent}% = ${result.agencyAmount.toLocaleString()}
-                        {result.descuentoTotal > 0 && <> - ${result.descuentoTotal.toLocaleString()} desc.</>}
-                        {result.otroTotal > 0 && <> - ${result.otroTotal.toLocaleString()} otros</>}
+                      <span className="text-[11px] text-text-muted/70 font-mono text-right">
+                        ${result.agencyAmount.toLocaleString()}
+                        {result.gananciaFabricaTotal > 0 && <> - ${result.gananciaFabricaTotal.toLocaleString()}</>}
+                        {result.otroTotal > 0 && <> - ${result.otroTotal.toLocaleString()}</>}
                       </span>
                     </div>
                   </div>
@@ -310,10 +319,10 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
             <AlertTriangle className="h-5 w-5 text-accent-red flex-shrink-0 mt-0.5" aria-hidden="true" />
             <div className="flex flex-col gap-0.5">
               <span className="text-sm font-bold text-accent-red font-display">
-                Porcentajes incompletos
+                Falta ajustar los %
               </span>
               <p className="text-xs text-text-secondary">
-                Suma actual: {result.percentTotal}%. Necesitas 100% para descargar.
+                Suma actual: {result.percentTotal}% — tiene que ser 100% para descargar.
               </p>
             </div>
           </div>

@@ -10,4 +10,5 @@ export const initialState: CalculatorState = {
   petrol: 0,
   vales: [],
   showVales: false,
+  calculated: false,
 }

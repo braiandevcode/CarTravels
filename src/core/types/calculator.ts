@@ -17,6 +17,7 @@ export interface CalculatorState {
   petrol: number
   vales: ValeTrip[]
   showVales: boolean
+  calculated: boolean
 }
 
 export interface ValeDetail {
@@ -41,6 +42,7 @@ export interface CalculatorResult {
   valeDetails: ValeDetail[]
   fabricaTotal: number
   descuentoTotal: number
+  gananciaFabricaTotal: number
   otroTotal: number
   finalAgency: number
   percentTotal: number

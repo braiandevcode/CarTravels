@@ -22,15 +22,15 @@ These are the possible scenarios that a "driver" usually deals with:
 * 3.B: Depending on the vale type:
   - "Fábrica": name, number of trips, real price per trip, discount per trip.
   - "Otro": name, number of trips, real price per trip (no discount).
-* 3.C: Only "Fábrica" vales affect the adjusted base. The difference between the real price total and discount total of all "Fábrica" vales is subtracted from the day's total: `adjustedTotal = total - (fabricaTotal - descuentoTotal)`. "Otro" vales do NOT affect the adjusted total.
+* 3.C: Only "Fábrica" vales affect the adjusted base. The discount (`descuento`) is subtracted directly from the total: `adjustedTotal = total - descuentoTotal`. The driver's earnings from fábrica trips (`gananciaFabricaTotal = fabricaTotal - descuentoTotal`) are deducted from the agency's share. "Otro" vales do NOT affect the adjusted total.
 * 3.D: The agency's percentage amount gets reduced by deductions from the vales:
-  - If "Fábrica" vales exist: deduct sum of all discounts (`descuentoTotal`).
+  - If "Fábrica" vales exist: deduct `gananciaFabricaTotal` (`precioReal - descuento`).
   - If "Otro" vales exist: deduct sum of all real prices (`otroTotal`).
   - If both: deduct both sums.
-  - `finalAgency = agencyAmount - descuentoTotal - otroTotal`.
+  - `finalAgency = agencyAmount - gananciaFabricaTotal - otroTotal`.
 * 3.E: The summarized usual calculation flow that the "driver" does is as follows:
 - total: X amount
-- If there are "Fábrica" vales: `difference = fabricaTotal - descuentoTotal`, then `adjustedTotal = total - difference`
+- If there are "Fábrica" vales: `adjustedTotal = total - descuentoTotal`
 - If no "Fábrica" vales: `adjustedTotal = total` (unchanged)
 - agency: `adjustedTotal × agencyPercent / 100`
 - driver: `adjustedTotal × driverPercent / 100`
@@ -38,11 +38,12 @@ These are the possible scenarios that a "driver" usually deals with:
 - petrol: X amount
 - vehicle (if rented): `(adjustedTotal × carPercent / 100) - (gas + petrol)`. Enabled via a toggle — does not modify percentages automatically.
 - Vale deductions:
-  - If "Fábrica" vales exist: `deduction += descuentoTotal`
+  - If "Fábrica" vales exist: `deduction += gananciaFabricaTotal` (= `fabricaTotal - descuentoTotal`)
   - If "Otro" vales exist: `deduction += otroTotal`
 - finalAgency = agencyAmount - deduction
 - If no vales: finalAgency = agencyAmount (no deduction)
 - Vale totals are displayed for reference in the receipt breakdown.
+- **Calculate button**: User must press "Calcular resultados" — results are hidden until then. Any data change invalidates the calculation. Vales with empty data (0 trips or 0 price) block the button.
 
 
 

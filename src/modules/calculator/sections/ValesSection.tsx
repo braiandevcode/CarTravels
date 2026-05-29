@@ -165,6 +165,16 @@ const ValesSection = () => {
                       </span>
                     </div>
                   )}
+                  {vale.type === 'fabrica' && subtotal > 0 && discountSubtotal > 0 && (
+                    <div className="mt-2 py-1.5 px-2 rounded-lg bg-accent-amber/8 border border-accent-amber/15 text-xs text-center font-mono">
+                      <span className="text-accent-teal">${subtotal.toLocaleString()}</span>
+                      <span className="text-text-muted"> − </span>
+                      <span className="text-accent-red">${discountSubtotal.toLocaleString()}</span>
+                      <span className="text-text-muted"> = </span>
+                      <span className="text-accent-amber font-bold">${(subtotal - discountSubtotal).toLocaleString()}</span>
+                      <span className="text-text-muted ml-1">tu parte</span>
+                    </div>
+                  )}
                 </div>
               </div>
             )

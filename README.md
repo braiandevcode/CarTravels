@@ -162,16 +162,28 @@ carTravels/
 
 ## Características Principales
 
-### Calculos Automáticos
-- **Porcentajes configurables**: Agencia, Chofer, Auto (si es alquilado)
+### Flujo de Cálculo
+
+El orden de las secciones guía al conductor paso a paso:
+
+1. **Total del día** — Ingresá lo que facturaste
+2. **Viajes con Vale** — Definí todos los vales (fábrica con descuento, otro sin descuento)
+3. **Reparto** — Configurá porcentajes de agencia/conductor y si el vehículo es alquilado
+4. **Gastos** — Gas (GNV) y Nafta
+5. **Resultados** — Presioná **"Calcular resultados"** para ver el desglose completo
+
+### Cálculos Automáticos
+- **Porcentajes configurables**: Agencia, Conductor, Vehículo (si alquilado)
 - **Validación en tiempo real**: Los porcentajes deben sumar 100%
-- **Ajuste por vales**: Viajes tipo "Fábrica" (con descuento) y "Otro" (sin descuento)
-- **Cálculo de agencia final**: Descuentos de vales aplicados automáticamente
+- **Ajuste por vales tipo "Fábrica"**: El descuento se resta directamente del total del día (`total - descuentoTotal`). La ganancia del conductor en esos viajes (`precioReal - descuento`) se deduce del porcentaje de la agencia.
+- **Cálculo de agencia final**: `agencia - gananciaFábrica - totalOtros`
+- **Botón "Calcular resultados"**: Los resultados no se muestran hasta presionar el botón. Si cambiás algún dato, los resultados se ocultan automáticamente y hay que volver a calcular.
 
 ### Validación con Zod
 - **Mensajes claros en español**: "Máximo 99 viajes", "Completá el total del día"
 - **Validación en tiempo real** en cada campo al escribir
 - **Límite de 2 dígitos** en el campo "N° Viajes" (máximo 99 viajes realistas)
+- **Validación de vales**: No permite calcular si hay vales sin datos completos (viajes o precio en 0)
 
 ### Interfaz Adaptable
 - **Modo claro/oscuro**: Toggle con ícono Sol/Luna en el header, persistente en localStorage

@@ -21,8 +21,8 @@ export function calculateResult(state: CalculatorState): CalculatorResult {
   const descuentoTotal = fabricaDetails.reduce((sum, v) => sum + v.discountSubtotal, 0)
   const otroTotal = otroDetails.reduce((sum, v) => sum + v.subtotal, 0)
 
-  const difference = fabricaTotal - descuentoTotal
-  const adjustedTotal = fabricaTotal > 0 ? total - difference : total
+  const gananciaFabricaTotal = fabricaTotal - descuentoTotal
+  const adjustedTotal = total - descuentoTotal
 
   const driverAmount: number = adjustedTotal * (driverPercent / 100)
 
@@ -43,7 +43,7 @@ export function calculateResult(state: CalculatorState): CalculatorResult {
     percentTotal = agencyPercent + driverPercent
   }
 
-  const deduction = descuentoTotal + otroTotal
+  const deduction = gananciaFabricaTotal + otroTotal
   const finalAgency = agencyAmount - deduction
 
   const isPercentValid = percentTotal === 100
@@ -59,6 +59,7 @@ export function calculateResult(state: CalculatorState): CalculatorResult {
     valeDetails,
     fabricaTotal,
     descuentoTotal,
+    gananciaFabricaTotal,
     otroTotal,
     finalAgency,
     percentTotal,
