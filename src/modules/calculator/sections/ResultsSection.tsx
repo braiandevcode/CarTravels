@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import useCalculatorContext from '../../../core/context/CalculatorContext'
 import { calculateResult } from '../../../core/hooks/useCalculator'
 import Button from '../../../shared/ui/Button'
-import { BarChart3, Eye, AlertTriangle } from 'lucide-react'
+import { Eye, AlertTriangle } from 'lucide-react'
 import type { CalculatorResult } from '../../../core/types/calculator'
 
 interface ResultsSectionProps {
@@ -12,35 +12,20 @@ interface ResultsSectionProps {
 export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
   const { state } = useCalculatorContext()
 
-  const result:CalculatorResult = useMemo(() => calculateResult(state), [state])
+  const result: CalculatorResult = useMemo(() => calculateResult(state), [state])
 
   if (state.total === 0) {
     return (
-      <section aria-label="Resultados" className="rounded-2xl card-glass border border-border-subtle p-5 md:p-6 opacity-60 animate-fade-in-up stagger-5">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-text-muted/10">
-            <BarChart3 className="h-4.5 w-4.5 text-text-muted" aria-hidden="true" />
-          </div>
-          <h2 className="text-lg font-bold text-text-muted font-display tracking-wide">Resultados</h2>
-        </div>
-        <div className="flex flex-col items-center justify-center py-8 gap-3">
-          <div className="text-4xl opacity-30" role="img" aria-label="Gráfico">📊</div>
-          <p className="text-center text-text-muted">Ingresa el total del día para ver los resultados</p>
-        </div>
-      </section>
+      <div className="flex flex-col items-center justify-center py-8 gap-3 opacity-60">
+        <div className="text-4xl opacity-30" role="img" aria-label="Gráfico">📊</div>
+        <p className="text-center text-text-muted">Ingresa el total del día para ver los resultados</p>
+      </div>
     )
   }
 
   return (
-    <section aria-label="Resultados" className="rounded-2xl card-glass card-accent-top p-5 md:p-6 animate-fade-in-up stagger-5">
-      <div className="flex items-center gap-2 mb-4">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-teal/15">
-          <BarChart3 className="h-4.5 w-4.5 text-accent-teal" aria-hidden="true" />
-        </div>
-        <h2 className="text-lg font-bold text-text-primary font-display tracking-wide">Resultados</h2>
-      </div>
-
-      <div className="flex flex-col gap-2 text-sm md:text-base">
+    <>
+    <div className="flex flex-col gap-2 text-sm md:text-base">
         <div className="flex justify-between py-2 px-3 rounded-lg bg-bg-input">
           <span className="text-text-secondary font-medium">Total del día</span>
           <span className="font-bold text-text-primary font-display text-lg">${result.adjustedTotal.toLocaleString()}</span>
@@ -87,80 +72,82 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
                 </span>
               </div>
               <div className="text-xs text-text-muted/70 -mt-0.5 mb-1 pl-3 font-mono bg-bg-input/50 py-1.5 px-3 rounded-lg">
-                {state.carPercent}% del total (${grossCar.toLocaleString()})
-                {totalExpenses > 0 && (
-                  <> - ${totalExpenses.toLocaleString()} en gastos</>
-                )}
+                ${grossCar.toLocaleString()} ({state.carPercent}%)
+                {totalExpenses > 0 && <> - ${totalExpenses.toLocaleString()} gastos</>}
                 {' = '}${result.carAmount.toLocaleString()}
               </div>
             </>
           )
         })()}
 
-        {result.factoryDetails.length > 0 && (
+        {result.valeDetails.length > 0 && (
           <>
             <div className="subtle-divider my-2" />
-            <div className="py-2">
-              <div className="flex items-center justify-between px-3 mb-2">
-                <span className="text-xs font-semibold text-text-muted uppercase tracking-wide font-display">
-                  Ajustes Fábricas
-                </span>
-              </div>
+            <div className="py-2 space-y-1.5">
+              <span className="text-xs font-semibold text-text-muted uppercase tracking-wide font-display block px-3 mb-2">
+                Vales y descuentos
+              </span>
 
-              <div className="flex justify-between py-1.5 px-3 text-sm bg-accent-teal/5 rounded-lg mb-1">
-                <span className="text-text-secondary">+ Total precio real fábricas</span>
-                <span className="text-accent-teal font-display font-semibold">
-                  +${result.factoryTotal.toLocaleString()}
-                </span>
-              </div>
-
-              {result.discountTotal > 0 && (
-                <div className="flex justify-between py-1.5 px-3 text-sm bg-accent-red/5 rounded-lg mb-1">
-                  <span className="text-text-secondary">- Total descuentos fábricas</span>
-                  <span className="text-accent-red font-display font-semibold">
-                    -${result.discountTotal.toLocaleString()}
+              {result.fabricaTotal > 0 && (
+                <div className="flex justify-between py-1.5 px-3 text-sm bg-accent-teal/5 rounded-lg">
+                  <span className="text-text-secondary">+ Precio real fábricas</span>
+                  <span className="text-accent-teal font-display font-semibold">
+                    +${result.fabricaTotal.toLocaleString()}
                   </span>
                 </div>
               )}
 
-              <div className="mt-2 pl-2">
-                {result.factoryDetails.map((f, i) => (
-                  <div key={i} className="py-1.5 text-xs border-l-2 border-border-subtle pl-2 mb-1">
-                    <div className="flex justify-between">
-                      <span className="text-text-secondary font-medium">{f.name}</span>
-                    </div>
-                    <div className="flex justify-between mt-0.5">
-                      <span className="text-text-muted/80">
-                        {f.trips} viajes × ${f.pricePerTrip.toLocaleString()}
-                      </span>
-                      <span className="text-accent-teal/90">
-                        +${f.factorySubtotal.toLocaleString()}
-                      </span>
-                    </div>
-                    {f.discountPerTrip > 0 && (
-                      <div className="flex justify-between mt-0.5">
-                        <span className="text-text-muted/80">
-                          {f.trips} viajes × ${f.discountPerTrip.toLocaleString()} descuento
-                        </span>
-                        <span className="text-accent-red/90">
-                          -${f.discountSubtotal.toLocaleString()}
-                        </span>
-                      </div>
-                    )}
+              {result.descuentoTotal > 0 && (
+                <div className="flex justify-between py-1.5 px-3 text-sm bg-accent-red/5 rounded-lg">
+                  <span className="text-text-secondary">- Descuentos fábricas</span>
+                  <span className="text-accent-red font-display font-semibold">
+                    -${result.descuentoTotal.toLocaleString()}
+                  </span>
+                </div>
+              )}
+
+              {result.otroTotal > 0 && (
+                <div className="flex justify-between py-1.5 px-3 text-sm bg-accent-red/5 rounded-lg">
+                  <span className="text-text-secondary">- Total otros</span>
+                  <span className="text-accent-red font-display font-semibold">
+                    -${result.otroTotal.toLocaleString()}
+                  </span>
+                </div>
+              )}
+
+              {result.valeDetails.map((v, i) => (
+                <div key={i} className="py-1 text-xs border-l-2 border-border-subtle pl-2 ml-1">
+                  <span className="text-text-secondary font-medium">{v.name}</span>
+                  <span className="text-text-muted ml-1">({v.type === 'fabrica' ? 'Fábrica' : 'Otro'})</span>
+                  <div className="flex justify-between mt-0.5">
+                    <span className="text-text-muted/80">{v.trips}× ${v.pricePerTrip.toLocaleString()}</span>
+                    <span className="text-accent-teal/90">+${v.subtotal.toLocaleString()}</span>
                   </div>
-                ))}
-              </div>
+                  {v.type === 'fabrica' && v.discountPerTrip > 0 && (
+                    <div className="flex justify-between mt-0.5">
+                      <span className="text-text-muted/80">{v.trips}× ${v.discountPerTrip.toLocaleString()} dto.</span>
+                      <span className="text-accent-red/90">-${v.discountSubtotal.toLocaleString()}</span>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
 
             <div className="flex justify-between py-3 px-4 rounded-lg bg-accent-amber/10 border border-accent-amber/20">
               <span className="text-text-secondary font-medium font-display">Agencia final</span>
-              <span className={`font-bold font-display text-lg ${result.finalAgency >= 0 ? 'text-accent-teal' : 'text-accent-red'}`}>
-                ${result.finalAgency.toLocaleString()}
-              </span>
+              <div className="flex flex-col items-end">
+                <span className={`font-bold font-display text-lg ${result.finalAgency >= 0 ? 'text-accent-teal' : 'text-accent-red'}`}>
+                  ${result.finalAgency.toLocaleString()}
+                </span>
+                <span className="text-[11px] text-text-muted/70 font-mono">
+                  {result.agencyDisplayPercent}% de ${result.agencyAmount.toLocaleString()}
+                  {result.descuentoTotal > 0 && <> - ${result.descuentoTotal.toLocaleString()} (desc.)</>}
+                  {result.otroTotal > 0 && <> - ${result.otroTotal.toLocaleString()} (otros)</>}
+                </span>
+              </div>
             </div>
           </>
         )}
-
       </div>
 
       {!result.isPercentValid && (
@@ -187,6 +174,6 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
           {result.isPercentValid ? 'Ver Recibo Completo' : 'Ajusta los porcentajes'}
         </Button>
       </div>
-    </section>
+    </>
   )
 }

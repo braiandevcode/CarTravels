@@ -18,21 +18,31 @@ These are the possible scenarios that a "driver" usually deals with:
 2. Writing down the expense amount for "Gas" (CNG) and "Petrol" (using the paper receipts provided at gas stations).
 3. They must rely on different "calculations" such as the following:
 
-* 3.A: If they made trips to one or more "Factories", calculating how many trips were made to each one (these negotiated prices "depend" on each "agency" and the "driver" themselves knows this to set the trip price).
-* 3.B: In reference to point "3.A", "normally" an "agency" fulfills a "contract" with an "X" factory, where the amount is fixed and its calculation should be: (X factory, Y trips * Z trip price).
-* 3.C: Summing up each accumulated price among all the factories, for example: accumulated price of factory X + accumulated price of factory Y. The difference between the real price total and the discount total is then subtracted from the day's total to calculate the adjusted base: `adjustedTotal = total - (factoryTotal - discountTotal)`.
-* 3.D: Regarding point "3.C", the "difference" adjusts the distributable base. The agency no longer directly subtracts factory accumulators — the adjustment happens at the total level before applying percentages.
+* 3.A: If they had trips with "Vales" (vouchers), selecting the vale type: "Fábrica" (Factory) or "Otro" (Other). These are negotiated prices that depend on the agency and the driver.
+* 3.B: Depending on the vale type:
+  - "Fábrica": name, number of trips, real price per trip, discount per trip.
+  - "Otro": name, number of trips, real price per trip (no discount).
+* 3.C: Only "Fábrica" vales affect the adjusted base. The difference between the real price total and discount total of all "Fábrica" vales is subtracted from the day's total: `adjustedTotal = total - (fabricaTotal - descuentoTotal)`. "Otro" vales do NOT affect the adjusted total.
+* 3.D: The agency's percentage amount gets reduced by deductions from the vales:
+  - If "Fábrica" vales exist: deduct sum of all discounts (`descuentoTotal`).
+  - If "Otro" vales exist: deduct sum of all real prices (`otroTotal`).
+  - If both: deduct both sums.
+  - `finalAgency = agencyAmount - descuentoTotal - otroTotal`.
 * 3.E: The summarized usual calculation flow that the "driver" does is as follows:
 - total: X amount
-- If there are factory trips: `difference = factoryTotal - discountTotal`, then `adjustedTotal = total - difference`
-- If no factory trips: `adjustedTotal = total`
+- If there are "Fábrica" vales: `difference = fabricaTotal - descuentoTotal`, then `adjustedTotal = total - difference`
+- If no "Fábrica" vales: `adjustedTotal = total` (unchanged)
 - agency: `adjustedTotal × agencyPercent / 100`
 - driver: `adjustedTotal × driverPercent / 100`
 - gas: X amount
 - petrol: X amount
 - vehicle (if rented): `(adjustedTotal × carPercent / 100) - (gas + petrol)`. Enabled via a toggle — does not modify percentages automatically.
-- finalAgency = agencyAmount (no factory adjustments applied)
-- Factory totals (`factoryTotal`, `discountTotal`) are displayed for reference only in the receipt breakdown.
+- Vale deductions:
+  - If "Fábrica" vales exist: `deduction += descuentoTotal`
+  - If "Otro" vales exist: `deduction += otroTotal`
+- finalAgency = agencyAmount - deduction
+- If no vales: finalAgency = agencyAmount (no deduction)
+- Vale totals are displayed for reference in the receipt breakdown.
 
 
 

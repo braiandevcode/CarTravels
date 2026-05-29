@@ -16,17 +16,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     const formattedId:string = `${inputId}-formatted`
 
     return (
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor={inputId} className="text-sm font-medium text-text-secondary font-display tracking-wide">{label}</label>
-        <span
-          id={formattedId}
-          className="text-xs text-text-muted font-mono -mt-0.5"
-          aria-hidden={!(formattedValue !== undefined && formattedValue > 0)}
-        >
-          {formattedValue !== undefined && formattedValue > 0
-            ? `ARS ${formattedValue.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-            : '\u00A0'}
-        </span>
+      <div className="flex flex-col gap-1">
+        <label htmlFor={inputId} className="text-base font-bold text-text-primary font-display tracking-wide">{label}</label>
         <div className="relative">
           {prefix && (
             <span aria-hidden="true" className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted font-semibold text-lg font-display">
@@ -43,12 +34,20 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             aria-describedby={error ? errorId : (formattedValue !== undefined && formattedValue > 0 ? formattedId : undefined)}
             className={`w-full rounded-xl input-glass px-4 py-3.5 text-lg font-semibold text-text-primary placeholder:text-text-muted/50 font-display tracking-wide ${
               prefix ? 'pl-10' : ''
-            } ${error ? 'border-accent-red focus:border-accent-red focus:shadow-[0_0_0_3px_rgba(239,68,68,0.15)]' : ''} ${className}`}
+            } ${error ? 'input-error' : ''} ${className}`}
             {...props}
           />
         </div>
+        {formattedValue !== undefined && formattedValue > 0 && (
+          <span
+            id={formattedId}
+            className="text-xs text-text-muted font-mono"
+          >
+            {`ARS ${formattedValue.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+          </span>
+        )}
         {error && (
-          <span id={errorId} role="alert" className="text-sm text-accent-red font-display">
+          <span id={errorId} role="alert" className="text-sm font-medium text-accent-red font-display">
             {error}
           </span>
         )}

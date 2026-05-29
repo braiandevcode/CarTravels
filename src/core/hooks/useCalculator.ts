@@ -1,22 +1,28 @@
-import type { CalculatorState, CalculatorResult, FactoryDetail } from '../types/calculator'
+import type { CalculatorState, CalculatorResult, ValeDetail } from '../types/calculator'
 
 export function calculateResult(state: CalculatorState): CalculatorResult {
-  const { total, agencyPercent, driverPercent, carPercent, carRented, gas, petrol, factories } = state
+  const { total, agencyPercent, driverPercent, carPercent, carRented, gas, petrol, vales } = state
 
-  const factoryDetails: FactoryDetail[] = factories.map((f) => ({
-    name: f.name,
-    trips: f.trips,
-    pricePerTrip: f.pricePerTrip,
-    discountPerTrip: f.discountPerTrip,
-    factorySubtotal: f.trips * f.pricePerTrip,
-    discountSubtotal: f.trips * f.discountPerTrip,
+  const valeDetails: ValeDetail[] = vales.map((v) => ({
+    id: v.id,
+    type: v.type,
+    name: v.name,
+    trips: v.trips,
+    pricePerTrip: v.pricePerTrip,
+    discountPerTrip: v.type === 'fabrica' ? v.discountPerTrip : 0,
+    subtotal: v.trips * v.pricePerTrip,
+    discountSubtotal: v.type === 'fabrica' ? v.trips * v.discountPerTrip : 0,
   }))
 
-  const factoryTotal = factoryDetails.reduce((sum, f) => sum + f.factorySubtotal, 0)
-  const discountTotal = factoryDetails.reduce((sum, f) => sum + f.discountSubtotal, 0)
+  const fabricaDetails = valeDetails.filter((v) => v.type === 'fabrica')
+  const otroDetails = valeDetails.filter((v) => v.type === 'otro')
 
-  const difference = factoryTotal - discountTotal
-  const adjustedTotal = factoryTotal > 0 ? total - difference : total
+  const fabricaTotal = fabricaDetails.reduce((sum, v) => sum + v.subtotal, 0)
+  const descuentoTotal = fabricaDetails.reduce((sum, v) => sum + v.discountSubtotal, 0)
+  const otroTotal = otroDetails.reduce((sum, v) => sum + v.subtotal, 0)
+
+  const difference = fabricaTotal - descuentoTotal
+  const adjustedTotal = fabricaTotal > 0 ? total - difference : total
 
   const driverAmount: number = adjustedTotal * (driverPercent / 100)
 
@@ -37,7 +43,8 @@ export function calculateResult(state: CalculatorState): CalculatorResult {
     percentTotal = agencyPercent + driverPercent
   }
 
-  const finalAgency = agencyAmount
+  const deduction = descuentoTotal + otroTotal
+  const finalAgency = agencyAmount - deduction
 
   const isPercentValid = percentTotal === 100
 
@@ -49,9 +56,10 @@ export function calculateResult(state: CalculatorState): CalculatorResult {
     carAmount,
     gas,
     petrol,
-    factoryTotal,
-    discountTotal,
-    factoryDetails,
+    valeDetails,
+    fabricaTotal,
+    descuentoTotal,
+    otroTotal,
     finalAgency,
     percentTotal,
     isPercentValid,

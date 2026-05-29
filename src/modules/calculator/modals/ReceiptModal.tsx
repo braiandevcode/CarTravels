@@ -1,8 +1,8 @@
 import { useMemo, useEffect, useRef } from 'react'
-import useCalculatorContext  from '../../../core/context/CalculatorContext'
+import useCalculatorContext from '../../../core/context/CalculatorContext'
 import { calculateResult } from '../../../core/hooks/useCalculator'
 import { useReceiptExport } from '../../../core/hooks/useReceiptExport'
-import Button  from '../../../shared/ui/Button'
+import Button from '../../../shared/ui/Button'
 import { X, Download, Share2, AlertTriangle } from 'lucide-react'
 import type { CalculatorResult } from '../../../core/types/calculator'
 
@@ -11,7 +11,7 @@ interface ReceiptModalProps {
   onClose: () => void
 }
 
-const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) =>{
+const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
   const { state } = useCalculatorContext()
   const result: CalculatorResult = useMemo(() => calculateResult(state), [state])
   const { shareImage, downloadPDF } = useReceiptExport()
@@ -210,53 +210,69 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) =>{
               )
             })()}
 
-            {result.factoryDetails.length > 0 && (
+            {result.valeDetails.length > 0 && (
               <>
                 <div className="subtle-divider" />
                 <div className="space-y-2">
                   <div className="flex justify-between px-2">
                     <span className="text-xs font-semibold text-text-muted uppercase tracking-wider font-display">
-                      Ajustes Fábricas
+                      Vales y descuentos
                     </span>
                   </div>
 
-                  <div className="flex justify-between p-2 text-sm bg-accent-teal/5 rounded-lg">
-                    <span className="text-text-secondary">+ Total precio real fábricas</span>
-                    <span className="text-accent-teal font-display font-semibold">
-                      +${result.factoryTotal.toLocaleString()}
-                    </span>
-                  </div>
+                  {result.fabricaTotal > 0 && (
+                    <div className="flex justify-between p-2 text-sm bg-accent-teal/5 rounded-lg">
+                      <span className="text-text-secondary">+ Total precio real fábricas</span>
+                      <span className="text-accent-teal font-display font-semibold">
+                        +${result.fabricaTotal.toLocaleString()}
+                      </span>
+                    </div>
+                  )}
 
-                  {result.discountTotal > 0 && (
+                  {result.descuentoTotal > 0 && (
                     <div className="flex justify-between p-2 text-sm bg-accent-red/5 rounded-lg">
                       <span className="text-text-secondary">- Total descuentos fábricas</span>
                       <span className="text-accent-red font-display font-semibold">
-                        -${result.discountTotal.toLocaleString()}
+                        -${result.descuentoTotal.toLocaleString()}
+                      </span>
+                    </div>
+                  )}
+
+                  {result.otroTotal > 0 && (
+                    <div className="flex justify-between p-2 text-sm bg-accent-red/5 rounded-lg">
+                      <span className="text-text-secondary">- Total otros</span>
+                      <span className="text-accent-red font-display font-semibold">
+                        -${result.otroTotal.toLocaleString()}
                       </span>
                     </div>
                   )}
 
                   <div className="mt-1 pl-2">
-                    {result.factoryDetails.map((f, i) => (
+                    {result.valeDetails.map((v, i) => (
                       <div key={i} className="py-1.5 text-xs border-l-2 border-border-subtle pl-2 mb-1">
                         <div className="flex justify-between">
-                          <span className="text-text-secondary font-medium">{f.name}</span>
+                          <span className="text-text-secondary font-medium">
+                            {v.name}
+                            <span className="text-text-muted ml-1">
+                              ({v.type === 'fabrica' ? 'Fábrica' : 'Otro'})
+                            </span>
+                          </span>
                         </div>
                         <div className="flex justify-between mt-0.5">
                           <span className="text-text-muted/80">
-                            {f.trips} × ${f.pricePerTrip.toLocaleString()}
+                            {v.trips} × ${v.pricePerTrip.toLocaleString()}
                           </span>
                           <span className="text-accent-teal/90">
-                            +${f.factorySubtotal.toLocaleString()}
+                            +${v.subtotal.toLocaleString()}
                           </span>
                         </div>
-                        {f.discountPerTrip > 0 && (
+                        {v.type === 'fabrica' && v.discountPerTrip > 0 && (
                           <div className="flex justify-between mt-0.5">
                             <span className="text-text-muted/80">
-                              {f.trips} × ${f.discountPerTrip.toLocaleString()} desc.
+                              {v.trips} × ${v.discountPerTrip.toLocaleString()} desc.
                             </span>
                             <span className="text-accent-red/90">
-                              -${f.discountSubtotal.toLocaleString()}
+                              -${v.discountSubtotal.toLocaleString()}
                             </span>
                           </div>
                         )}
@@ -266,16 +282,22 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) =>{
 
                   <div className="flex justify-between pt-2 px-2 border-t border-border-subtle">
                     <span className="text-text-secondary font-medium font-display">Agencia final</span>
-                    <span
-                      className={`font-semibold font-display ${result.finalAgency >= 0 ? 'text-accent-teal' : 'text-accent-red'}`}
-                    >
-                      ${result.finalAgency.toLocaleString()}
-                    </span>
+                    <div className="flex flex-col items-end">
+                      <span
+                        className={`font-semibold font-display ${result.finalAgency >= 0 ? 'text-accent-teal' : 'text-accent-red'}`}
+                      >
+                        ${result.finalAgency.toLocaleString()}
+                      </span>
+                      <span className="text-[11px] text-text-muted/70 font-mono">
+                        {result.agencyDisplayPercent}% = ${result.agencyAmount.toLocaleString()}
+                        {result.descuentoTotal > 0 && <> - ${result.descuentoTotal.toLocaleString()} desc.</>}
+                        {result.otroTotal > 0 && <> - ${result.otroTotal.toLocaleString()} otros</>}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </>
             )}
-
           </div>
 
           <div className="mt-5 text-center text-xs text-text-muted font-display">
@@ -312,4 +334,4 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) =>{
   )
 }
 
-export default ReceiptModal;
+export default ReceiptModal

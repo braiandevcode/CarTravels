@@ -1,4 +1,4 @@
-import type { CalculatorState } from "../types/calculator";
+import type { CalculatorState } from '../types/calculator'
 
 export const initialState: CalculatorState = {
   total: 0,
@@ -8,6 +8,6 @@ export const initialState: CalculatorState = {
   carRented: false,
   gas: 0,
   petrol: 0,
-  factories: [],
-  showFactories: false,
+  vales: [],
+  showVales: false,
 }

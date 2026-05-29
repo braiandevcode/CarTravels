@@ -24,9 +24,12 @@ Calculadora de jornada diseñada para choferes de agencias de autos y taxis. Sim
 
 - ✅ Ingreso simple de datos (total facturado, gastos de gas/nafta)
 - ✅ Cálculos automáticos de porcentajes (agencia, chofer, auto alquilado)
-- ✅ Manejo de viajes a fábricas con precios negociados
+- ✅ Manejo de viajes con vale (fábrica y otros) con precios negociados
+- ✅ Validación en tiempo real con mensajes claros (Zod)
 - ✅ Generación de comprobante en PDF y compartir por WhatsApp
 - ✅ Datos guardados localmente en tu dispositivo (sin registro)
+- ✅ Modo claro/oscuro con persistencia de preferencia
+- ✅ Secciones colapsables en mobile para navegación paso a paso
 
 ---
 
@@ -62,8 +65,7 @@ Calculadora de jornada diseñada para choferes de agencias de autos y taxis. Sim
 | `jspdf` | 4.2.1 | Generar PDF del comprobante |
 | `lucide-react` | 1.16.0 | Íconos de la UI |
 | `react-icons` | 5.6.0 | Íconos de marcas (GitHub, Instagram) |
-| `zod` | 4.4.3 | Validación de esquemas |
-| `react-hook-form` | 7.76.1 | Manejo de formularios |
+| `zod` | 4.4.3 | Validación de esquemas con mensajes en español |
 
 ---
 
@@ -79,29 +81,33 @@ src/
 │
 ├── core/                      # LÓGICA CENTRAL (sin dependencia de UI)
 │   ├── types/
-│   │   └── calculator.ts      # Interfaces: CalculatorState, Action, Result
+│   │   └── calculator.ts      # Interfaces: CalculatorState, ValeTrip, Result
 │   ├── context/
-│   │   └── CalculatorContext.tsx  # State management + localStorage
+│   │   ├── CalculatorContext.tsx  # State management + localStorage
+│   │   └── ThemeContext.tsx       # Toggle dark/light mode + persistencia
+│   ├── schemas/                   # Validación Zod (nuevo)
+│   │   ├── calculator.schema.ts  # Schemas de totales y porcentajes
+│   │   └── vale.schema.ts        # Schema de vales con z.enum
 │   └── hooks/
 │       ├── useCalculator.ts   # Lógica pura de cálculos
 │       └── useReceiptExport.ts  # Exportar PDF y compartir imagen
 │
 ├── modules/                   # CARACTERÍSTICAS POR DOMINIO
 │   ├── calculator/            # Módulo principal de la calculadora
-│   │   ├── CalculationContent.tsx
+│   │   ├── CalculationContent.tsx  # Orquestador + secciones colapsables
 │   │   ├── sections/
-│   │   │   ├── ConfigSection.tsx   # Porcentajes + toggle auto alquilado
+│   │   │   ├── ConfigSection.tsx   # Porcentajes + toggle vehículo alquilado
 │   │   │   ├── IncomeSection.tsx   # Input del total facturado
 │   │   │   ├── ExpensesSection.tsx # Gas (GNV) + Nafta
-│   │   │   ├── FactoriesSection.tsx # Viajes a fábricas dinámicos
-│   │   │   └── ResultsSection.tsx   # Desglose de resultados
+│   │   │   ├── ValesSection.tsx    # Viajes con vale (fábrica/otro)
+│   │   │   └── ResultsSection.tsx  # Desglose de resultados
 │   │   └── modals/
 │   │       ├── ReceiptModal.tsx    # Vista previa + PDF + compartir
 │   │       └── ConfirmResetModal.tsx # Confirmación antes de resetear
 │   │
 │   ├── layout/                 # Módulo de layout persistente
-│   │   ├── Layout.tsx          # Shell: Header + Outlet + Footer
-│   │   ├── Header.tsx          # Navegación sticky (Inicio, FAQ, Acerca de)
+│   │   ├── Layout.tsx          # Shell: ThemeProvider + Header + Outlet + Footer
+│   │   ├── Header.tsx          # Navegación sticky + toggle dark/light
 │   │   └── Footer.tsx          # Links legales + redes sociales
 │   │
 │   └── pages/                  # Módulo de páginas informativas
@@ -113,9 +119,10 @@ src/
 └── shared/                     # COMPONENTES REUTILIZABLES
     ├── ui/                     # Componentes UI genéricos
     │   ├── Button.tsx          # Botones con variantes
-    │   ├── Input.tsx           # Input numérico con prefijo $
-    │   ├── PercentageInput.tsx # Input de porcentaje con %
+    │   ├── Input.tsx           # Input con label grande, prefijo $, error
+    │   ├── PercentageInput.tsx # Input de porcentaje con label mejorado
     │   ├── Toggle.tsx          # Switch toggle accesible
+    │   ├── CollapsibleSection.tsx # Sección colapsable responsive (nuevo)
     │   └── Accordion.tsx       # Acordeón para FAQ
     └── components/
         └── LoadingScreen.tsx   # Splash screen animado
@@ -125,7 +132,8 @@ src/
 
 | Capa | Puede importar de | No puede importar de |
 |------|-------------------|----------------------|
-| `core/` | Librerías externas | `modules/`, `shared/` |
+| `core/` | Librerías externas (zod) | `modules/`, `shared/` |
+| `core/schemas/` | `zod` | `modules/`, `shared/` |
 | `modules/` | `core/`, `shared/` | Otros `modules/*` (solo a través de contratos claros) |
 | `shared/` | Librerías externas | `modules/`, `core/` (excepto tipos) |
 
@@ -157,10 +165,24 @@ carTravels/
 ### Calculos Automáticos
 - **Porcentajes configurables**: Agencia, Chofer, Auto (si es alquilado)
 - **Validación en tiempo real**: Los porcentajes deben sumar 100%
-- **Ajuste por fábricas**: Viajes con precios negociados y descuentos
+- **Ajuste por vales**: Viajes tipo "Fábrica" (con descuento) y "Otro" (sin descuento)
+- **Cálculo de agencia final**: Descuentos de vales aplicados automáticamente
+
+### Validación con Zod
+- **Mensajes claros en español**: "Máximo 99 viajes", "Completá el total del día"
+- **Validación en tiempo real** en cada campo al escribir
+- **Límite de 2 dígitos** en el campo "N° Viajes" (máximo 99 viajes realistas)
+
+### Interfaz Adaptable
+- **Modo claro/oscuro**: Toggle con ícono Sol/Luna en el header, persistente en localStorage
+- **Secciones colapsables en mobile**: Navegación paso a paso (1/5, 2/5...) para evitar scroll excesivo
+- **Labels más grandes y visibles**: `text-base font-bold` con color primario, gap reducido al input
+- **Inputs con bordes reforzados**: Mayor contraste y área táctil para mejor percepción
+- **Textos simplificados**: Mensajes cortos y directos en toda la interfaz
 
 ### Persistencia
 - Los datos se guardan automáticamente en `localStorage`
+- La preferencia de tema (claro/oscuro) también persiste
 - No requiere registro ni conexión a internet
 - Reset seguro con confirmación
 
@@ -175,12 +197,6 @@ carTravels/
 - `/terms` - Términos y condiciones
 - `/privacy` - Política de privacidad
 
-### Diseño
-- Tema oscuro "Industrial Driver"
-- Responsive mobile-first
-- Animaciones suaves y micro-interacciones
-- Accesibilidad: `prefers-reduced-motion`, focus traps, ARIA labels
-
 ---
 
 ## Capturas de Pantalla
@@ -189,7 +205,7 @@ carTravels/
   <img src="./public/images/001.png" alt="Pantalla principal" width="400" style="max-width: 100%; height: auto; margin: 8px; border-radius: 8px;" />
   <img src="./public/images/002.png" alt="Configuración de porcentajes" width="400" style="max-width: 100%; height: auto; margin: 8px; border-radius: 8px;" />
   <img src="./public/images/003.png" alt="Gestión de gastos" width="400" style="max-width: 100%; height: auto; margin: 8px; border-radius: 8px;" />
-  <img src="./public/images/004.png" alt="Viajes a fábricas" width="400" style="max-width: 100%; height: auto; margin: 8px; border-radius: 8px;" />
+  <img src="./public/images/004.png" alt="Viajes con vale" width="400" style="max-width: 100%; height: auto; margin: 8px; border-radius: 8px;" />
   <img src="./public/images/005.png" alt="Resultados y desglose" width="400" style="max-width: 100%; height: auto; margin: 8px; border-radius: 8px;" />
   <img src="./public/images/006.png" alt="Comprobante PDF" width="400" style="max-width: 100%; height: auto; margin: 8px; border-radius: 8px;" />
 </div>

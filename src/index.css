@@ -1,5 +1,5 @@
-@import 'tailwindcss';
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+@import 'tailwindcss';
 
 @theme {
   --font-display: 'Chakra Petch', system-ui, sans-serif;
@@ -31,6 +31,51 @@
   --shadow-glow-teal: 0 0 20px rgba(20, 184, 166, 0.25);
   --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
   --shadow-card-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+}
+
+.light {
+  --color-bg-deep: #f3f4f6;
+  --color-bg-card: #ffffff;
+  --color-bg-card-subtle: #f9fafb;
+  --color-bg-input: #ffffff;
+  --color-bg-hover: #e5e7eb;
+
+  --color-accent-amber: #d97706;
+  --color-accent-amber-soft: #f59e0b;
+  --color-accent-teal: #0d9488;
+  --color-accent-teal-soft: #14b8a6;
+  --color-accent-red: #dc2626;
+  --color-accent-red-soft: #ef4444;
+  --color-accent-blue: #2563eb;
+
+  --color-border-subtle: #e5e7eb;
+  --color-border-emphasis: #d1d5db;
+  --color-border-amber: #fbbf24;
+
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #374151;
+  --color-text-muted: #4b5563;
+
+  --shadow-glow-amber: 0 0 20px rgba(217, 119, 6, 0.15);
+  --shadow-glow-teal: 0 0 20px rgba(13, 148, 136, 0.15);
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-card-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+}
+
+.light .text-text-muted\/70 {
+  color: #4b5563;
+}
+
+.light .text-text-muted\/80 {
+  color: #374151;
+}
+
+@media (min-width: 768px) {
+  .collapsible-content {
+    max-height: none !important;
+    opacity: 1 !important;
+    overflow: visible !important;
+  }
 }
 
 @keyframes fadeInUp {
@@ -69,7 +114,7 @@
     box-shadow: var(--shadow-glow-amber);
   }
   50% {
-    box-shadow: 0 0 30px rgba(245, 158, 11, 0.4), 0 0 60px rgba(245, 158, 11, 0.15);
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.4), 0 0 60px rgba(245, 158, 11, 0.1);
   }
 }
 
@@ -128,6 +173,10 @@ body {
   transition: all 0.3s ease;
 }
 
+.light .card-glass {
+  background: var(--color-bg-card);
+}
+
 .card-glass:hover {
   border-color: var(--color-border-emphasis);
   box-shadow: var(--shadow-card-hover);
@@ -150,7 +199,7 @@ body {
 
 .input-glass {
   background: var(--color-bg-input);
-  border: 2px solid var(--color-border-subtle);
+  border: 2px solid var(--color-border-emphasis);
   transition: all 0.2s ease;
 }
 
@@ -158,6 +207,24 @@ body {
   border-color: var(--color-accent-amber);
   box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15), var(--shadow-glow-amber);
   outline: none;
+}
+
+.light .input-glass {
+  border-color: var(--color-border-subtle);
+}
+
+.light .input-glass:focus {
+  border-color: var(--color-accent-amber);
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.12);
+}
+
+.input-error {
+  border-color: var(--color-accent-red) !important;
+}
+
+.input-error:focus {
+  border-color: var(--color-accent-red) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
 }
 
 .btn-primary-glow {

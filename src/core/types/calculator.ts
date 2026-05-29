@@ -1,5 +1,6 @@
-export interface FactoryTrip {
+export interface ValeTrip {
   id: string
+  type: 'fabrica' | 'otro'
   name: string
   trips: number
   pricePerTrip: number
@@ -14,16 +15,18 @@ export interface CalculatorState {
   carRented: boolean
   gas: number
   petrol: number
-  factories: FactoryTrip[]
-  showFactories: boolean
+  vales: ValeTrip[]
+  showVales: boolean
 }
 
-export interface FactoryDetail {
+export interface ValeDetail {
+  id: string
+  type: 'fabrica' | 'otro'
   name: string
   trips: number
   pricePerTrip: number
   discountPerTrip: number
-  factorySubtotal: number
+  subtotal: number
   discountSubtotal: number
 }
 
@@ -35,9 +38,10 @@ export interface CalculatorResult {
   carAmount: number | null
   gas: number
   petrol: number
-  factoryTotal: number
-  discountTotal: number
-  factoryDetails: FactoryDetail[]
+  valeDetails: ValeDetail[]
+  fabricaTotal: number
+  descuentoTotal: number
+  otroTotal: number
   finalAgency: number
   percentTotal: number
   isPercentValid: boolean

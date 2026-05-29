@@ -1,9 +1,9 @@
 import { createContext, useContext, useReducer, useEffect, type ReactNode } from 'react'
-import type { CalculatorState, FactoryTrip } from '../types/calculator'
+import type { CalculatorState, ValeTrip } from '../types/calculator'
 import { initialState } from '../config/calculates.config'
 
 
-const STORAGE_KEY:string = 'cartravels-state-v1'
+const STORAGE_KEY:string = 'cartravels-state-v2'
 
 const loadStoredState = (): CalculatorState | null => {
   try {
@@ -17,6 +17,11 @@ const loadStoredState = (): CalculatorState | null => {
         typeof parsed.carPercent === 'number' &&
         parsed.agencyPercent < 50
 
+      // Si el estado guardado tiene formato viejo (factories), ignorar y empezar limpio
+      if ('factories' in parsed) {
+        return null
+      }
+
       const migratedAgency = isOldFormat
         ? parsed.agencyPercent + parsed.carPercent
         : parsed.agencyPercent ?? initialState.agencyPercent
@@ -25,9 +30,9 @@ const loadStoredState = (): CalculatorState | null => {
         ...initialState,
         ...parsed,
         agencyPercent: migratedAgency,
-        factories: (parsed.factories || []).map((f: FactoryTrip & { discountPerTrip?: number }) => ({
-          ...f,
-          discountPerTrip: f.discountPerTrip ?? 0,
+        vales: (parsed.vales || []).map((v: ValeTrip & { discountPerTrip?: number }) => ({
+          ...v,
+          discountPerTrip: v.type === 'fabrica' ? (v.discountPerTrip ?? 0) : 0,
         })),
       }
     }
@@ -53,10 +58,10 @@ type Action =
   | { type: 'SET_CAR_RENTED'; payload: boolean }
   | { type: 'SET_GAS'; payload: number }
   | { type: 'SET_PETROL'; payload: number }
-  | { type: 'SET_SHOW_FACTORIES'; payload: boolean }
-  | { type: 'ADD_FACTORY'; payload: FactoryTrip }
-  | { type: 'UPDATE_FACTORY'; payload: FactoryTrip }
-  | { type: 'REMOVE_FACTORY'; payload: string }
+  | { type: 'SET_SHOW_VALES'; payload: boolean }
+  | { type: 'ADD_VALE'; payload: ValeTrip }
+  | { type: 'UPDATE_VALE'; payload: ValeTrip }
+  | { type: 'REMOVE_VALE'; payload: string }
   | { type: 'RESET' }
 
 const calculatorReducer = (state: CalculatorState, action: Action): CalculatorState => {
@@ -80,17 +85,17 @@ const calculatorReducer = (state: CalculatorState, action: Action): CalculatorSt
       return { ...state, gas: action.payload }
     case 'SET_PETROL':
       return { ...state, petrol: action.payload }
-    case 'SET_SHOW_FACTORIES':
-      return { ...state, showFactories: action.payload, factories: action.payload ? state.factories : [] }
-    case 'ADD_FACTORY':
-      return { ...state, factories: [...state.factories, action.payload] }
-    case 'UPDATE_FACTORY':
+    case 'SET_SHOW_VALES':
+      return { ...state, showVales: action.payload, vales: action.payload ? state.vales : [] }
+    case 'ADD_VALE':
+      return { ...state, vales: [...state.vales, action.payload] }
+    case 'UPDATE_VALE':
       return {
         ...state,
-        factories: state.factories.map((f) => (f.id === action.payload.id ? action.payload : f)),
+        vales: state.vales.map((v) => (v.id === action.payload.id ? action.payload : v)),
       }
-    case 'REMOVE_FACTORY':
-      return { ...state, factories: state.factories.filter((f) => f.id !== action.payload) }
+    case 'REMOVE_VALE':
+      return { ...state, vales: state.vales.filter((v) => v.id !== action.payload) }
     case 'RESET':
       return initialState
     default:

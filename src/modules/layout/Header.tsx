@@ -1,11 +1,14 @@
-import { Car, Menu, X } from 'lucide-react'
+import { Car, Menu, X, Sun, Moon } from 'lucide-react'
 import { useState } from 'react'
 import { NavLink, useNavigate, type NavigateFunction } from 'react-router-dom'
 import { navLinks } from '../../core/config/header.config'
+import { useTheme } from '../../core/context/ThemeContext'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const navigate: NavigateFunction = useNavigate()
+  const { theme, toggleTheme } = useTheme()
+  const ThemeIcon = theme === 'dark' ? Sun : Moon
 
   const handleLogoClick = () => {
     navigate('/')
@@ -56,19 +59,31 @@ const Header = () => {
           ))}
         </nav>
 
-        <button
-          type="button"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="md:hidden flex items-center justify-center h-9 w-9 rounded-lg bg-bg-card border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-hover transition-colors cursor-pointer"
-          aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-          aria-expanded={isMenuOpen}
-        >
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="flex items-center justify-center h-9 w-9 rounded-lg bg-bg-card border border-border-subtle text-text-secondary hover:text-accent-amber hover:border-accent-amber/30 transition-all duration-200 cursor-pointer"
+            aria-label={theme === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'}
+            title={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
+          >
+            <ThemeIcon className="h-4.5 w-4.5" aria-hidden="true" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden flex items-center justify-center h-9 w-9 rounded-lg bg-bg-card border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-hover transition-colors cursor-pointer"
+            aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+            aria-expanded={isMenuOpen}
+          >
           {isMenuOpen ? (
             <X className="h-5 w-5" aria-hidden="true" />
           ) : (
             <Menu className="h-5 w-5" aria-hidden="true" />
           )}
         </button>
+        </div>
       </div>
 
       {isMenuOpen && (

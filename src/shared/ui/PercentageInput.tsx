@@ -9,13 +9,13 @@ interface PercentageInputProps {
 }
 
 const PercentageInput = ({ label, value, onChange, hint }: PercentageInputProps) => {
-  const inputId:string = useId()
+  const inputId: string = useId()
   const hintId: string = `${inputId}-hint`
 
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-1">
       <div className="flex items-center gap-2">
-        <label htmlFor={inputId} className="text-sm font-medium text-text-secondary font-display">{label}</label>
+        <label htmlFor={inputId} className="text-base font-bold text-text-primary font-display tracking-wide">{label}</label>
         <Pencil className="h-3.5 w-3.5 text-text-muted/60" aria-hidden="true" />
       </div>
       <div className="relative">
