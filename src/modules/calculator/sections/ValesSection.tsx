@@ -15,7 +15,7 @@ const defaultVale = (): ValeTrip => ({
   name: '',
   trips: 0,
   pricePerTrip: 0,
-  discountPerTrip: 0,
+  fixedFeePerTrip: 0,
 })
 
 interface ValeErrors {
@@ -45,7 +45,7 @@ const ValesSection = () => {
       }))
     }
 
-    if (field === 'pricePerTrip' || field === 'discountPerTrip') {
+    if (field === 'pricePerTrip' || field === 'fixedFeePerTrip') {
       parsed = Number(raw.replace(/\D/g, ''))
     }
 
@@ -70,7 +70,7 @@ const ValesSection = () => {
         <div className="flex flex-col gap-4 animate-fade-in">
           {state.vales.map((vale) => {
             const subtotal: number = vale.trips * vale.pricePerTrip
-            const discountSubtotal: number = vale.type === 'fabrica' ? vale.trips * vale.discountPerTrip : 0
+            const fixedFeeSubtotal: number = vale.type === 'fabrica' ? vale.trips * vale.fixedFeePerTrip : 0
             const valeErrors = errors[vale.id] || {}
 
             return (
@@ -87,7 +87,7 @@ const ValesSection = () => {
                         payload: {
                           ...vale,
                           type: e.target.value as 'fabrica' | 'otro',
-                          discountPerTrip: e.target.value === 'otro' ? 0 : vale.discountPerTrip,
+                          fixedFeePerTrip: e.target.value === 'otro' ? 0 : vale.fixedFeePerTrip,
                         },
                       })
                     }
@@ -140,12 +140,12 @@ const ValesSection = () => {
                   />
                   {vale.type === 'fabrica' && (
                     <Input
-                      label="Descuento x Viaje"
+                      label="Fijo x Viaje"
                       prefix="$"
                       numeric
                       placeholder="0"
-                      value={vale.discountPerTrip || ''}
-                      onChange={(e) => updateVale(vale, 'discountPerTrip', e.target.value)}
+                      value={vale.fixedFeePerTrip || ''}
+                      onChange={(e) => updateVale(vale, 'fixedFeePerTrip', e.target.value)}
                     />
                   )}
                 </div>
@@ -157,21 +157,21 @@ const ValesSection = () => {
                       +${subtotal.toLocaleString()}
                     </span>
                   </div>
-                  {vale.type === 'fabrica' && discountSubtotal > 0 && (
+                  {vale.type === 'fabrica' && fixedFeeSubtotal > 0 && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-text-secondary">Descuento acumulado</span>
+                      <span className="text-text-secondary">Fijo acumulado</span>
                       <span className="font-semibold font-display text-accent-red">
-                        -${discountSubtotal.toLocaleString()}
+                        -${fixedFeeSubtotal.toLocaleString()}
                       </span>
                     </div>
                   )}
-                  {vale.type === 'fabrica' && subtotal > 0 && discountSubtotal > 0 && (
+                  {vale.type === 'fabrica' && subtotal > 0 && fixedFeeSubtotal > 0 && (
                     <div className="mt-2 py-1.5 px-2 rounded-lg bg-accent-amber/8 border border-accent-amber/15 text-xs text-center font-mono">
                       <span className="text-accent-teal">${subtotal.toLocaleString()}</span>
                       <span className="text-text-muted"> − </span>
-                      <span className="text-accent-red">${discountSubtotal.toLocaleString()}</span>
+                      <span className="text-accent-red">${fixedFeeSubtotal.toLocaleString()}</span>
                       <span className="text-text-muted"> = </span>
-                      <span className="text-accent-amber font-bold">${(subtotal - discountSubtotal).toLocaleString()}</span>
+                      <span className="text-accent-amber font-bold">${(subtotal - fixedFeeSubtotal).toLocaleString()}</span>
                       <span className="text-text-muted ml-1">tu parte</span>
                     </div>
                   )}

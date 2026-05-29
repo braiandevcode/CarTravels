@@ -35,9 +35,9 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
     const fabricaTrips = state.vales
       .filter((v) => v.type === 'fabrica')
       .reduce((s, v) => s + v.trips, 0)
-    const descuentoSum = state.vales
+    const fixedFeeSum = state.vales
       .filter((v) => v.type === 'fabrica')
-      .reduce((s, v) => s + (v.discountPerTrip * v.trips), 0)
+      .reduce((s, v) => s + (v.fixedFeePerTrip * v.trips), 0)
 
     const canCalculate = result.isPercentValid && hasValidVales
 
@@ -56,7 +56,7 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
             {fabricaCount > 0 && (
               <span className="text-sm text-text-secondary flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-accent-amber" />
-                {fabricaCount} vale{fabricaCount > 1 ? 's' : ''} fábrica · {fabricaTrips} viaje{fabricaTrips > 1 ? 's' : ''} · ${descuentoSum.toLocaleString()} desc.
+                {fabricaCount} vale{fabricaCount > 1 ? 's' : ''} fábrica · {fabricaTrips} viaje{fabricaTrips > 1 ? 's' : ''} · ${fixedFeeSum.toLocaleString()} fijo
               </span>
             )}
             {otrosCount > 0 && (
@@ -187,11 +187,11 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
               </div>
             )}
 
-            {result.descuentoTotal > 0 && (
+            {result.fixedFeeTotal > 0 && (
               <div className="flex justify-between py-1.5 px-3 text-sm bg-accent-red/5 rounded-lg">
-                <span className="text-text-secondary">- Descuentos fábricas</span>
+                <span className="text-text-secondary">- Fijo fábricas</span>
                 <span className="text-accent-red font-display font-semibold">
-                  -${result.descuentoTotal.toLocaleString()}
+                  -${result.fixedFeeTotal.toLocaleString()}
                 </span>
               </div>
             )}
@@ -222,10 +222,10 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
                   <span className="text-text-muted/80">{v.trips}× ${v.pricePerTrip.toLocaleString()}</span>
                   <span className="text-accent-teal/90">+${v.subtotal.toLocaleString()}</span>
                 </div>
-                {v.type === 'fabrica' && v.discountPerTrip > 0 && (
+                {v.type === 'fabrica' && v.fixedFeePerTrip > 0 && (
                   <div className="flex justify-between mt-0.5">
-                    <span className="text-text-muted/80">{v.trips}× ${v.discountPerTrip.toLocaleString()} dto.</span>
-                    <span className="text-accent-red/90">-${v.discountSubtotal.toLocaleString()}</span>
+                    <span className="text-text-muted/80">{v.trips}× ${v.fixedFeePerTrip.toLocaleString()} fijo</span>
+                    <span className="text-accent-red/90">-${v.fixedFeeSubtotal.toLocaleString()}</span>
                   </div>
                 )}
               </div>
@@ -240,7 +240,7 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
               </span>
               <span className="text-[11px] text-text-muted/70 font-mono text-right">
                 ${result.agencyAmount.toLocaleString()}
-                {result.gananciaFabricaTotal > 0 && <> - ${result.gananciaFabricaTotal.toLocaleString()}</>}
+                {result.fixedFeeTotal > 0 && <> - ${result.fixedFeeTotal.toLocaleString()}</>}
                 {result.otroTotal > 0 && <> - ${result.otroTotal.toLocaleString()}</>}
               </span>
             </div>

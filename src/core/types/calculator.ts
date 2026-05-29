@@ -4,7 +4,7 @@ export interface ValeTrip {
   name: string
   trips: number
   pricePerTrip: number
-  discountPerTrip: number
+  fixedFeePerTrip: number
 }
 
 export interface CalculatorState {
@@ -26,9 +26,9 @@ export interface ValeDetail {
   name: string
   trips: number
   pricePerTrip: number
-  discountPerTrip: number
+  fixedFeePerTrip: number
   subtotal: number
-  discountSubtotal: number
+  fixedFeeSubtotal: number
 }
 
 export interface CalculatorResult {
@@ -41,7 +41,7 @@ export interface CalculatorResult {
   petrol: number
   valeDetails: ValeDetail[]
   fabricaTotal: number
-  descuentoTotal: number
+  fixedFeeTotal: number
   gananciaFabricaTotal: number
   otroTotal: number
   finalAgency: number

@@ -30,9 +30,9 @@ const loadStoredState = (): CalculatorState | null => {
         ...initialState,
         ...parsed,
         agencyPercent: migratedAgency,
-        vales: (parsed.vales || []).map((v: ValeTrip & { discountPerTrip?: number }) => ({
+        vales: (parsed.vales || []).map((v: ValeTrip & { fixedFeePerTrip?: number; discountPerTrip?: number }) => ({
           ...v,
-          discountPerTrip: v.type === 'fabrica' ? (v.discountPerTrip ?? 0) : 0,
+          fixedFeePerTrip: v.type === 'fabrica' ? (v.fixedFeePerTrip ?? v.discountPerTrip ?? 0) : 0,
         })),
       }
     }

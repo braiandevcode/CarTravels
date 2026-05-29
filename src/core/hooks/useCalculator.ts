@@ -9,20 +9,20 @@ export function calculateResult(state: CalculatorState): CalculatorResult {
     name: v.name,
     trips: v.trips,
     pricePerTrip: v.pricePerTrip,
-    discountPerTrip: v.type === 'fabrica' ? v.discountPerTrip : 0,
+    fixedFeePerTrip: v.type === 'fabrica' ? v.fixedFeePerTrip : 0,
     subtotal: v.trips * v.pricePerTrip,
-    discountSubtotal: v.type === 'fabrica' ? v.trips * v.discountPerTrip : 0,
+    fixedFeeSubtotal: v.type === 'fabrica' ? v.trips * v.fixedFeePerTrip : 0,
   }))
 
   const fabricaDetails = valeDetails.filter((v) => v.type === 'fabrica')
   const otroDetails = valeDetails.filter((v) => v.type === 'otro')
 
   const fabricaTotal = fabricaDetails.reduce((sum, v) => sum + v.subtotal, 0)
-  const descuentoTotal = fabricaDetails.reduce((sum, v) => sum + v.discountSubtotal, 0)
+  const fixedFeeTotal = fabricaDetails.reduce((sum, v) => sum + v.fixedFeeSubtotal, 0)
   const otroTotal = otroDetails.reduce((sum, v) => sum + v.subtotal, 0)
 
-  const gananciaFabricaTotal = fabricaTotal - descuentoTotal
-  const adjustedTotal = total - descuentoTotal
+  const gananciaFabricaTotal = fabricaTotal - fixedFeeTotal
+  const adjustedTotal = total - gananciaFabricaTotal
 
   const driverAmount: number = adjustedTotal * (driverPercent / 100)
 
@@ -43,7 +43,7 @@ export function calculateResult(state: CalculatorState): CalculatorResult {
     percentTotal = agencyPercent + driverPercent
   }
 
-  const deduction = gananciaFabricaTotal + otroTotal
+  const deduction = fixedFeeTotal + otroTotal
   const finalAgency = agencyAmount - deduction
 
   const isPercentValid = percentTotal === 100
@@ -58,7 +58,7 @@ export function calculateResult(state: CalculatorState): CalculatorResult {
     petrol,
     valeDetails,
     fabricaTotal,
-    descuentoTotal,
+    fixedFeeTotal,
     gananciaFabricaTotal,
     otroTotal,
     finalAgency,

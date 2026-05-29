@@ -229,11 +229,11 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
                     </div>
                   )}
 
-                  {result.descuentoTotal > 0 && (
+                  {result.fixedFeeTotal > 0 && (
                     <div className="flex justify-between p-2 text-sm bg-accent-red/5 rounded-lg">
-                      <span className="text-text-secondary">- Descuentos fábricas</span>
+                      <span className="text-text-secondary">- Fijo fábricas</span>
                       <span className="text-accent-red font-display font-semibold">
-                        -${result.descuentoTotal.toLocaleString()}
+                        -${result.fixedFeeTotal.toLocaleString()}
                       </span>
                     </div>
                   )}
@@ -275,13 +275,13 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
                             +${v.subtotal.toLocaleString()}
                           </span>
                         </div>
-                        {v.type === 'fabrica' && v.discountPerTrip > 0 && (
+                        {v.type === 'fabrica' && v.fixedFeePerTrip > 0 && (
                           <div className="flex justify-between mt-0.5">
                             <span className="text-text-muted/80">
-                              {v.trips} × ${v.discountPerTrip.toLocaleString()} desc.
+                              {v.trips} × ${v.fixedFeePerTrip.toLocaleString()} fijo
                             </span>
                             <span className="text-accent-red/90">
-                              -${v.discountSubtotal.toLocaleString()}
+                              -${v.fixedFeeSubtotal.toLocaleString()}
                             </span>
                           </div>
                         )}
@@ -299,7 +299,7 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
                       </span>
                       <span className="text-[11px] text-text-muted/70 font-mono text-right">
                         ${result.agencyAmount.toLocaleString()}
-                        {result.gananciaFabricaTotal > 0 && <> - ${result.gananciaFabricaTotal.toLocaleString()}</>}
+                        {result.fixedFeeTotal > 0 && <> - ${result.fixedFeeTotal.toLocaleString()}</>}
                         {result.otroTotal > 0 && <> - ${result.otroTotal.toLocaleString()}</>}
                       </span>
                     </div>
