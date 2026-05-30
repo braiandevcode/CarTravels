@@ -29,7 +29,10 @@ Calculadora de jornada diseñada para choferes de agencias de autos y taxis. Sim
 - ✅ Generación de comprobante en PDF y compartir por WhatsApp
 - ✅ Datos guardados localmente en tu dispositivo (sin registro)
 - ✅ Modo claro/oscuro con persistencia de preferencia
-- ✅ Secciones colapsables en mobile para navegación paso a paso
+- ✅ Wizard paso a paso con validación por etapa y auto-cálculo al finalizar
+- ✅ Guía de onboarding interactiva al primer ingreso
+- ✅ Landing page con英雄介绍 y acceso rápido
+- ✅ Paleta violeta (#8b5cf6) y verde manzana (#22c55e) para acciones primarias
 
 ---
 
@@ -77,7 +80,7 @@ Arquitectura modular siguiendo **Separation of Concerns (SoC)**:
 src/
 ├── main.tsx                   # Entry point de React
 ├── App.tsx                    # Router y configuración principal
-├── index.css                  # Tailwind v4 + tema personalizado
+├── index.css                  # Tailwind v4 + tema violeta personalizado
 │
 ├── core/                      # LÓGICA CENTRAL (sin dependencia de UI)
 │   ├── types/
@@ -85,7 +88,7 @@ src/
 │   ├── context/
 │   │   ├── CalculatorContext.tsx  # State management + localStorage
 │   │   └── ThemeContext.tsx       # Toggle dark/light mode + persistencia
-│   ├── schemas/                   # Validación Zod (nuevo)
+│   ├── schemas/                   # Validación Zod
 │   │   ├── calculator.schema.ts  # Schemas de totales y porcentajes
 │   │   └── vale.schema.ts        # Schema de vales con z.enum
 │   └── hooks/
@@ -94,7 +97,9 @@ src/
 │
 ├── modules/                   # CARACTERÍSTICAS POR DOMINIO
 │   ├── calculator/            # Módulo principal de la calculadora
-│   │   ├── CalculationContent.tsx  # Orquestador + secciones colapsables
+│   │   ├── pages/
+│   │   │   ├── WizardPage.tsx       # Orquestador wizard 5 pasos + validación
+│   │   │   └── OnboardingGuide.tsx  # Guía interactiva de primer uso
 │   │   ├── sections/
 │   │   │   ├── ConfigSection.tsx   # Porcentajes + toggle vehículo alquilado
 │   │   │   ├── IncomeSection.tsx   # Input del total facturado
@@ -110,7 +115,9 @@ src/
 │   │   ├── Header.tsx          # Navegación sticky + toggle dark/light
 │   │   └── Footer.tsx          # Links legales + redes sociales
 │   │
-│   └── pages/                  # Módulo de páginas informativas
+│   └── pages/                  # Módulo de páginas
+│       ├── HomePage.tsx        # Landing ↔ Wizard según estado
+│       ├── LandingPage.tsx     # Hero + "Empezar"
 │       ├── FAQPage.tsx         # Preguntas frecuentes
 │       ├── AboutPage.tsx       # Acerca de carTravels
 │       ├── TermsPage.tsx       # Términos y condiciones
@@ -120,9 +127,9 @@ src/
     ├── ui/                     # Componentes UI genéricos
     │   ├── Button.tsx          # Botones con variantes
     │   ├── Input.tsx           # Input con label grande, prefijo $, error
-    │   ├── PercentageInput.tsx # Input de porcentaje con label mejorado
-    │   ├── Toggle.tsx          # Switch toggle accesible
-    │   ├── CollapsibleSection.tsx # Sección colapsable responsive (nuevo)
+    │   ├── PercentageInput.tsx # Input de porcentaje violeta
+    │   ├── Toggle.tsx          # Switch toggle verde manzana
+    │   ├── StepIndicator.tsx   # Indicador de progreso 5 pasos
     │   └── Accordion.tsx       # Acordeón para FAQ
     └── components/
         └── LoadingScreen.tsx   # Splash screen animado
@@ -162,22 +169,27 @@ carTravels/
 
 ## Características Principales
 
-### Flujo de Cálculo
+### Flujo Wizard
 
-El orden de las secciones guía al conductor paso a paso:
+El asistente guía al conductor en 5 pasos con validación antes de avanzar:
 
-1. **Total del día** — Ingresá lo que facturaste
-2. **Viajes con Vale** — Definí todos los vales (fábrica con precio fijo de planilla, otro sin fijo)
-3. **Reparto** — Configurá porcentajes de agencia/conductor y si el vehículo es alquilado
-4. **Gastos** — Gas (GNV) y Nafta
-5. **Resultados** — Presioná **"Calcular resultados"** para ver el desglose completo
+| Paso | Sección | Validación |
+|------|---------|------------|
+| 1 | **Total del día** — Ingresá lo que facturaste | `total > 0` |
+| 2 | **Viajes con Vale** — Definí vales con toggle ON | Si toggle activado: debe haber vales con datos completos |
+| 3 | **Porcentajes** — Agencia, conductor y vehículo (si alquilado) | Suma = 100% |
+| 4 | **Gastos** — Gas (GNV) y Nafta | Siempre válido |
+| 5 | **Resultados** — Desglose completo + botón "Ver Recibo" | Se calcula automáticamente al llegar |
+
+- El botón **"Siguiente"** se deshabilita hasta que el paso actual sea válido.
+- Si volvés atrás y cambiás datos, al regresar al paso 5 se recalcula automáticamente.
+- No hay botón "Calcular resultados": el cálculo ocurre al llegar al último paso.
 
 ### Cálculos Automáticos
 - **Porcentajes configurables**: Agencia, Conductor, Vehículo (si alquilado)
 - **Validación en tiempo real**: Los porcentajes deben sumar 100%
-- **Ajuste por vales tipo "Fábrica"**: El precio fijo de planilla se descuenta del precio real acumulado. La ganancia del conductor en esos viajes (`precioReal − precioFijo`) se resta del total del día (`total − gananciaFábrica`). El fijo acumulado se deduce del porcentaje de la agencia.
-- **Cálculo de agencia final**: `agencia − fijoFábricas − totalOtros`
-- **Botón "Calcular resultados"**: Los resultados no se muestran hasta presionar el botón. Si cambiás algún dato, los resultados se ocultan automáticamente y hay que volver a calcular.
+- **Ajuste por vales tipo "Fábrica"**: El precio fijo de planilla se descuenta del precio real acumulado. La ganancia del conductor en esos viajes (`precioReal − precioFijo` = `gananciaFábrica`) se resta del total del día (`total − gananciaFábrica`). El fijo acumulado se deduce del porcentaje de la agencia.
+- **Cálculo de agencia final**: `agencia − fijoFábricas` (si hay fábrica) `− totalOtros` (si hay otros)
 
 ### Validación con Zod
 - **Mensajes claros en español**: "Máximo 99 viajes", "Completá el total del día"
@@ -187,10 +199,14 @@ El orden de las secciones guía al conductor paso a paso:
 
 ### Interfaz Adaptable
 - **Modo claro/oscuro**: Toggle con ícono Sol/Luna en el header, persistente en localStorage
-- **Secciones colapsables en mobile**: Navegación paso a paso (1/5, 2/5...) para evitar scroll excesivo
+- **Wizard paso a paso**: 5 pasos con `StepIndicator` circular + etiquetas en desktop, compacto en mobile
+- **Onboarding interactivo**: Guía multi-paso al primer ingreso con botón "Saltar", persiste en localStorage
+- **Transiciones responsive**: Slide horizontal en mobile (≤768px), fade + translateY en desktop (>768px)
+- **Paleta violeta (#8b5cf6)**: Acciones primarias, botón "Siguiente", % sign
+- **Verde manzana (#22c55e)**: Estados activos (toggle ON), elementos completados
+- **Landing page**: Hero con CTA "Empezar", 3 tarjetas de características
 - **Labels más grandes y visibles**: `text-base font-bold` con color primario, gap reducido al input
 - **Inputs con bordes reforzados**: Mayor contraste y área táctil para mejor percepción
-- **Textos simplificados**: Mensajes cortos y directos en toda la interfaz
 
 ### Persistencia
 - Los datos se guardan automáticamente en `localStorage`
@@ -203,7 +219,7 @@ El orden de las secciones guía al conductor paso a paso:
 - **Compartir por WhatsApp**: Convierte el comprobante a imagen y usa Web Share API
 
 ### Ruteo SPA
-- `/` - Calculadora principal
+- `/` - Landing page → wizard de cálculo (manejado por estado interno, no por ruta)
 - `/faq` - Preguntas frecuentes
 - `/about` - Acerca de carTravels
 - `/terms` - Términos y condiciones

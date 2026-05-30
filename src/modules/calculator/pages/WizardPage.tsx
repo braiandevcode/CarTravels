@@ -23,7 +23,7 @@ const stepComponents = [
 const stepValid = (state: ReturnType<typeof useCalculatorContext>['state'], step: number): boolean => {
   switch (step) {
     case 0: return state.total > 0
-    case 1: return !state.showVales || state.vales.length === 0 || state.vales.every((v) => v.trips > 0 && v.pricePerTrip > 0)
+    case 1: return !state.showVales || (state.vales.length > 0 && state.vales.every((v) => v.trips > 0 && v.pricePerTrip > 0))
     case 2: {
       const total = state.carRented
         ? state.agencyPercent + state.driverPercent + state.carPercent

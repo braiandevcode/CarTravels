@@ -88,7 +88,7 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 animate-fade-in"
+      className="fixed inset-0 z-50 flex items-start md:items-center justify-center bg-black/70 p-4 overflow-y-auto animate-fade-in"
       onClick={handleBackdropClick}
     >
       <div
@@ -113,7 +113,7 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
 
         <div
           id="receipt-content"
-          className="flex-1 overflow-y-auto p-6"
+          className="flex-1 overflow-y-auto p-6 min-h-0"
         >
           <div className="text-center mb-6">
             <div className="inline-flex items-center gap-2 mb-2">
