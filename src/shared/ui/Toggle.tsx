@@ -18,12 +18,12 @@ const Toggle = ({ label, enabled, onChange }: ToggleProps) => {
         aria-checked={enabled}
         aria-labelledby={labelId}
         onClick={() => onChange(!enabled)}
-        className={`relative inline-flex h-8 w-14 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-accent-amber/30 focus:ring-offset-2 focus:ring-offset-bg-deep ${
-          enabled ? 'bg-accent-amber' : 'bg-border-subtle'
+        className={`relative inline-flex h-8 w-14 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-accent-green/30 focus:ring-offset-2 focus:ring-offset-bg-deep ${
+          enabled ? 'bg-accent-green' : 'bg-border-subtle'
         }`}
         style={
           enabled
-            ? { boxShadow: '0 0 15px rgba(245, 158, 11, 0.4)' }
+            ? { boxShadow: '0 0 15px rgba(34, 197, 94, 0.4)' }
             : {}
         }
       >

@@ -32,7 +32,7 @@ const PercentageInput = ({ label, value, onChange, hint }: PercentageInputProps)
           aria-describedby={hint ? hintId : undefined}
           className="w-full rounded-xl input-glass px-4 py-3.5 pr-12 text-lg font-semibold text-text-primary font-display tracking-wide [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         />
-        <span aria-hidden="true" className="absolute right-4 top-1/2 -translate-y-1/2 text-lg font-bold text-accent-amber font-display">%</span>
+        <span aria-hidden="true" className="absolute right-4 top-1/2 -translate-y-1/2 text-lg font-bold text-accent-violet font-display">%</span>
       </div>
       {hint && <span id={hintId} className="text-xs text-text-muted/70">{hint}</span>}
     </div>

@@ -27,8 +27,8 @@ const Header = () => {
           onClick={handleLogoClick}
           className="flex items-center gap-3 cursor-pointer"
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-amber/15 border border-accent-amber/20">
-            <Car className="h-5 w-5 text-accent-amber" aria-hidden="true" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-violet/15 border border-accent-violet/20">
+            <Car className="h-5 w-5 text-accent-violet" aria-hidden="true" />
           </div>
           <div className="flex flex-col">
             <span className="text-xl font-black text-text-primary font-display tracking-tight">
@@ -49,7 +49,7 @@ const Header = () => {
               className={({ isActive }) =>
                 `px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer font-display tracking-wide ${
                   isActive
-                    ? 'bg-accent-amber/15 text-accent-amber border border-accent-amber/20'
+                    ? 'bg-accent-violet/15 text-accent-violet border border-accent-violet/20'
                     : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary border border-transparent'
                 }`
               }
@@ -63,7 +63,7 @@ const Header = () => {
           <button
             type="button"
             onClick={toggleTheme}
-            className="flex items-center justify-center h-9 w-9 rounded-lg bg-bg-card border border-border-subtle text-text-secondary hover:text-accent-amber hover:border-accent-amber/30 transition-all duration-200 cursor-pointer"
+            className="flex items-center justify-center h-9 w-9 rounded-lg bg-bg-card border border-border-subtle text-text-secondary hover:text-accent-violet hover:border-accent-violet/30 transition-all duration-200 cursor-pointer"
             aria-label={theme === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'}
             title={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
           >
@@ -100,8 +100,8 @@ const Header = () => {
                 className={({ isActive }) =>
                   `px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer font-display tracking-wide ${
                     isActive
-                      ? 'bg-accent-amber/15 text-accent-amber border-l-4 border-accent-amber'
-                      : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary border-l-4 border-transparent'
+                    ? 'bg-accent-violet/15 text-accent-violet border-l-4 border-accent-violet'
+                    : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary border-l-4 border-transparent'
                   }`
                 }
               >
