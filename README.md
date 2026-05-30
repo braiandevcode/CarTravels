@@ -167,7 +167,7 @@ carTravels/
 El orden de las secciones guía al conductor paso a paso:
 
 1. **Total del día** — Ingresá lo que facturaste
-2. **Viajes con Vale** — Definí todos los vales (fábrica con descuento, otro sin descuento)
+2. **Viajes con Vale** — Definí todos los vales (fábrica con precio fijo de planilla, otro sin fijo)
 3. **Reparto** — Configurá porcentajes de agencia/conductor y si el vehículo es alquilado
 4. **Gastos** — Gas (GNV) y Nafta
 5. **Resultados** — Presioná **"Calcular resultados"** para ver el desglose completo
@@ -175,8 +175,8 @@ El orden de las secciones guía al conductor paso a paso:
 ### Cálculos Automáticos
 - **Porcentajes configurables**: Agencia, Conductor, Vehículo (si alquilado)
 - **Validación en tiempo real**: Los porcentajes deben sumar 100%
-- **Ajuste por vales tipo "Fábrica"**: El descuento se resta directamente del total del día (`total - descuentoTotal`). La ganancia del conductor en esos viajes (`precioReal - descuento`) se deduce del porcentaje de la agencia.
-- **Cálculo de agencia final**: `agencia - gananciaFábrica - totalOtros`
+- **Ajuste por vales tipo "Fábrica"**: El precio fijo de planilla se descuenta del precio real acumulado. La ganancia del conductor en esos viajes (`precioReal − precioFijo`) se resta del total del día (`total − gananciaFábrica`). El fijo acumulado se deduce del porcentaje de la agencia.
+- **Cálculo de agencia final**: `agencia − fijoFábricas − totalOtros`
 - **Botón "Calcular resultados"**: Los resultados no se muestran hasta presionar el botón. Si cambiás algún dato, los resultados se ocultan automáticamente y hay que volver a calcular.
 
 ### Validación con Zod

@@ -20,17 +20,17 @@ These are the possible scenarios that a "driver" usually deals with:
 
 * 3.A: If they had trips with "Vales" (vouchers), selecting the vale type: "Fábrica" (Factory) or "Otro" (Other). These are negotiated prices that depend on the agency and the driver.
 * 3.B: Depending on the vale type:
-  - "Fábrica": name, number of trips, real price per trip, discount per trip.
-  - "Otro": name, number of trips, real price per trip (no discount).
-* 3.C: Only "Fábrica" vales affect the adjusted base. The discount (`descuento`) is subtracted directly from the total: `adjustedTotal = total - descuentoTotal`. The driver's earnings from fábrica trips (`gananciaFabricaTotal = fabricaTotal - descuentoTotal`) are deducted from the agency's share. "Otro" vales do NOT affect the adjusted total.
+  - "Fábrica": name, number of trips, real price per trip, fixed fee per trip (precio fijo de planilla).
+  - "Otro": name, number of trips, real price per trip (no fixed fee).
+* 3.C: Only "Fábrica" vales affect the adjusted base. The driver enters the real price (`precioReal`) and the fixed fee (`precioFijo`) from the agency's planilla. The driver's earnings from fábrica trips (`gananciaFabricaTotal = fabricaTotal - fixedFeeTotal`) are subtracted from the day's total: `adjustedTotal = total - gananciaFabricaTotal`. "Otro" vales do NOT affect the adjusted total.
 * 3.D: The agency's percentage amount gets reduced by deductions from the vales:
-  - If "Fábrica" vales exist: deduct `gananciaFabricaTotal` (`precioReal - descuento`).
+  - If "Fábrica" vales exist: deduct `fixedFeeTotal` (the fixed fee the agency charges per planilla).
   - If "Otro" vales exist: deduct sum of all real prices (`otroTotal`).
   - If both: deduct both sums.
-  - `finalAgency = agencyAmount - gananciaFabricaTotal - otroTotal`.
+  - `finalAgency = agencyAmount - fixedFeeTotal - otroTotal`.
 * 3.E: The summarized usual calculation flow that the "driver" does is as follows:
 - total: X amount
-- If there are "Fábrica" vales: `adjustedTotal = total - descuentoTotal`
+- If there are "Fábrica" vales: `adjustedTotal = total - (fabricaTotal - fixedFeeTotal)` = `total - gananciaFabricaTotal`
 - If no "Fábrica" vales: `adjustedTotal = total` (unchanged)
 - agency: `adjustedTotal × agencyPercent / 100`
 - driver: `adjustedTotal × driverPercent / 100`
@@ -38,7 +38,7 @@ These are the possible scenarios that a "driver" usually deals with:
 - petrol: X amount
 - vehicle (if rented): `(adjustedTotal × carPercent / 100) - (gas + petrol)`. Enabled via a toggle — does not modify percentages automatically.
 - Vale deductions:
-  - If "Fábrica" vales exist: `deduction += gananciaFabricaTotal` (= `fabricaTotal - descuentoTotal`)
+  - If "Fábrica" vales exist: `deduction += fixedFeeTotal` (= sum of all fixed fees)
   - If "Otro" vales exist: `deduction += otroTotal`
 - finalAgency = agencyAmount - deduction
 - If no vales: finalAgency = agencyAmount (no deduction)
