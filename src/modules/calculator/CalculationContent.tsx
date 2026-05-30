@@ -59,7 +59,7 @@ const CalculatorContent = () => {
     },
     {
       step: 3,
-      title: 'Reparto',
+        title: 'Porcentajes',
       icon: (
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-amber/15">
           <Settings className="h-4.5 w-4.5 text-accent-amber" aria-hidden="true" />
@@ -100,7 +100,7 @@ const CalculatorContent = () => {
               className="flex items-center gap-1.5 rounded-lg bg-accent-red/10 px-3 py-1.5 text-sm font-medium text-accent-red transition-colors hover:bg-accent-red/20 cursor-pointer border border-accent-red/20 font-display"
             >
               <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-              Nuevo
+              Reiniciar todo
             </button>
           </div>
         )}

@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import useCalculatorContext from '../../../core/context/CalculatorContext'
 import { calculateResult } from '../../../core/hooks/useCalculator'
 import Button from '../../../shared/ui/Button'
-import { Calculator, Eye, AlertTriangle, RotateCcw, CheckCircle2 } from 'lucide-react'
+import { Calculator, Eye, AlertTriangle, CheckCircle2 } from 'lucide-react'
 import type { CalculatorResult } from '../../../core/types/calculator'
 
 interface ResultsSectionProps {
@@ -196,15 +196,6 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
               </div>
             )}
 
-            {result.gananciaFabricaTotal > 0 && (
-              <div className="flex justify-between py-1.5 px-3 text-sm bg-accent-amber/5 rounded-lg">
-                <span className="text-text-secondary">Te llevás de fábrica</span>
-                <span className="text-accent-amber font-display font-semibold">
-                  +${result.gananciaFabricaTotal.toLocaleString()}
-                </span>
-              </div>
-            )}
-
             {result.otroTotal > 0 && (
               <div className="flex justify-between py-1.5 px-3 text-sm bg-accent-red/5 rounded-lg">
                 <span className="text-text-secondary">- Total otros</span>
@@ -224,7 +215,7 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
                 </div>
                 {v.type === 'fabrica' && v.fixedFeePerTrip > 0 && (
                   <div className="flex justify-between mt-0.5">
-                    <span className="text-text-muted/80">{v.trips}× ${v.fixedFeePerTrip.toLocaleString()} fijo</span>
+                    <span className="text-text-muted/80">{v.trips} × ${v.fixedFeePerTrip.toLocaleString()} fijo</span>
                     <span className="text-accent-red/90">-${v.fixedFeeSubtotal.toLocaleString()}</span>
                   </div>
                 )}
@@ -262,25 +253,15 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
         </div>
       )}
 
-      <div className="mt-5 flex gap-3">
-        <div className="flex-1">
-          <Button
-            variant="primary"
-            onClick={onViewReceipt}
-            disabled={!result.isPercentValid}
-          >
-            <Eye className="h-4 w-4" aria-hidden="true" />
-            {result.isPercentValid ? 'Ver Recibo' : 'Ajustá los %'}
-          </Button>
-        </div>
-        <button
-          type="button"
-          onClick={() => dispatch({ type: 'CALCULATE' })}
-          className="rounded-xl border border-border-subtle p-3 text-text-muted hover:text-text-primary hover:bg-bg-hover transition-all cursor-pointer"
-          aria-label="Recalcular"
+      <div className="mt-5">
+        <Button
+          variant="primary"
+          onClick={onViewReceipt}
+          disabled={!result.isPercentValid}
         >
-          <RotateCcw className="h-4 w-4" aria-hidden="true" />
-        </button>
+          <Eye className="h-4 w-4" aria-hidden="true" />
+          {result.isPercentValid ? 'Ver Recibo' : 'Ajustá los %'}
+        </Button>
       </div>
     </div>
   )

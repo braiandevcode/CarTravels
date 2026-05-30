@@ -1,4 +1,4 @@
-import { type ReactNode, useRef } from 'react'
+import { type ReactNode, useRef, useEffect } from 'react'
 import { ChevronDown } from 'lucide-react'
 
 interface CollapsibleSectionProps {
@@ -21,6 +21,18 @@ const CollapsibleSection = ({
   onToggle,
 }: CollapsibleSectionProps) => {
   const contentRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!isExpanded || !contentRef.current) return
+
+    const focusable = contentRef.current.querySelector<HTMLElement>(
+      'input, select, textarea, button, [tabindex]:not([tabindex="-1"])'
+    )
+    focusable?.focus()
+
+    const section = contentRef.current.closest<HTMLElement>('[class*="rounded-2xl"]')
+    section?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }, [isExpanded])
 
   return (
     <div className="rounded-2xl card-glass card-accent-top overflow-hidden animate-fade-in-up">
