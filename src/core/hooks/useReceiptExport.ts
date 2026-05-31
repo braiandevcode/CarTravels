@@ -2,6 +2,18 @@ import { useCallback } from 'react'
 import { toCanvas } from 'html-to-image'
 import jsPDF from 'jspdf'
 
+function parseRgb(color: string): { r: number; g: number; b: number } | null {
+  const m = color.match(/rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/)
+  if (!m) return null
+  return { r: Number(m[1]), g: Number(m[2]), b: Number(m[3]) }
+}
+
+function luminance(color: string): number | null {
+  const p = parseRgb(color)
+  if (!p) return null
+  return 0.299 * p.r + 0.587 * p.g + 0.114 * p.b
+}
+
 function fixExportStyles(element: HTMLElement): void {
   element.style.overflow = 'visible'
   element.style.maxHeight = 'none'
@@ -17,33 +29,22 @@ function fixExportStyles(element: HTMLElement): void {
 
   const all = element.querySelectorAll<HTMLElement>('*')
   all.forEach((el) => {
-    const color = getComputedStyle(el).color
-    const bg = getComputedStyle(el).backgroundColor
-    const borderColor = getComputedStyle(el).borderColor
+    const computed = getComputedStyle(el)
+    const bgLum = luminance(computed.backgroundColor)
+    const textLum = luminance(computed.color)
+    const borderLum = luminance(computed.borderColor)
 
-    const isLightText =
-      color.includes('248, 250, 252') ||
-      color.includes('148, 163, 184') ||
-      color.includes('100, 116, 139') ||
-      color.includes('20, 184, 166')
+    if (bgLum !== null && bgLum < 128) {
+      el.style.backgroundColor = '#ffffff'
+    }
+    el.style.boxShadow = 'none'
 
-    const hasDarkBg =
-      bg.includes('10, 15, 26') ||
-      bg.includes('17, 24, 39') ||
-      bg.includes('13, 20, 33') ||
-      bg.includes('15, 23, 42')
+    if (textLum !== null && textLum > 180) {
+      el.style.color = '#0f172a'
+    }
 
-    const hasDarkBorder =
-      borderColor.includes('31, 41, 55') ||
-      borderColor.includes('55, 65, 81')
-
-    if (isLightText || hasDarkBg || hasDarkBorder) {
-      if (isLightText) el.style.color = '#0f172a'
-      if (hasDarkBg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
-        el.style.backgroundColor = '#ffffff'
-      }
-      el.style.boxShadow = 'none'
-      if (hasDarkBorder) el.style.borderColor = '#e2e8f0'
+    if (borderLum !== null && borderLum < 100) {
+      el.style.borderColor = '#e2e8f0'
     }
   })
 }
@@ -52,13 +53,28 @@ async function renderOffscreen(elementId: string): Promise<HTMLCanvasElement> {
   const original = document.getElementById(elementId)
   if (!original) throw new Error(`Element #${elementId} not found`)
 
+  const originalWidth = original.offsetWidth
+  const originalHeight = original.offsetHeight
   const clone = original.cloneNode(true) as HTMLElement
-  clone.style.position = 'fixed'
-  clone.style.left = '-9999px'
-  clone.style.top = '0'
-  clone.style.zIndex = '-1'
+  clone.style.width = originalWidth + 'px'
+  clone.style.height = originalHeight + 'px'
 
-  document.body.appendChild(clone)
+  const wrapper = document.createElement('div')
+  wrapper.style.position = 'fixed'
+  wrapper.style.top = '0'
+  wrapper.style.left = '0'
+  wrapper.style.width = '0'
+  wrapper.style.height = '0'
+  wrapper.style.overflow = 'visible'
+  wrapper.style.zIndex = '-1000'
+  wrapper.style.pointerEvents = 'none'
+
+  clone.style.position = 'absolute'
+  clone.style.top = '0'
+  clone.style.left = '0'
+
+  wrapper.appendChild(clone)
+  document.body.appendChild(wrapper)
   fixExportStyles(clone)
 
   try {
@@ -68,7 +84,7 @@ async function renderOffscreen(elementId: string): Promise<HTMLCanvasElement> {
       cacheBust: true,
     })
   } finally {
-    document.body.removeChild(clone)
+    document.body.removeChild(wrapper)
   }
 }
 
@@ -125,14 +141,7 @@ export function useReceiptExport() {
     const xPos = margin + (maxImgWidth - imgWidth) / 2
     const yPos = margin
 
-    pdf.addImage(
-      imgData,
-      'PNG',
-      xPos,
-      yPos,
-      imgWidth,
-      imgHeight
-    )
+    pdf.addImage(imgData, 'PNG', xPos, yPos, imgWidth, imgHeight)
 
     pdf.save(filename)
   }, [])

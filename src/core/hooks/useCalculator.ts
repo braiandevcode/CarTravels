@@ -1,9 +1,10 @@
 import type { CalculatorState, CalculatorResult, ValeDetail } from '../types/calculator'
 
 export function calculateResult(state: CalculatorState): CalculatorResult {
-  const { total, agencyPercent, driverPercent, carPercent, carRented, gas, petrol, vales } = state
+  const { total, agencyPercent, driverPercent, carPercent, carRented, gas, petrol, vales, showVales } = state
+  const effectiveVales = showVales ? vales : []
 
-  const valeDetails: ValeDetail[] = vales.map((v) => ({
+  const valeDetails: ValeDetail[] = effectiveVales.map((v) => ({
     id: v.id,
     type: v.type,
     name: v.name,
