@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import useCalculatorContext from '../../../core/context/CalculatorContext'
 import Input from '../../../shared/ui/Input'
 import Button from '../../../shared/ui/Button'
@@ -6,17 +6,6 @@ import Toggle from '../../../shared/ui/Toggle'
 import { Trash2, Plus } from 'lucide-react'
 import { validateTrips } from '../../../core/schemas/calculator.schema'
 import type { ValeTrip } from '../../../core/types/calculator'
-
-let valeIdCounter: number = 0
-
-const defaultVale = (): ValeTrip => ({
-  id: `vale-${++valeIdCounter}`,
-  type: 'fabrica',
-  name: '',
-  trips: 0,
-  pricePerTrip: 0,
-  fixedFeePerTrip: 0,
-})
 
 interface ValeErrors {
   trips?: string
@@ -26,10 +15,32 @@ interface ValeErrors {
 const ValesSection = () => {
   const { state, dispatch } = useCalculatorContext()
   const [errors, setErrors] = useState<Record<string, ValeErrors>>({})
+  const prevValesLength = useRef(state.vales.length)
+  const valesContainerRef = useRef<HTMLDivElement>(null)
 
-  const addVale = (): void => {
+  const defaultVale = useCallback((): ValeTrip => ({
+    id: `vale-${crypto.randomUUID()}`,
+    type: 'fabrica',
+    name: '',
+    trips: 0,
+    pricePerTrip: 0,
+    fixedFeePerTrip: 0,
+  }), [])
+
+  const addVale = useCallback((): void => {
     dispatch({ type: 'ADD_VALE', payload: defaultVale() })
-  }
+  }, [defaultVale])
+
+  useEffect(() => {
+    if (state.vales.length > prevValesLength.current && valesContainerRef.current) {
+      const container = valesContainerRef.current
+      const lastVale = container.lastElementChild
+      if (lastVale instanceof HTMLElement) {
+        lastVale.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
+    }
+    prevValesLength.current = state.vales.length
+  }, [state.vales.length])
 
   const updateVale = (vale: ValeTrip, field: string, raw: string): void => {
     let parsed: string | number = raw
@@ -67,7 +78,7 @@ const ValesSection = () => {
       </div>
 
       {state.showVales && (
-        <div className="flex flex-col gap-4 animate-fade-in">
+        <div ref={valesContainerRef} className="flex flex-col gap-4 animate-fade-in">
           {state.vales.map((vale) => {
             const subtotal: number = vale.trips * vale.pricePerTrip
             const fixedFeeSubtotal: number = vale.type === 'fabrica' ? vale.trips * vale.fixedFeePerTrip : 0

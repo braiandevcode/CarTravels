@@ -94,6 +94,14 @@ const WizardPage = ({ onBackToLanding }: WizardPageProps) => {
       <div className="flex justify-end mb-4 gap-2">
         <button
           type="button"
+          onClick={handleReset}
+          className="inline-flex items-center gap-1.5 rounded-lg bg-accent-red/10 px-3 py-1.5 text-xs font-medium text-accent-red transition-colors hover:bg-accent-red/20 cursor-pointer font-display border border-accent-red/20"
+        >
+          <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+          Reiniciar
+        </button>
+        <button
+          type="button"
           onClick={() => setShowOnboarding(true)}
           className="rounded-lg bg-bg-hover px-3 py-1.5 text-xs font-medium text-text-muted transition-colors hover:text-text-primary cursor-pointer font-display border border-border-subtle"
         >
@@ -141,17 +149,6 @@ const WizardPage = ({ onBackToLanding }: WizardPageProps) => {
         </div>
 
         <div className="flex items-center gap-3">
-          {currentStep === 4 && (
-            <button
-              type="button"
-              onClick={handleReset}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-accent-red/10 px-4 py-2.5 text-sm font-medium text-accent-red transition-colors hover:bg-accent-red/20 cursor-pointer font-display border border-accent-red/20"
-            >
-              <RotateCcw className="h-4 w-4" aria-hidden="true" />
-              Reiniciar
-            </button>
-          )}
-
           {currentStep < 4 && (
             <button
               type="button"

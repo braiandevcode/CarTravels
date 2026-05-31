@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { X, Car, Calculator, Percent, Fuel, FileText, Check } from 'lucide-react'
 
 interface OnboardingGuideProps {
@@ -57,9 +58,9 @@ const OnboardingGuide = ({ isOpen, onClose }: OnboardingGuideProps) => {
 
   const s = steps[step]
 
-  return (
+  const modal = (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 animate-fade-in"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 p-4 animate-fade-in"
       onClick={(e) => { if (e.target === e.currentTarget) handleClose() }}
     >
       <div
@@ -129,6 +130,8 @@ const OnboardingGuide = ({ isOpen, onClose }: OnboardingGuideProps) => {
       </div>
     </div>
   )
+
+  return createPortal(modal, document.body)
 }
 
 export default OnboardingGuide

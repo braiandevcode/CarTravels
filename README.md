@@ -1,4 +1,4 @@
-# CarTravels
+# CarTravels v1.6.0
 
 Calculadora de jornada diseñada para choferes de agencias de autos y taxis. Simplifica tus cálculos diarios.
 
@@ -31,7 +31,7 @@ Calculadora de jornada diseñada para choferes de agencias de autos y taxis. Sim
 - ✅ Modo claro/oscuro con persistencia de preferencia
 - ✅ Wizard paso a paso con validación por etapa y auto-cálculo al finalizar
 - ✅ Guía de onboarding interactiva al primer ingreso
-- ✅ Landing page con英雄介绍 y acceso rápido
+- ✅ Landing page con presentación y acceso rápido
 - ✅ Paleta violeta (#8b5cf6) y verde manzana (#22c55e) para acciones primarias
 
 ---
@@ -69,6 +69,8 @@ Calculadora de jornada diseñada para choferes de agencias de autos y taxis. Sim
 | `lucide-react` | 1.16.0 | Íconos de la UI |
 | `react-icons` | 5.6.0 | Íconos de marcas (GitHub, Instagram) |
 | `zod` | 4.4.3 | Validación de esquemas con mensajes en español |
+| `clsx` | 2.1.1 | Conditional class joining |
+| `tailwind-merge` | 3.6.0 | Resolución inteligente de conflictos Tailwind |
 
 ---
 
@@ -124,6 +126,8 @@ src/
 │       └── PrivacyPage.tsx     # Política de privacidad
 │
 └── shared/                     # COMPONENTES REUTILIZABLES
+    ├── lib/
+    │   └── utils.ts            # cn() helper (clsx + tailwind-merge)
     ├── ui/                     # Componentes UI genéricos
     │   ├── Button.tsx          # Botones con variantes
     │   ├── Input.tsx           # Input con label grande, prefijo $, error
@@ -179,17 +183,20 @@ El asistente guía al conductor en 5 pasos con validación antes de avanzar:
 | 2 | **Viajes con Vale** — Definí vales con toggle ON | Si toggle activado: debe haber vales con datos completos |
 | 3 | **Porcentajes** — Agencia, conductor y vehículo (si alquilado) | Suma = 100% |
 | 4 | **Gastos** — Gas (GNV) y Nafta | Siempre válido |
-| 5 | **Resultados** — Desglose completo + botón "Ver Recibo" | Se calcula automáticamente al llegar |
+| 5 | **Resultados** — Desglose completo + botón "Ver Recibo" | Se calcula automáticamente al llegar. Botón "Reiniciar" siempre visible en barra superior |
 
 - El botón **"Siguiente"** se deshabilita hasta que el paso actual sea válido.
 - Si volvés atrás y cambiás datos, al regresar al paso 5 se recalcula automáticamente.
 - No hay botón "Calcular resultados": el cálculo ocurre al llegar al último paso.
+- El botón **"Reiniciar"** (rojo) está siempre visible en la barra superior para reiniciar todos los datos con confirmación.
 
 ### Cálculos Automáticos
 - **Porcentajes configurables**: Agencia, Conductor, Vehículo (si alquilado)
 - **Validación en tiempo real**: Los porcentajes deben sumar 100%
 - **Ajuste por vales tipo "Fábrica"**: El precio fijo de planilla se descuenta del precio real acumulado. La ganancia del conductor en esos viajes (`precioReal − precioFijo` = `gananciaFábrica`) se resta del total del día (`total − gananciaFábrica`). El fijo acumulado se deduce del porcentaje de la agencia.
 - **Cálculo de agencia final**: `agencia − fijoFábricas` (si hay fábrica) `− totalOtros` (si hay otros)
+- **Visual de vales**: Líneas de resumen "+ Precio real fábricas" y "- Fijo fábricas" eliminadas. Detalle individual muestra "fijo planilla" en naranja sin signo negativo
+- **Labels actualizados**: "Tu parte" → "Conductor", "Gas (GNV)" → "Gas", "Reparto" → "Porcentajes"
 
 ### Validación con Zod
 - **Mensajes claros en español**: "Máximo 99 viajes", "Completá el total del día"
@@ -207,6 +214,9 @@ El asistente guía al conductor en 5 pasos con validación antes de avanzar:
 - **Landing page**: Hero con CTA "Empezar", 3 tarjetas de características
 - **Labels más grandes y visibles**: `text-base font-bold` con color primario, gap reducido al input
 - **Inputs con bordes reforzados**: Mayor contraste y área táctil para mejor percepción
+- **Modales vía portal**: `ReceiptModal` y `OnboardingGuide` se renderizan con `createPortal(document.body)` — elimina bugs de `position: fixed` con ancestros transform
+- **Botón "Reiniciar" persistente**: Visible en todos los pasos del wizard en la barra superior
+- **Scroll automático a nuevo vale**: Al agregar un vale, la vista se desplaza suavemente al nuevo elemento
 
 ### Persistencia
 - Los datos se guardan automáticamente en `localStorage`
@@ -217,6 +227,8 @@ El asistente guía al conductor en 5 pasos con validación antes de avanzar:
 ### Exportación
 - **Descargar PDF**: Comprobante listo para imprimir o guardar
 - **Compartir por WhatsApp**: Convierte el comprobante a imagen y usa Web Share API
+- **Export sin manipulación del DOM**: Clona el elemento offscreen, aplica estilos de export al clon, renderiza con `html-to-image`, y remueve el clon — zero flash visual
+- **Estados durante exportación**: Botones se deshabilitan y muestran "Exportando..." mientras se genera; modal se auto-cierra al finalizar
 
 ### Ruteo SPA
 - `/` - Landing page → wizard de cálculo (manejado por estado interno, no por ruta)
