@@ -12,7 +12,10 @@ interface ResultsSectionProps {
 export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
   const { state, dispatch } = useCalculatorContext();
 
-  const result: CalculatorResult = useMemo(() => calculateResult(state),[state]);
+  const result: CalculatorResult = useMemo(
+    () => calculateResult(state),
+    [state],
+  );
 
   if (state.total === 0) {
     return (
@@ -149,7 +152,8 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
       <div className="rounded-xl bg-accent-amber/8 border border-accent-amber/15 p-3 space-y-2">
         <div className="flex justify-between p-2 rounded-lg hover:bg-bg-input/50 transition-colors">
           <span className="text-text-secondary">
-            Agencia ({result.agencyDisplayPercent}%) + desc.
+            Agencia ({result.agencyDisplayPercent}%){" "}
+            {result.valeDetails.length > 0 ? "+ desc" : ""}
           </span>
           <span
             className={`font-semibold font-display ${result.finalAgency >= 0 ? "text-accent-amber" : "text-accent-red"}`}
@@ -158,6 +162,8 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
           </span>
         </div>
       </div>
+
+      {result.valeDetails.length > 0 && (
         <div className="text-xs text-text-muted/70 -mt-0.5 mb-1 pl-3 font-mono bg-bg-input/50 py-1.5 px-3 rounded-lg">
           ${result.agencyAmount.toLocaleString()}
           {result.fixedFeeTotal > 0 && (
@@ -165,6 +171,7 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
           )}
           {result.otroTotal > 0 && <> - ${result.otroTotal.toLocaleString()}</>}
         </div>
+      )}
 
       <div className="rounded-xl bg-accent-amber/8 border border-accent-amber/15 p-3 space-y-2">
         <div className="flex justify-between">
@@ -233,16 +240,7 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
             <span className="text-xs font-semibold text-text-muted uppercase tracking-wide font-display block px-3 mb-2">
               Vales
             </span>
-
-            {result.otroTotal > 0 && (
-              <div className="flex justify-between py-1.5 px-3 text-sm bg-accent-red/5 rounded-lg">
-                <span className="text-text-secondary">- Total otros</span>
-                <span className="text-accent-red font-display font-semibold">
-                  -${result.otroTotal.toLocaleString()}
-                </span>
-              </div>
-            )}
-
+            
             {result.valeDetails.map((v, i) => (
               <div
                 key={i}

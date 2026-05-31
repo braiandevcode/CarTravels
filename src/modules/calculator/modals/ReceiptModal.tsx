@@ -180,21 +180,28 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
               <div>
                 <div className="flex justify-between p-2 rounded-lg hover:bg-bg-input/50 transition-colors">
                   <span className="text-text-secondary">
-                    Agencia ({result.agencyDisplayPercent}%) + desc.
+                    Agencia ({result.agencyDisplayPercent}%){" "}
+                    {result.valeDetails.length > 0
+                      ? "+ desc"
+                      : ""}
                   </span>
-                  <span className={`font-semibold font-display ${result.finalAgency >= 0 ? "text-accent-amber" : "text-accent-red"}`}>
+                  <span
+                    className={`font-semibold font-display ${result.finalAgency >= 0 ? "text-accent-amber" : "text-accent-red"}`}
+                  >
                     ${result.finalAgency.toLocaleString()}
                   </span>
                 </div>
-                <span className="text-[11px] text-text-muted/70 font-mono text-right px-2">
-                  ${result.agencyAmount.toLocaleString()}
-                  {result.fixedFeeTotal > 0 && (
-                    <> - ${result.fixedFeeTotal.toLocaleString()}</>
-                  )}
-                  {result.otroTotal > 0 && (
-                    <> - ${result.otroTotal.toLocaleString()}</>
-                  )}
-                </span>
+                {result.valeDetails.length > 0 && (
+                  <span className="text-[11px] text-text-muted/70 font-mono text-right px-2">
+                    ${result.agencyAmount.toLocaleString()}
+                    {result.fixedFeeTotal > 0 && (
+                      <> - ${result.fixedFeeTotal.toLocaleString()}</>
+                    )}
+                    {result.otroTotal > 0 && (
+                      <> - ${result.otroTotal.toLocaleString()}</>
+                    )}
+                  </span>
+                )}
               </div>
 
               <div className="flex justify-between p-2 rounded-lg hover:bg-bg-input/50 transition-colors">
@@ -274,15 +281,6 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
                       Vales
                     </span>
                   </div>
-
-                  {result.otroTotal > 0 && (
-                    <div className="flex justify-between p-2 text-sm bg-accent-red/5 rounded-lg">
-                      <span className="text-text-secondary">- Total otros</span>
-                      <span className="text-accent-red font-display font-semibold">
-                        -${result.otroTotal.toLocaleString()}
-                      </span>
-                    </div>
-                  )}
 
                   <div className="mt-1 pl-2">
                     {result.valeDetails.map((v, i) => (

@@ -119,7 +119,7 @@ const ValesSection = () => {
                 </div>
 
                 <Input
-                  label="Nombre"
+                  label="Nombre cliente/entidad"
                   placeholder="Ej: Cliente X"
                   value={vale.name}
                   onChange={(e) => {
@@ -131,7 +131,7 @@ const ValesSection = () => {
                 />
 
                 <Input
-                  label="N° Viajes"
+                  label="Cantidad de Viajes"
                   numeric
                   placeholder="0"
                   maxLength={2}
@@ -142,7 +142,7 @@ const ValesSection = () => {
 
                 <div className="grid grid-cols-2 gap-3">
                   <Input
-                    label="Precio real x Viaje"
+                    label="Precio real"
                     prefix="$"
                     numeric
                     placeholder="0"
@@ -151,7 +151,7 @@ const ValesSection = () => {
                   />
                   {vale.type === 'fabrica' && (
                     <Input
-                      label="Fijo x Viaje"
+                      label="precio planilla"
                       prefix="$"
                       numeric
                       placeholder="0"
@@ -170,9 +170,9 @@ const ValesSection = () => {
                   </div>
                   {vale.type === 'fabrica' && fixedFeeSubtotal > 0 && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-text-secondary">Fijo acumulado</span>
-                      <span className="font-semibold font-display text-accent-red">
-                        -${fixedFeeSubtotal.toLocaleString()}
+                      <span className="text-text-secondary">Fijo planilla acumulado</span>
+                      <span className="font-semibold font-display text-orange-400">
+                        +${fixedFeeSubtotal.toLocaleString()}
                       </span>
                     </div>
                   )}
