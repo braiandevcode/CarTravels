@@ -14,8 +14,9 @@ const App = () => {
     return () => clearTimeout(timer);
   }, []); // on Mount
 
+  // SI ESTA CARGANDO
   if (isLoading) {
-    return <LoadingScreen />;
+    return <LoadingScreen />; //MOSTRAR LOADING
   }
 
   return <RouterProvider router={router} />;
