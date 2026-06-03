@@ -1,13 +1,11 @@
-import { createContext, useContext, useReducer, useEffect, type ReactNode } from 'react'
+import { createContext, useContext, useReducer, useEffect, type ReactNode, type Dispatch } from 'react'
 import type { CalculatorState, ValeTrip } from '../types/calculator'
 import { initialState } from '../config/calculates.config'
-
-
-const STORAGE_KEY:string = 'cartravels-state-v2'
+import { EStoreKey } from '../enum/EStoreKey'
 
 const loadStoredState = (): CalculatorState | null => {
   try {
-    const stored:string | null = localStorage.getItem(STORAGE_KEY)
+    const stored:string | null = localStorage.getItem(EStoreKey.CAR_TRAVELS)
     if (stored) {
       const parsed = JSON.parse(stored)
 
@@ -42,9 +40,9 @@ const loadStoredState = (): CalculatorState | null => {
   return null
 }
 
-const saveStateToStorage = (state: CalculatorState) => {
+const saveStateToStorage = (state: CalculatorState):void => {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+    localStorage.setItem(EStoreKey.CAR_TRAVELS, JSON.stringify(state))
   } catch {
     // Ignore storage errors
   }
@@ -109,12 +107,12 @@ const calculatorReducer = (state: CalculatorState, action: Action): CalculatorSt
 
 interface CalculatorContextType {
   state: CalculatorState
-  dispatch: React.Dispatch<Action>
+  dispatch: Dispatch<Action>
 }
 
 const CalculatorContext = createContext<CalculatorContextType | null>(null)
 
-export function CalculatorProvider({ children }: { children: ReactNode }) {
+export const CalculatorProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(
     calculatorReducer,
     initialState,

@@ -1,9 +1,10 @@
 import { ArrowLeft, Shield } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 
-const currentYear: number = new Date().getFullYear()
+const CURRENT_YEAR: number = new Date().getFullYear()
 
-const PrivacyPage = () => {
+const PrivacyPage = ():ReactNode => {
   return (
     <div className="min-h-[calc(100vh-140px)]">
       <div className="mx-auto max-w-3xl px-4 py-8 md:px-6 md:py-10">
@@ -143,7 +144,7 @@ const PrivacyPage = () => {
 
           <div className="text-center py-4">
             <p className="text-sm text-text-muted">
-              © {currentYear} carTravels. Todos los derechos reservados.
+              © {CURRENT_YEAR} carTravels. Todos los derechos reservados.
             </p>
           </div>
         </div>

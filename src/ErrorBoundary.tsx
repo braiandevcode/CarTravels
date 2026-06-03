@@ -4,18 +4,18 @@ interface ErrorBoundaryState{
     hasError: boolean;
 }
 
-interface ErrorBoundaryPropos{
+interface ErrorBoundaryProps{
     children: ReactNode;
 }
 
-class ErrorBoundary extends Component<ErrorBoundaryPropos, ErrorBoundaryState>{
-    constructor(props:ErrorBoundaryPropos){
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState>{
+    constructor(props:ErrorBoundaryProps){
         super(props)
         this.state = { hasError: false }
 
     }
 
-    static getDerivedStateFromProps(_:Error): ErrorBoundaryState{
+    static getDerivedStateFromError(_:Error): ErrorBoundaryState{
         return { hasError: true };
     }
 
