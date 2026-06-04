@@ -36,17 +36,17 @@ const TermsPage = ():ReactNode => {
               1. Lo que tenés que saber
             </h2>
             <p className="text-text-secondary leading-relaxed">
-              Al usar carTravels, estás de acuerdo con estas reglas. Si no estás de acuerdo
+              Al usar CarTravels, estás de acuerdo con estas reglas. Si no estás de acuerdo
               con algo, por favor no uses la aplicación.
             </p>
           </section>
 
           <section className="card-glass rounded-xl p-6">
             <h2 className="text-xl font-bold text-text-primary font-display mb-4">
-              2. ¿Qué hace carTravels?
+              2. ¿Qué hace CarTravels?
             </h2>
             <p className="text-text-secondary leading-relaxed mb-4">
-              carTravels es una calculadora que te ayuda a hacer las cuentas de tu jornada
+              CarTravels es una calculadora que te ayuda a hacer las cuentas de tu jornada
               de forma automática. Con ella podés:
             </p>
             <ul className="space-y-2 text-text-secondary pl-6 list-disc">
@@ -62,7 +62,7 @@ const TermsPage = ():ReactNode => {
               3. Tus datos
             </h2>
             <p className="text-text-secondary leading-relaxed mb-4">
-              Todo lo que ingresas en carTravels se guarda directamente en tu teléfono
+              Todo lo que ingresas en CarTravels se guarda directamente en tu teléfono
               o computadora. Esto significa:
             </p>
             <ul className="space-y-2 text-text-secondary pl-6 list-disc">
@@ -77,9 +77,9 @@ const TermsPage = ():ReactNode => {
               4. Importante
             </h2>
             <p className="text-text-secondary leading-relaxed">
-              carTravels está para ayudarte, pero siempre te recomendamos verificar los
+              CarTravels está para ayudarte, pero siempre te recomendamos verificar los
               resultados antes de presentarlos a tu agencia. Si bien nos esforzamos para
-              que todo sea exacto, no podemos garantizar que no haya errores. carTravels
+              que todo sea exacto, no podemos garantizar que no haya errores. CarTravels
               no se responsabiliza por diferencias en los cálculos ni por decisiones que
               tomes basadas en los resultados.
             </p>
@@ -90,7 +90,7 @@ const TermsPage = ():ReactNode => {
               5. Uso permitido
             </h2>
             <p className="text-text-secondary leading-relaxed">
-              carTravels es para uso personal. Podés usarla para hacer tus propios cálculos
+              CarTravels es para uso personal. Podés usarla para hacer tus propios cálculos
               de jornada. No está permitido: modificar la aplicación, usarla para fines
               ilegales, o venderla/distribuirla a otras personas.
             </p>
@@ -102,7 +102,7 @@ const TermsPage = ():ReactNode => {
             </h2>
             <p className="text-text-secondary leading-relaxed">
               Podemos actualizar estos términos en cualquier momento. Si seguís usando
-              carTravels después de un cambio, significa que estás de acuerdo con las
+              CarTravels después de un cambio, significa que estás de acuerdo con las
               nuevas reglas.
             </p>
           </section>
@@ -119,7 +119,7 @@ const TermsPage = ():ReactNode => {
 
           <div className="text-center py-4">
             <p className="text-sm text-text-muted">
-              © {currentYear} carTravels. Todos los derechos reservados.
+              © {currentYear} CarTravels. Todos los derechos reservados.
             </p>
           </div>
         </div>

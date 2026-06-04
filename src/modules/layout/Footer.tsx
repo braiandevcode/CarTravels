@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { legalLinks, socialLinks } from '../../core/config/footer.config'
 import { Car } from 'lucide-react'
+import { FaCar } from 'react-icons/fa'
 
 const currentYear: number = new Date().getFullYear()
 
@@ -12,10 +13,10 @@ const Footer = () => {
           <div className="flex flex-col gap-3">
             <Link to="/" className="flex items-center gap-2 cursor-pointer">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-teal/15 border border-accent-teal/20">
-                <Car className="h-4 w-4 text-accent-teal" aria-hidden="true" />
+                <FaCar className="h-4 w-4 text-accent-teal" aria-hidden="true" />
               </div>
               <span className="text-lg font-black text-text-primary font-display tracking-tight">
-                carTravels
+                CarTravels
               </span>
             </Link>
             <p className="text-sm text-text-secondary max-w-xs">
@@ -67,10 +68,7 @@ const Footer = () => {
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-2">
           <p className="text-xs text-text-muted font-display">
-            © {currentYear} carTravels. Todos los derechos reservados.
-          </p>
-          <p className="text-xs text-text-muted">
-            Hecho con ❤️ para los choferes
+            © {currentYear} CarTravels. Todos los derechos reservados.
           </p>
         </div>
       </div>

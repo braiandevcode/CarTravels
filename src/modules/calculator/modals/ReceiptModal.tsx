@@ -6,6 +6,7 @@ import { useReceiptExport } from "../../../core/hooks/useReceiptExport";
 import Button from "../../../shared/ui/Button";
 import { X, Download, Share2, AlertTriangle } from "lucide-react";
 import type { CalculatorResult } from "../../../core/types/calculator";
+import { FaCar } from "react-icons/fa";
 
 interface ReceiptModalProps {
   isOpen: boolean;
@@ -14,35 +15,33 @@ interface ReceiptModalProps {
 
 const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
   const { state } = useCalculatorContext();
-  const result: CalculatorResult = useMemo(
-    () => calculateResult(state),
-    [state],
-  );
+  const result: CalculatorResult = useMemo(() => calculateResult(state),[state]);
   const { shareImage, downloadPDF } = useReceiptExport();
-  const modalRef = useRef<HTMLDivElement>(null);
-
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const D: Document = document;
+  const BODY_STYLE:CSSStyleDeclaration = D.body.style;
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden";
+      BODY_STYLE.overflow = "hidden";
       window.dispatchEvent(new CustomEvent("modal:open"));
     } else {
-      document.body.style.overflow = "";
+      BODY_STYLE.overflow = "";
     }
     return () => {
-      document.body.style.overflow = "";
+      BODY_STYLE.overflow = "";
     };
   }, [isOpen]);
 
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
+    const handleEscape = (e: KeyboardEvent):void => {
       if (e.key === "Escape") {
         onClose();
       }
     };
     if (isOpen) {
-      document.addEventListener("keydown", handleEscape);
+      D.addEventListener("keydown", handleEscape);
     }
-    return () => document.removeEventListener("keydown", handleEscape);
+    return () => D.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>): void => {
@@ -62,17 +61,16 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
       );
     const firstElement: HTMLElement = focusableElements[0];
-    const lastElement: HTMLElement =
-      focusableElements[focusableElements.length - 1];
+    const lastElement: HTMLElement = focusableElements[focusableElements.length - 1];
 
     firstElement?.focus();
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Tab") {
-        if (e.shiftKey && document.activeElement === firstElement) {
+        if (e.shiftKey && D.activeElement === firstElement) {
           e.preventDefault();
           lastElement?.focus();
-        } else if (!e.shiftKey && document.activeElement === lastElement) {
+        } else if (!e.shiftKey && D.activeElement === lastElement) {
           e.preventDefault();
           firstElement?.focus();
         }
@@ -110,10 +108,7 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
   const MODAL_TITLE_ID: string = "receipt-modal-title";
 
   return createPortal(
-    <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 p-4 animate-fade-in"
-      onClick={handleBackdropClick}
-    >
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 p-4 animate-fade-in" onClick={handleBackdropClick}>
       <div
         ref={modalRef}
         role="dialog"
@@ -147,12 +142,12 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
             <div className="inline-flex items-center gap-2 mb-2">
               <div className="w-10 h-10 rounded-full bg-accent-amber/20 flex items-center justify-center">
                 <span className="text-xl" role="img" aria-label="Auto">
-                  🚗
+                  <FaCar />
                 </span>
               </div>
             </div>
             <h1 className="text-2xl font-black text-text-primary font-display tracking-tight">
-              carTravels
+              CarTravels
             </h1>
             <p className="text-xs text-text-muted mt-1 font-display">
               Resumen de jornada

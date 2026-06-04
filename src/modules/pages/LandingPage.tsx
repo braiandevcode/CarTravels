@@ -38,7 +38,7 @@ const LandingPage = ({ onStart }: LandingPageProps) => {
           </h1>
           <p className="text-base md:text-lg text-text-secondary max-w-lg mx-auto leading-relaxed">
             Olvidate de los cálculos tediosos al final del turno.{' '}
-            <span className="text-text-primary font-semibold">carTravels</span> hace el trabajo
+            <span className="text-text-primary font-semibold">CarTravels</span> hace el trabajo
             por vos: ingresá los datos y tené todo listo en segundos.
           </p>
         </div>

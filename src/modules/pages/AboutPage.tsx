@@ -37,7 +37,7 @@ const AboutPage = () => {
           </h1>
 
           <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto mb-10">
-            carTravels simplifica el cálculo de tu jornada laboral. Ingresá tus datos,
+            CarTravels simplifica el cálculo de tu jornada laboral. Ingresá tus datos,
             y nosotros nos encargamos de distribuir cada peso entre agencia, conductor
             y vehículo. Sin errores, sin complicaciones.
           </p>
@@ -57,7 +57,7 @@ const AboutPage = () => {
               </h2>
               <p className="text-text-secondary mb-6 leading-relaxed">
                 Sabemos que al finalizar una jornada larga, lo último que querés es
-                ponerte a hacer cuentas en una libreta. carTravels fue creado
+                ponerte a hacer cuentas en una libreta. CarTravels fue creado
                 específicamente para choferes de agencias de autos y taxis.
               </p>
               <ul className="space-y-3">
@@ -134,7 +134,7 @@ const AboutPage = () => {
             </h2>
             <p className="text-lg text-text-secondary max-w-xl mx-auto mb-8">
               Dejá las libretas y las calculadoras manuales atrás.
-              Probá carTravels ahora y simplificá tu jornada.
+              Probá CarTravels ahora y simplificá tu jornada.
             </p>
             <Link to="/">
               <Button variant="primary" fullWidth={false} className="text-lg px-10 py-4">

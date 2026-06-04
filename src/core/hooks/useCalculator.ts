@@ -15,17 +15,19 @@ export function calculateResult(state: CalculatorState): CalculatorResult {
     fixedFeeSubtotal: v.type === 'fabrica' ? v.trips * v.fixedFeePerTrip : 0,
   }))
 
-  const fabricaDetails = valeDetails.filter((v) => v.type === 'fabrica')
-  const otroDetails = valeDetails.filter((v) => v.type === 'otro')
+  const ONE_HUNDRED: number = 100
 
-  const fabricaTotal = fabricaDetails.reduce((sum, v) => sum + v.subtotal, 0)
-  const fixedFeeTotal = fabricaDetails.reduce((sum, v) => sum + v.fixedFeeSubtotal, 0)
-  const otroTotal = otroDetails.reduce((sum, v) => sum + v.subtotal, 0)
+  const fabricaDetails: ValeDetail[] = valeDetails.filter((v) => v.type === 'fabrica')
+  const otroDetails: ValeDetail[] = valeDetails.filter((v) => v.type === 'otro')
 
-  const gananciaFabricaTotal = fabricaTotal - fixedFeeTotal
-  const adjustedTotal = total - gananciaFabricaTotal
+  const fabricaTotal: number = fabricaDetails.reduce((sum, v) => sum + v.subtotal, 0)
+  const fixedFeeTotal: number = fabricaDetails.reduce((sum, v) => sum + v.fixedFeeSubtotal, 0)
+  const otroTotal: number = otroDetails.reduce((sum, v) => sum + v.subtotal, 0)
 
-  const driverAmount: number = adjustedTotal * (driverPercent / 100)
+  const gananciaFabricaTotal: number = fabricaTotal - fixedFeeTotal
+  const adjustedTotal: number = total - gananciaFabricaTotal
+
+  const driverAmount: number = adjustedTotal * (driverPercent / ONE_HUNDRED)
 
   let agencyAmount: number
   let agencyDisplayPercent: number
@@ -33,13 +35,13 @@ export function calculateResult(state: CalculatorState): CalculatorResult {
   let percentTotal: number
 
   if (carRented) {
-    agencyAmount = adjustedTotal * (agencyPercent / 100)
+    agencyAmount = adjustedTotal * (agencyPercent / ONE_HUNDRED)
     agencyDisplayPercent = agencyPercent
-    carAmount = (adjustedTotal * (carPercent / 100)) - (gas + petrol)
+    carAmount = (adjustedTotal * (carPercent / ONE_HUNDRED)) - (gas + petrol)
     percentTotal = agencyPercent + driverPercent + carPercent
   } else {
     agencyDisplayPercent = agencyPercent
-    agencyAmount = adjustedTotal * (agencyDisplayPercent / 100)
+    agencyAmount = adjustedTotal * (agencyDisplayPercent / ONE_HUNDRED)
     carAmount = null
     percentTotal = agencyPercent + driverPercent
   }
@@ -47,7 +49,7 @@ export function calculateResult(state: CalculatorState): CalculatorResult {
   const deduction = fixedFeeTotal + otroTotal
   const finalAgency = agencyAmount - deduction
 
-  const isPercentValid = percentTotal === 100
+  const isPercentValid = percentTotal === ONE_HUNDRED
 
   return {
     adjustedTotal,

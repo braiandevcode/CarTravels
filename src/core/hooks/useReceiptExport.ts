@@ -1,6 +1,8 @@
 import { useCallback } from 'react'
 import jsPDF from 'jspdf'
 import { renderOffscreen } from '../../modules/utils/canvasRenderer'
+import { ENameReceip } from '../enum/ENameReceip'
+import { EExtentionFile } from '../enum/EExtentionFile'
 
 export const useReceiptExport = () => {
   const shareImage = useCallback(async (elementId: string) => {
@@ -25,26 +27,27 @@ export const useReceiptExport = () => {
     }
   }, [])
 
-  const downloadPDF = useCallback(async (elementId: string, filename = 'resumen-cartravels.pdf') => {
-    const canvas = await renderOffscreen(elementId)
+  const downloadPDF = useCallback(async (elementId: string, filename = `${ENameReceip.NAME_SUMMARY}.${EExtentionFile.PDF}`) => {
+    const canvas: HTMLCanvasElement = await renderOffscreen(elementId)
 
-    const imgData = canvas.toDataURL('image/png')
-    const pdf = new jsPDF({
+    const imgData: string = canvas.toDataURL('image/png');
+
+    const pdf: jsPDF = new jsPDF({
       orientation: 'p',
       unit: 'mm',
       format: 'a4',
       compress: true,
     })
 
-    const pageWidth = pdf.internal.pageSize.getWidth()
-    const pageHeight = pdf.internal.pageSize.getHeight()
-    const margin = 12
+    const pageWidth: number = pdf.internal.pageSize.getWidth()
+    const pageHeight: number = pdf.internal.pageSize.getHeight()
+    const margin: number = 12
 
-    const maxImgWidth = pageWidth - margin * 2
-    const maxImgHeight = pageHeight - margin * 2
+    const maxImgWidth: number = pageWidth - margin * 2
+    const maxImgHeight: number = pageHeight - margin * 2
 
-    let imgWidth = maxImgWidth
-    let imgHeight = (canvas.height * imgWidth) / canvas.width
+    let imgWidth: number = maxImgWidth
+    let imgHeight: number = (canvas.height * imgWidth) / canvas.width
 
     if (imgHeight > maxImgHeight) {
       const scale = maxImgHeight / imgHeight
@@ -52,8 +55,8 @@ export const useReceiptExport = () => {
       imgWidth = imgWidth * scale
     }
 
-    const xPos = margin + (maxImgWidth - imgWidth) / 2
-    const yPos = margin
+    const xPos: number = margin + (maxImgWidth - imgWidth) / 2
+    const yPos: number = margin
 
     pdf.addImage(imgData, 'PNG', xPos, yPos, imgWidth, imgHeight)
 

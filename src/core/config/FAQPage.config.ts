@@ -5,14 +5,14 @@ interface FaqItems{
 
 const faqItems: FaqItems[] = [
   {
-    question: '¿Cómo funciona carTravels?',
+    question: '¿Cómo funciona CarTravels?',
     answer:
-      'carTravels es una calculadora diseñada para simplificar los cálculos diarios de los choferes. Simplemente ingresá el total del día, tus gastos (gas, nafta), y los viajes a fábricas. La herramienta calcula automáticamente la distribución entre la agencia, el conductor y el vehículo (si es alquilado).',
+      'CarTravels es una calculadora diseñada para simplificar los cálculos diarios de los choferes. Simplemente ingresá el total del día, tus gastos (gas, nafta), y los viajes a fábricas. La herramienta calcula automáticamente la distribución entre la agencia, el conductor y el vehículo (si es alquilado).',
   },
   {
     question: '¿Tengo que crear una cuenta?',
     answer:
-      'No. carTravels funciona directamente en tu navegador sin necesidad de registrarte. Tus datos se guardan directamente en tu teléfono o computadora, y solo vos tenés acceso a ellos. No necesitás email ni contraseña.',
+      'No. CarTravels funciona directamente en tu navegador sin necesidad de registrarte. Tus datos se guardan directamente en tu teléfono o computadora, y solo vos tenés acceso a ellos. No necesitás email ni contraseña.',
   },
   {
     question: '¿Qué pasa con mis datos? ¿Son seguros?',
@@ -37,7 +37,7 @@ const faqItems: FaqItems[] = [
   {
     question: '¿Funciona sin internet?',
     answer:
-      'Sí. Una vez que la página carga por primera vez, podés usar carTravels sin necesidad de tener datos o WiFi. Solo necesitás internet la primera vez para abrir la página. Después podés usarla incluso en zonas sin señal.',
+      'Sí. Una vez que la página carga por primera vez, podés usar CarTravels sin necesidad de tener datos o WiFi. Solo necesitás internet la primera vez para abrir la página. Después podés usarla incluso en zonas sin señal.',
   },
 ]
 
