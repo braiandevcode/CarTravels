@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, type ReactNode } from 'react'
+import { useState, useRef, useEffect, useId, type ReactNode } from 'react'
 
 interface IHelpHintProps {
   text: string
@@ -8,7 +8,7 @@ interface IHelpHintProps {
 const HelpHint = ({ text, side = 'top' }: IHelpHintProps): ReactNode => {
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
-  const contentId = `help-hint-${useRef(crypto.randomUUID()).current}`
+  const contentId = `help-hint-${useId()}`
 
   const HANDLE_TOGGLE = (): void => setIsOpen((prev) => !prev)
   const HANDLE_CLOSE = (): void => setIsOpen(false)

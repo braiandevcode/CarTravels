@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import useCalculatorContext from '../../../core/context/CalculatorContext'
+import useCalculatorContext from '../../../core/context/useCalculatorContext'
 import Toggle from '../../../shared/ui/Toggle'
 import HelpHint from '../../../shared/ui/HelpHint'
 import PercentageInput from '../../../shared/ui/PercentageInput'

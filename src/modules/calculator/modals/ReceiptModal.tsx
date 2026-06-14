@@ -1,12 +1,11 @@
-import { useMemo, useEffect, useRef, useState } from 'react';
+import { useMemo, useEffect, useRef, useState, type MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
-import useCalculatorContext from '../../../core/context/CalculatorContext';
+import useCalculatorContext from '../../../core/context/useCalculatorContext';
 import { calculateResult } from '../../../core/hooks/useCalculator';
 import { useReceiptExport } from '../../../core/hooks/useReceiptExport';
 import Button from '../../../shared/ui/Button';
 import { X, Download, Share2, AlertTriangle } from 'lucide-react';
 import type { ICalculatorResult } from '../../../core/types/calculator';
-// @ts-ignore: ICalculatorResult is used via the type annotation on line 18
 import { FaCar } from 'react-icons/fa';
 
 interface ReceiptModalProps {
@@ -19,9 +18,9 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
   const result: ICalculatorResult = useMemo(() => calculateResult(state),[state]);
   const { shareImage, downloadPDF } = useReceiptExport();
   const modalRef = useRef<HTMLDivElement | null>(null);
-  const D: Document = document;
-  const BODY_STYLE:CSSStyleDeclaration = D.body.style;
+
   useEffect(() => {
+    const BODY_STYLE: CSSStyleDeclaration = document.body.style;
     if (isOpen) {
       BODY_STYLE.overflow = "hidden";
       window.dispatchEvent(new CustomEvent("modal:open"));
@@ -40,12 +39,12 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
       }
     };
     if (isOpen) {
-      D.addEventListener("keydown", handleEscape);
+      document.addEventListener("keydown", handleEscape);
     }
-    return () => D.removeEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
 
-  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>): void => {
+  const handleBackdropClick = (e: MouseEvent<HTMLDivElement>): void => {
     if (e.target === e.currentTarget) {
       onClose();
     }
@@ -68,10 +67,10 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Tab") {
-        if (e.shiftKey && D.activeElement === firstElement) {
+        if (e.shiftKey && document.activeElement === firstElement) {
           e.preventDefault();
           lastElement?.focus();
-        } else if (!e.shiftKey && D.activeElement === lastElement) {
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
           e.preventDefault();
           firstElement?.focus();
         }

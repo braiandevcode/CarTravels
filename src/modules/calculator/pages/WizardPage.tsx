@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback, type JSX } from 'react'
+import { useState, useCallback, type JSX } from 'react'
 import { ArrowLeft, ArrowRight, RotateCcw } from 'lucide-react'
-import useCalculatorContext from '../../../core/context/CalculatorContext'
+import useCalculatorContext from '../../../core/context/useCalculatorContext'
 import HelpHint from '../../../shared/ui/HelpHint'
 import StepIndicator from '../../../shared/ui/StepIndicator'
 import IncomeSection from '../sections/IncomeSection'
@@ -18,7 +18,7 @@ import { EStoreKey } from '../../../core/enum/EStoreKey'
 const STEP_LABELS: string[] = ['Ingreso', 'Vales', '%', 'Gastos', 'Resultados']
 const STEP_HELP_TEXTS: string[] = [
   'Ingresá el total del día para continuar',
-  'Completá los datos de todos los vales (nombre, viajes y precio)',
+  'Guardá o actualizá todos los vales para continuar',
   'Los porcentajes deben sumar 100%',
   '',
 ]
@@ -33,7 +33,7 @@ const stepComponents: (() => JSX.Element)[] = [
 const stepValid = (state: ReturnType<typeof useCalculatorContext>['state'], step: number): boolean => {
   switch (step) {
     case 0: return state.total > 0
-    case 1: return !state.showVouchers || (state.vouchers.length > 0 && state.vouchers.every((v) => v.trips > 0 && v.pricePerTrip > 0 && v.name.trim().length > 0))
+    case 1: return !state.showVouchers || (state.vouchers.length > 0 && state.vouchers.every((v) => v.saved && !v.editing && v.trips > 0 && v.pricePerTrip > 0 && v.name.trim().length > 0))
     case 2: {
       const total:number = state.carRented
         ? state.agencyPercent + state.driverPercent + state.carPercent
@@ -60,15 +60,10 @@ const WizardPage = ({ onBackToLanding }: IWizardPageProps) => {
   const [direction, setDirection] = useState<TDirection | null>(null)
   const [receiptOpen, setReceiptOpen] = useState<boolean>(false)
   const [confirmResetOpen, setConfirmResetOpen] = useState<boolean>(false)
-  const [showOnboarding, setShowOnboarding] = useState<boolean>(false)
-
-  const CHECK_SEEN_ONBOARDING = (): void => {
+  const [showOnboarding, setShowOnboarding] = useState<boolean>(() => {
     const SEEN_VALUE_OF_KEY: string | null = localStorage.getItem(EStoreKey.CAR_TRAVELS_ON_BOARDING)
-    if (!SEEN_VALUE_OF_KEY) {
-      setShowOnboarding(true)
-    }
-  }
-  useEffect(CHECK_SEEN_ONBOARDING, []); //SOLO AL MONTARSE
+    return !SEEN_VALUE_OF_KEY
+  })
 
   const goNext = useCallback(() => {
     if (currentStep < 4 && stepValid(state, currentStep)) {
@@ -83,10 +78,13 @@ const WizardPage = ({ onBackToLanding }: IWizardPageProps) => {
 
   const goPrev = useCallback(() => {
     if (currentStep > 0) {
+      if (currentStep === 1) {
+        dispatch({ type: 'CLEAR_UNSAVED_VOUCHERS' })
+      }
       setDirection('prev')
       setCurrentStep((s) => s - 1)
     }
-  }, [currentStep])
+  }, [currentStep, dispatch])
 
   const animateClass: TAnimateWizard = direction === 'next' ? 'animate-slide-in-right' : direction === 'prev'
     ? 'animate-slide-in-left'

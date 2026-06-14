@@ -2,7 +2,7 @@ import type { ICalculatorState, ICalculatorResult, IVoucherDetail } from '../typ
 
 export function calculateResult(state: ICalculatorState): ICalculatorResult {
   const { total, agencyPercent, driverPercent, carPercent, carRented, gas, petrol, vouchers, showVouchers } = state
-  const effectiveVouchers = showVouchers ? vouchers : []
+  const effectiveVouchers = showVouchers ? vouchers.filter((v) => v.saved && !v.editing) : []
 
   const voucherDetailList: IVoucherDetail[] = effectiveVouchers.map((v) => ({
     id: v.id,

@@ -6,6 +6,7 @@ export interface IVoucherTrip {
   pricePerTrip: number
   fixedFeePerTrip: number
   saved: boolean
+  editing: boolean
 }
 
 export interface ICalculatorState {

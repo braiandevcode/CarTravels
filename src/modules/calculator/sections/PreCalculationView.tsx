@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import useCalculatorContext from '../../../core/context/CalculatorContext';
+import useCalculatorContext from '../../../core/context/useCalculatorContext';
 import { calculateResult } from '../../../core/hooks/useCalculator';
 import Button from '../../../shared/ui/Button';
 import { Calculator, AlertTriangle, BarChart } from 'lucide-react';
@@ -25,7 +25,7 @@ const PreCalculationView = () => {
   const SHOW_VOUCHER_ACTIVE: boolean = state.showVouchers;
 
   const HAS_VALID_VOUCHER: boolean = SHOW_VOUCHER_ACTIVE && HAS_VOUCHER
-    ? state.vouchers.every((v) => v.trips > 0 && v.pricePerTrip > 0)
+    ? state.vouchers.every((v) => v.saved && !v.editing && v.trips > 0 && v.pricePerTrip > 0 && v.name.trim().length > 0)
     : true;
 
   const HAS_INVALID_VOUCHER: boolean = SHOW_VOUCHER_ACTIVE && HAS_VOUCHER && !HAS_VALID_VOUCHER;
@@ -79,7 +79,7 @@ const PreCalculationView = () => {
             aria-hidden="true"
           />
           <span className="text-xs text-text-secondary">
-            Completá los datos de los vouchers o eliminalos
+            Guardá o actualizá los vales antes de calcular
           </span>
         </div>
       )}

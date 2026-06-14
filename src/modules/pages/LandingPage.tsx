@@ -13,9 +13,11 @@ interface ILandingPageProps {
 const LandingPage = ({ onStart }: ILandingPageProps):ReactNode => {
   const [showSponsor, setShowSponsor] = useState(false)
 
-  useEffect(() => {
-    setShowSponsor(true)
-  }, [])
+  const SHOW_SPONSOR_WITH_TRANSITION = (): (() => void) => {
+    const timerId: number = window.setTimeout(() => setShowSponsor(true), 0)
+    return () => window.clearTimeout(timerId)
+  }
+  useEffect(SHOW_SPONSOR_WITH_TRANSITION, [])
 
   return (
     <>
@@ -26,6 +28,7 @@ const LandingPage = ({ onStart }: ILandingPageProps):ReactNode => {
         <SponsorBanner
           imageUrl={SPONSORS[0].imageUrl}
           logoUrl={SPONSORS[0].logoUrl ?? SPONSORS[0].imageUrl}
+          linkUrl={SPONSORS[0].linkUrl}
           alt={SPONSORS[0].alt}
           dismissible
         />

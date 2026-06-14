@@ -44,11 +44,23 @@ const calculatorReducer = (state: ICalculatorState, action: TAction): ICalculato
       return {
         ...state,
         vouchers: state.vouchers.map((v) =>
-          v.id === action.payload ? { ...v, saved: true } : v
+          v.id === action.payload ? { ...v, saved: true, editing: false } : v
         ),
       }
     case 'REMOVE_VOUCHER':
       return { ...state, vouchers: state.vouchers.filter((v) => v.id !== action.payload), calculated: false }
+    case 'CLEAR_UNSAVED_VOUCHERS': {
+      const savedVouchers = state.vouchers
+        .filter((v) => v.saved)
+        .map((v) => ({ ...v, editing: false }))
+
+      return {
+        ...state,
+        vouchers: savedVouchers,
+        showVouchers: savedVouchers.length > 0,
+        calculated: false,
+      }
+    }
     case 'CALCULATE':
       return { ...state, calculated: true }
     case 'RESET':
