@@ -1,6 +1,6 @@
 import Input from '../../../shared/ui/Input'
 import HelpHint from '../../../shared/ui/HelpHint'
-import { CheckCircle2, Paintbrush, Trash2, Save, Edit } from 'lucide-react'
+import { CheckCircle2, Trash2, Save, Edit } from 'lucide-react'
 import type { IVoucherTrip } from '../../../core/types/calculator'
 import type { TAction } from '../../../core/types/action'
 import { validateTrips } from '../../../core/schemas/calculator.schema'
