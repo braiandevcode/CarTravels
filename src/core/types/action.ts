@@ -13,5 +13,6 @@ export type TAction =
   | { type: 'UPDATE_VOUCHER'; payload: IVoucherTrip }
   | { type: 'SAVE_VOUCHER'; payload: string }
   | { type: 'REMOVE_VOUCHER'; payload: string }
+  | { type: 'CLEAR_UNSAVED_VOUCHERS' }
   | { type: 'CALCULATE' }
   | { type: 'RESET' }

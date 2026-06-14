@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import useCalculatorContext from '../../../core/context/CalculatorContext';
+import useCalculatorContext from '../../../core/context/useCalculatorContext';
 import { calculateResult } from '../../../core/hooks/useCalculator';
 import Button from '../../../shared/ui/Button';
 import VoucherDetailList from '../components/VoucherDetailList';
@@ -40,7 +40,7 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
     const showValesActive = state.showVouchers;
     const hasValidVales =
       state.showVouchers && state.vouchers.length > 0
-        ? state.vouchers.every((v) => v.trips > 0 && v.pricePerTrip > 0)
+        ? state.vouchers.every((v) => v.saved && !v.editing && v.trips > 0 && v.pricePerTrip > 0 && v.name.trim().length > 0)
         : true;
     const hasInvalidVales =
       state.showVouchers && state.vouchers.length > 0 && !hasValidVales;
@@ -93,7 +93,7 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
               aria-hidden="true"
             />
             <span className="text-xs text-text-secondary">
-              Completá los datos de los vales o eliminalos
+              Guardá o actualizá los vales antes de calcular
             </span>
           </div>
         )}

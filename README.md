@@ -85,7 +85,7 @@ Ejemplo de flujo:
 1. Ejecutar `pnpm dev`.
 2. Abrir la URL local que imprime Vite.
 3. Presionar **Empezar**.
-4. Completar total, vales, porcentajes y gastos.
+4. Completar total, vales, porcentajes y gastos. Si cargás vales, guardalos antes de avanzar.
 5. Presionar **Calcular resultados**.
 6. Revisar el desglose y abrir **Ver Recibo** para exportar.
 
@@ -93,11 +93,13 @@ Ejemplo de flujo:
 
 - Wizard de 5 pasos: ingreso, vales, porcentajes, gastos y resultados.
 - Botón **Calcular resultados** obligatorio antes de mostrar el desglose.
-- Cualquier cambio en datos relevantes invalida el cálculo anterior.
+- Cualquier cambio confirmado en datos relevantes invalida el cálculo anterior.
 - Reducer central para cambios de estado de la calculadora.
 - Persistencia en `localStorage` con guardado debounced.
 - Migración básica de formatos anteriores de estado local.
-- Vales guardables: solo los vales guardados persisten al recargar.
+- Vales guardables: solo los vales guardados persisten al recargar y habilitan el avance del wizard.
+- Edición controlada de vales: al editar un vale guardado, **Actualizar** se habilita solo si hay cambios reales; si se revierten los valores originales, el paso sigue habilitado.
+- Limpieza de borradores: al volver atrás desde el paso de vales, se descartan vales no guardados y ediciones pendientes.
 - Toggle de vales bloqueado cuando existen vales guardados.
 - Scroll automático al agregar un nuevo vale.
 - Onboarding de primer uso con persistencia en `localStorage`.
@@ -112,7 +114,9 @@ Ejemplo de flujo:
 
 - `Fábrica`: requiere nombre, cantidad de viajes, precio real y precio fijo de planilla.
 - `Otro`: requiere nombre, cantidad de viajes y precio real.
-- Los vales incompletos bloquean **Calcular resultados**.
+- Los vales incompletos o sin guardar bloquean el avance del wizard y **Calcular resultados**.
+- Las ediciones pendientes de un vale guardado bloquean el avance hasta presionar **Actualizar**.
+- Si el usuario abre edición pero no cambia nada, o vuelve a los valores originales, **Actualizar** queda deshabilitado y el wizard puede continuar.
 - Los vales `Fábrica` ajustan el total base.
 - Los vales `Otro` no ajustan el total base, pero sí reducen lo que queda para la agencia.
 
@@ -152,7 +156,9 @@ src/
 │   │   └── sponsor.config.ts
 │   ├── context/
 │   │   ├── CalculatorContext.tsx
-│   │   └── ThemeContext.tsx
+│   │   ├── ThemeContext.tsx
+│   │   ├── calculatorContextValue.ts
+│   │   └── useCalculatorContext.ts
 │   ├── enum/
 │   ├── hooks/
 │   │   ├── useCalculator.ts

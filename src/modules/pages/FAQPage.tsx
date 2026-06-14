@@ -9,9 +9,11 @@ import Accordion from '../../shared/ui/Accordion'
 const FAQPage = () => {
   const [showSponsor, setShowSponsor] = useState(false)
 
-  useEffect(() => {
-    setShowSponsor(true)
-  }, [])
+  const SHOW_SPONSOR_WITH_TRANSITION = (): (() => void) => {
+    const timerId: number = window.setTimeout(() => setShowSponsor(true), 0)
+    return () => window.clearTimeout(timerId)
+  }
+  useEffect(SHOW_SPONSOR_WITH_TRANSITION, [])
 
   return (
     <div className="min-h-[calc(100vh-140px)]">

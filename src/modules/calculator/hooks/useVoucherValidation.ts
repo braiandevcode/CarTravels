@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect, useCallback, type RefObject } from 'react'
-import useCalculatorContext from '../../../core/context/CalculatorContext'
+import useCalculatorContext from '../../../core/context/useCalculatorContext'
 import { validateTrips } from '../../../core/schemas/calculator.schema'
 import type { IVoucherTrip } from '../../../core/types/calculator'
+
+type TVoucherEditableField = keyof Pick<IVoucherTrip, 'trips' | 'pricePerTrip' | 'fixedFeePerTrip'>
 
 interface IVoucherErrors {
   trips?: string
@@ -22,6 +24,7 @@ export function useVoucherValidation() {
     pricePerTrip: 0,
     fixedFeePerTrip: 0,
     saved: false,
+    editing: false,
   }), [])
 
   const addVoucher = useCallback((): void => {
@@ -40,7 +43,7 @@ export function useVoucherValidation() {
   }
   useEffect(HANDLE_SCROLL_TO_NEW_VOUCHER, [state.vouchers.length])
 
-  const updateVoucher = (voucher: IVoucherTrip, field: string, raw: string): void => {
+  const updateVoucher = (voucher: IVoucherTrip, field: TVoucherEditableField, raw: string): void => {
     let parsed: string | number = raw
 
     if (field === 'trips') {

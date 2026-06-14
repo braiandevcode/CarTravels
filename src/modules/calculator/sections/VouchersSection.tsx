@@ -12,7 +12,6 @@ const VouchersSection = () => {
     vouchersContainerRef,
     dispatch,
     addVoucher,
-    updateVoucher,
     saveVoucher,
     hasSavedVouchers,
   } = useVoucherValidation()
@@ -40,7 +39,6 @@ const VouchersSection = () => {
               key={voucher.id}
               voucher={voucher}
               errors={errors}
-              updateVoucher={updateVoucher}
               dispatch={dispatch}
               saveVoucher={saveVoucher}
             />

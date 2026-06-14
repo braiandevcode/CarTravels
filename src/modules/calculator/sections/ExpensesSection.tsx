@@ -1,4 +1,4 @@
-import useCalculatorContext from '../../../core/context/CalculatorContext'
+import useCalculatorContext from '../../../core/context/useCalculatorContext'
 import Input from '../../../shared/ui/Input'
 
 const ExpensesSection = () => {

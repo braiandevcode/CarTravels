@@ -1,11 +1,11 @@
-import { createContext, useContext, useReducer, useEffect, useRef, type ReactNode } from 'react'
+import { useReducer, useEffect, useMemo, type ReactNode } from 'react'
 import type { ICalculatorState, IVoucherTrip } from '../types/calculator'
 import { EStoreKey } from '../enum/EStoreKey'
 import { ENameTypesEntity } from '../enum/ENameTypesEntity'
 import { initialState } from '../config/calculates.config'
 import calculatorReducer from '../reducer/calculate.reducer'
-import type { ICalculatorContextType } from '../types/calculatorContextType'
 import { debounce } from '../../shared/lib/debounce'
+import { CalculatorContext } from './calculatorContextValue'
 
 // CARGO DATOS DEL STORAGE
 const loadStoredState = (): ICalculatorState | null => {
@@ -38,6 +38,7 @@ const loadStoredState = (): ICalculatorState | null => {
         vouchers: (PARSED.vouchers || []).map((v: IVoucherTrip & { fixedFeePerTrip?: number; fixedPricePerTrip?: number }) => ({
           ...v,
           saved: true,
+          editing: false,
           fixedFeePerTrip: v.type === ENameTypesEntity.FACTORY ? (v.fixedFeePerTrip ?? v.fixedPricePerTrip ?? 0) : 0,
         })),
       }
@@ -53,7 +54,9 @@ const saveStateToStorage = (state: ICalculatorState):void => {
   try {
     const stateToSave = {
       ...state,
-      vouchers: state.vouchers.filter((v) => v.saved),
+      vouchers: state.vouchers
+        .filter((v) => v.saved)
+        .map((v) => ({ ...v, editing: false })),
     }
     localStorage.setItem(EStoreKey.CAR_TRAVELS, JSON.stringify(stateToSave))
   } catch {
@@ -61,13 +64,11 @@ const saveStateToStorage = (state: ICalculatorState):void => {
   }
 }
 
-const CalculatorContext = createContext<ICalculatorContextType | null>(null)
-
 // PROVEO CALCULOS DE LOS DATOS
 export const CalculatorProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(calculatorReducer, initialState, (initial) => loadStoredState() || initial)
 
-  const debouncedSave = useRef(debounce(saveStateToStorage, 300)).current
+  const debouncedSave = useMemo(() => debounce(saveStateToStorage, 300), [])
 
   const HANDLE_STATE_PERSISTENCE = (): void => {
     debouncedSave(state)
@@ -80,12 +81,3 @@ export const CalculatorProvider = ({ children }: { children: ReactNode }) => {
     </CalculatorContext.Provider>
   )
 }
-
-const useCalculatorContext = () =>{
-  const ctx = useContext(CalculatorContext)
-  if (!ctx) {
-    throw new Error('useCalculatorContext must be used within CalculatorProvider')
-  }
-  return ctx
-}
-export default useCalculatorContext;
