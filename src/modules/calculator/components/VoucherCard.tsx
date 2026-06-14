@@ -1,6 +1,6 @@
 import Input from '../../../shared/ui/Input'
 import HelpHint from '../../../shared/ui/HelpHint'
-import { CheckCircle2, Paintbrush, Trash2, Save } from 'lucide-react'
+import { CheckCircle2, Paintbrush, Trash2, Save, Edit } from 'lucide-react'
 import type { IVoucherTrip } from '../../../core/types/calculator'
 import type { TAction } from '../../../core/types/action'
 import { validateTrips } from '../../../core/schemas/calculator.schema'
@@ -155,7 +155,7 @@ const VoucherCard = ({ voucher, errors, dispatch, saveVoucher }: IVoucherCardPro
               className="text-accent-amber/80 hover:text-accent-amber transition-colors cursor-pointer p-1.5 rounded-lg hover:bg-accent-amber/10"
               aria-label="Editar vale"
             >
-              <Paintbrush className="h-4 w-4" aria-hidden="true" />
+              <Edit className="h-5 w-5" aria-hidden="true" />
             </button>
             <button
               type="button"
@@ -163,7 +163,7 @@ const VoucherCard = ({ voucher, errors, dispatch, saveVoucher }: IVoucherCardPro
               className="text-accent-red/70 hover:text-accent-red transition-colors cursor-pointer p-1.5 rounded-lg hover:bg-accent-red/10"
               aria-label="Eliminar vale"
             >
-              <Trash2 className="h-4 w-4" aria-hidden="true" />
+              <Trash2 className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
         )}
