@@ -1,14 +1,14 @@
-import { useId } from 'react'
+import { useId, type ReactNode } from 'react'
 import { Pencil } from 'lucide-react'
 
-interface PercentageInputProps {
+interface IPercentageInputProps {
   label: string
   value: number
   onChange: (value: number) => void
   hint?: string
 }
 
-const PercentageInput = ({ label, value, onChange, hint }: PercentageInputProps) => {
+const PercentageInput = ({ label, value, onChange, hint }: IPercentageInputProps):ReactNode => {
   const inputId: string = useId()
   const hintId: string = `${inputId}-hint`
 

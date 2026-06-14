@@ -1,3 +1,3 @@
 export enum ENameReceip{
-  NAME_SUMMARY = 'resumen-cartravels'
+  NAME_SUMMARY = 'summary-cartravels'
 }

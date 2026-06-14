@@ -1,9 +1,10 @@
-import { useMemo } from "react";
-import useCalculatorContext from "../../../core/context/CalculatorContext";
-import { calculateResult } from "../../../core/hooks/useCalculator";
-import Button from "../../../shared/ui/Button";
-import { Calculator, Eye, AlertTriangle, CheckCircle2 } from "lucide-react";
-import type { CalculatorResult } from "../../../core/types/calculator";
+import { useMemo } from 'react';
+import useCalculatorContext from '../../../core/context/CalculatorContext';
+import { calculateResult } from '../../../core/hooks/useCalculator';
+import Button from '../../../shared/ui/Button';
+import VoucherDetailList from '../components/VoucherDetailList';
+import { Calculator, Eye, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import type { ICalculatorResult } from '../../../core/types/calculator';
 
 interface ResultsSectionProps {
   onViewReceipt: () => void;
@@ -12,7 +13,7 @@ interface ResultsSectionProps {
 export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
   const { state, dispatch } = useCalculatorContext();
 
-  const result: CalculatorResult = useMemo(
+  const result: ICalculatorResult = useMemo(
     () => calculateResult(state),
     [state],
   );
@@ -35,21 +36,21 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
   }
 
   if (!state.calculated) {
-    const hasVales = state.vales.length > 0;
-    const showValesActive = state.showVales;
+    const hasVales = state.vouchers.length > 0;
+    const showValesActive = state.showVouchers;
     const hasValidVales =
-      state.showVales && state.vales.length > 0
-        ? state.vales.every((v) => v.trips > 0 && v.pricePerTrip > 0)
+      state.showVouchers && state.vouchers.length > 0
+        ? state.vouchers.every((v) => v.trips > 0 && v.pricePerTrip > 0)
         : true;
     const hasInvalidVales =
-      state.showVales && state.vales.length > 0 && !hasValidVales;
-    const fabricaCount = state.vales.filter((v) => v.type === "fabrica").length;
-    const otrosCount = state.vales.filter((v) => v.type === "otro").length;
-    const fabricaTrips = state.vales
-      .filter((v) => v.type === "fabrica")
+      state.showVouchers && state.vouchers.length > 0 && !hasValidVales;
+    const fabricaCount = state.vouchers.filter((v) => v.type === "factory").length;
+    const otrosCount = state.vouchers.filter((v) => v.type === "other").length;
+    const fabricaTrips = state.vouchers
+      .filter((v) => v.type === "factory")
       .reduce((s, v) => s + v.trips, 0);
-    const fixedFeeSum = state.vales
-      .filter((v) => v.type === "fabrica")
+    const fixedFeeSum = state.vouchers
+      .filter((v) => v.type === "factory")
       .reduce((s, v) => s + v.fixedFeePerTrip * v.trips, 0);
 
     const canCalculate = result.isPercentValid && hasValidVales;
@@ -153,7 +154,7 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
         <div className="flex justify-between p-2 rounded-lg hover:bg-bg-input/50 transition-colors">
           <span className="text-text-secondary">
             Agencia ({result.agencyDisplayPercent}%){" "}
-            {result.valeDetails.length > 0 ? "+ desc" : ""}
+            {result.voucherDetails.length > 0 ? "+ desc" : ""}
           </span>
           <span
             className={`font-semibold font-display ${result.finalAgency >= 0 ? "text-accent-amber" : "text-accent-red"}`}
@@ -163,13 +164,13 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
         </div>
       </div>
 
-      {result.valeDetails.length > 0 && (
+      {result.voucherDetails.length > 0 && (
         <div className="text-xs text-text-muted/70 -mt-0.5 mb-1 pl-3 font-mono bg-bg-input/50 py-1.5 px-3 rounded-lg">
           ${result.agencyAmount.toLocaleString()}
           {result.fixedFeeTotal > 0 && (
             <> - ${result.fixedFeeTotal.toLocaleString()}</>
           )}
-          {result.otroTotal > 0 && <> - ${result.otroTotal.toLocaleString()}</>}
+                {result.otherTotal > 0 && <> - ${result.otherTotal.toLocaleString()}</>}
         </div>
       )}
 
@@ -233,7 +234,7 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
           );
         })()}
 
-      {result.valeDetails.length > 0 && (
+      {result.voucherDetails.length > 0 && (
         <>
           <div className="subtle-divider my-2" />
           <div className="py-2 space-y-1.5">
@@ -241,37 +242,7 @@ export function ResultsSection({ onViewReceipt }: ResultsSectionProps) {
               Vales
             </span>
             
-            {result.valeDetails.map((v, i) => (
-              <div
-                key={i}
-                className="py-1 text-xs border-l-2 border-border-subtle pl-2 ml-1"
-              >
-                <span className="text-text-secondary font-medium">
-                  {v.name}
-                </span>
-                <span className="text-text-muted ml-1">
-                  ({v.type === "fabrica" ? "Fábrica" : "Otro"})
-                </span>
-                <div className="flex justify-between mt-0.5">
-                  <span className="text-text-muted/80">
-                    {v.trips}× ${v.pricePerTrip.toLocaleString()}
-                  </span>
-                  <span className="text-accent-teal/90">
-                    +${v.subtotal.toLocaleString()}
-                  </span>
-                </div>
-                {v.type === "fabrica" && v.fixedFeePerTrip > 0 && (
-                  <div className="flex justify-between mt-0.5">
-                    <span className="text-text-muted/80">
-                      {v.trips} × ${v.fixedFeePerTrip.toLocaleString()} fijo
-                    </span>
-                    <span className="text-orange-400">
-                      ${v.fixedFeeSubtotal.toLocaleString()}
-                    </span>
-                  </div>
-                )}
-              </div>
-            ))}
+            <VoucherDetailList voucherDetails={result.voucherDetails} compact />
           </div>
         </>
       )}

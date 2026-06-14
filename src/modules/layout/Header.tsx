@@ -1,18 +1,19 @@
-import { Car, Menu, X, Sun, Moon } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { Menu, X, Sun, Moon } from 'lucide-react'
+import { useState, useEffect, type ReactNode } from 'react'
 import { NavLink, useNavigate, type NavigateFunction } from 'react-router-dom'
 import { navLinks } from '../../core/config/header.config'
 import { useTheme } from '../../core/context/ThemeContext'
 import { FaCar } from 'react-icons/fa'
 
-const Header = () => {
+const Header = ():ReactNode => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
 
-  useEffect(() => {
+  const CLOSE_MENU_ON_MODAL_OPEN = (): (() => void) => {
     const handler = () => setIsMenuOpen(false)
     window.addEventListener('modal:open', handler)
     return () => window.removeEventListener('modal:open', handler)
-  }, [])
+  }
+  useEffect(CLOSE_MENU_ON_MODAL_OPEN, [])
   const navigate: NavigateFunction = useNavigate()
   const { theme, toggleTheme } = useTheme()
   const ThemeIcon = theme === 'dark' ? Sun : Moon

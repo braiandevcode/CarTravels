@@ -1,8 +1,10 @@
-import { useEffect, useRef } from 'react'
+import { type ReactNode } from 'react'
 import { X, AlertTriangle } from 'lucide-react'
 import Button  from '../../../shared/ui/Button'
+import ModalPortal from '../../../shared/components/ModalPortal'
+import { useFocusTrap } from '../hooks/useFocusTrap'
 
-interface ConfirmResetModalProps {
+interface IConfirmResetModalProps {
   isOpen: boolean
   onConfirm: () => void
   onCancel: () => void
@@ -10,42 +12,13 @@ interface ConfirmResetModalProps {
 
 const TITLE_ID: string = 'confirm-reset-title'
 
-const ConfirmResetModal = ({ isOpen, onConfirm, onCancel }: ConfirmResetModalProps) => {
-  const modalRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (!isOpen) return
-
-    const modal = modalRef.current
-    if (!modal) return
-
-    const focusableElements: NodeListOf<HTMLElement> = modal.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    )
-    const firstElement: HTMLElement = focusableElements[0]
-    const lastElement: HTMLElement = focusableElements[focusableElements.length - 1]
-
-    firstElement?.focus()
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Tab') {
-        if (e.shiftKey && document.activeElement === firstElement) {
-          e.preventDefault()
-          lastElement?.focus()
-        } else if (!e.shiftKey && document.activeElement === lastElement) {
-          e.preventDefault()
-          firstElement?.focus()
-        }
-      }
-    }
-
-    modal.addEventListener('keydown', handleKeyDown)
-    return () => modal.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen])
+const ConfirmResetModal = ({ isOpen, onConfirm, onCancel }: IConfirmResetModalProps): ReactNode => {
+  const modalRef = useFocusTrap(isOpen)
 
   if (!isOpen) return null
 
   return (
+    <ModalPortal>
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 animate-fade-in"
       onClick={onCancel}
@@ -89,6 +62,7 @@ const ConfirmResetModal = ({ isOpen, onConfirm, onCancel }: ConfirmResetModalPro
         </div>
       </div>
     </div>
+    </ModalPortal>
   )
 }
 

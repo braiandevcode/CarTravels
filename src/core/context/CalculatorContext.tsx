@@ -1,36 +1,44 @@
-import { createContext, useContext, useReducer, useEffect, type ReactNode, type Dispatch } from 'react'
-import type { CalculatorState, ValeTrip } from '../types/calculator'
-import { initialState } from '../config/calculates.config'
+import { createContext, useContext, useReducer, useEffect, useRef, type ReactNode } from 'react'
+import type { ICalculatorState, IVoucherTrip } from '../types/calculator'
 import { EStoreKey } from '../enum/EStoreKey'
+import { ENameTypesEntity } from '../enum/ENameTypesEntity'
+import { initialState } from '../config/calculates.config'
+import calculatorReducer from '../reducer/calculate.reducer'
+import type { ICalculatorContextType } from '../types/calculatorContextType'
+import { debounce } from '../../shared/lib/debounce'
 
-const loadStoredState = (): CalculatorState | null => {
+// CARGO DATOS DEL STORAGE
+const loadStoredState = (): ICalculatorState | null => {
   try {
-    const stored:string | null = localStorage.getItem(EStoreKey.CAR_TRAVELS)
-    if (stored) {
-      const parsed = JSON.parse(stored)
+    const STORED:string | null = localStorage.getItem(EStoreKey.CAR_TRAVELS)
+    if (STORED) {
+      const PARSED = JSON.parse(STORED)
+      const CAR_NOT_RENTED: boolean = PARSED.carRented === false // AUTO NO ALQUILADO
+      const IS_NUMBER_AGENCY_PERCENT: boolean = typeof PARSED.agencyPercent === 'number'; //VERIFICO SI PORCENTAJE DE AGENCIA ES NUMERO
+      const IS_NUMBER_CAR_PERCENT:boolean = typeof PARSED.carPercent === 'number'; // VERIFICO SI PORCENTAJE DEL AUTO ES NUMERO
 
-      const isOldFormat: boolean =
-        parsed.carRented === false &&
-        typeof parsed.agencyPercent === 'number' &&
-        typeof parsed.carPercent === 'number' &&
-        parsed.agencyPercent < 50
+      // VERIFICO SI EL FORMATO ES VIEJO
+      const isOldFormat: boolean = CAR_NOT_RENTED && IS_NUMBER_AGENCY_PERCENT && IS_NUMBER_CAR_PERCENT &&
+        PARSED.agencyPercent < 50
 
-      // Si el estado guardado tiene formato viejo (factories), ignorar y empezar limpio
-      if ('factories' in parsed) {
+      // SI ESTADO GUARDADO TIENE FORMATO VIEJO, IGNORO Y EMPIEZO LIMPIO
+      if (ENameTypesEntity.FACTORY in PARSED) {
         return null
       }
 
+      // MIGRO DATOS DE AGENCIA
       const migratedAgency = isOldFormat
-        ? parsed.agencyPercent + parsed.carPercent
-        : parsed.agencyPercent ?? initialState.agencyPercent
+        ? PARSED.agencyPercent + PARSED.carPercent
+        : PARSED.agencyPercent ?? initialState.agencyPercent
 
       return {
         ...initialState,
-        ...parsed,
+        ...PARSED,
         agencyPercent: migratedAgency,
-        vales: (parsed.vales || []).map((v: ValeTrip & { fixedFeePerTrip?: number; discountPerTrip?: number }) => ({
+        vouchers: (PARSED.vouchers || []).map((v: IVoucherTrip & { fixedFeePerTrip?: number; fixedPricePerTrip?: number }) => ({
           ...v,
-          fixedFeePerTrip: v.type === 'fabrica' ? (v.fixedFeePerTrip ?? v.discountPerTrip ?? 0) : 0,
+          saved: true,
+          fixedFeePerTrip: v.type === ENameTypesEntity.FACTORY ? (v.fixedFeePerTrip ?? v.fixedPricePerTrip ?? 0) : 0,
         })),
       }
     }
@@ -40,88 +48,31 @@ const loadStoredState = (): CalculatorState | null => {
   return null
 }
 
-const saveStateToStorage = (state: CalculatorState):void => {
+// GUARDO DATOS EN STORAGE (solo vales con saved: true)
+const saveStateToStorage = (state: ICalculatorState):void => {
   try {
-    localStorage.setItem(EStoreKey.CAR_TRAVELS, JSON.stringify(state))
-  } catch {
-    // Ignore storage errors
-  }
-}
-
-type Action =
-  | { type: 'SET_TOTAL'; payload: number }
-  | { type: 'SET_AGENCY_PERCENT'; payload: number }
-  | { type: 'SET_DRIVER_PERCENT'; payload: number }
-  | { type: 'SET_CAR_PERCENT'; payload: number }
-  | { type: 'SET_CAR_RENTED'; payload: boolean }
-  | { type: 'SET_GAS'; payload: number }
-  | { type: 'SET_PETROL'; payload: number }
-  | { type: 'SET_SHOW_VALES'; payload: boolean }
-  | { type: 'ADD_VALE'; payload: ValeTrip }
-  | { type: 'UPDATE_VALE'; payload: ValeTrip }
-  | { type: 'REMOVE_VALE'; payload: string }
-  | { type: 'CALCULATE' }
-  | { type: 'RESET' }
-
-const calculatorReducer = (state: CalculatorState, action: Action): CalculatorState => {
-  switch (action.type) {
-    case 'SET_TOTAL':
-      return { ...state, total: action.payload, calculated: false }
-    case 'SET_AGENCY_PERCENT':
-      return { ...state, agencyPercent: action.payload, calculated: false }
-    case 'SET_DRIVER_PERCENT':
-      return { ...state, driverPercent: action.payload, calculated: false }
-    case 'SET_CAR_PERCENT':
-      return { ...state, carPercent: action.payload, calculated: false }
-    case 'SET_CAR_RENTED': {
-      const newValue: boolean = action.payload
-      if (newValue === state.carRented) {
-        return state
-      }
-      return { ...state, carRented: newValue, calculated: false }
+    const stateToSave = {
+      ...state,
+      vouchers: state.vouchers.filter((v) => v.saved),
     }
-    case 'SET_GAS':
-      return { ...state, gas: action.payload, calculated: false }
-    case 'SET_PETROL':
-      return { ...state, petrol: action.payload, calculated: false }
-    case 'SET_SHOW_VALES':
-      return { ...state, showVales: action.payload, vales: action.payload ? state.vales : [], calculated: false }
-    case 'ADD_VALE':
-      return { ...state, vales: [...state.vales, action.payload], calculated: false }
-    case 'UPDATE_VALE':
-      return {
-        ...state,
-        vales: state.vales.map((v) => (v.id === action.payload.id ? action.payload : v)),
-        calculated: false,
-      }
-    case 'REMOVE_VALE':
-      return { ...state, vales: state.vales.filter((v) => v.id !== action.payload), calculated: false }
-    case 'CALCULATE':
-      return { ...state, calculated: true }
-    case 'RESET':
-      return { ...initialState, calculated: false }
-    default:
-      return state
+    localStorage.setItem(EStoreKey.CAR_TRAVELS, JSON.stringify(stateToSave))
+  } catch {
+    // IGNORO ERRORES DE STORAGE
   }
 }
 
-interface CalculatorContextType {
-  state: CalculatorState
-  dispatch: Dispatch<Action>
-}
+const CalculatorContext = createContext<ICalculatorContextType | null>(null)
 
-const CalculatorContext = createContext<CalculatorContextType | null>(null)
-
+// PROVEO CALCULOS DE LOS DATOS
 export const CalculatorProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(
-    calculatorReducer,
-    initialState,
-    (initial) => loadStoredState() || initial
-  )
+  const [state, dispatch] = useReducer(calculatorReducer, initialState, (initial) => loadStoredState() || initial)
 
-  useEffect(() => {
-    saveStateToStorage(state)
-  }, [state])
+  const debouncedSave = useRef(debounce(saveStateToStorage, 300)).current
+
+  const HANDLE_STATE_PERSISTENCE = (): void => {
+    debouncedSave(state)
+  }
+  useEffect(HANDLE_STATE_PERSISTENCE, [state, debouncedSave])
 
   return (
     <CalculatorContext.Provider value={{ state, dispatch }}>

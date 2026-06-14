@@ -1,10 +1,11 @@
-import AccordionItem from './AcordionItems';
+import type { ReactNode } from 'react';
+import AccordionItem from './AccordionItems';
 
-interface AccordionProps {
+interface IAccordionProps {
   items: { question: string; answer: string }[]
 }
 
-export function Accordion({ items }: AccordionProps) {
+const Accordion= ({ items }: IAccordionProps): ReactNode => {
   return (
     <div className="flex flex-col gap-4">
       {items.map((item, index) => (
@@ -18,3 +19,4 @@ export function Accordion({ items }: AccordionProps) {
     </div>
   )
 }
+export default Accordion;

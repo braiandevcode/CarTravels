@@ -1,13 +1,14 @@
-export interface ValeTrip {
+export interface IVoucherTrip {
   id: string
-  type: 'fabrica' | 'otro'
+  type: 'factory' | 'other'
   name: string
   trips: number
   pricePerTrip: number
   fixedFeePerTrip: number
+  saved: boolean
 }
 
-export interface CalculatorState {
+export interface ICalculatorState {
   total: number
   agencyPercent: number
   driverPercent: number
@@ -15,14 +16,14 @@ export interface CalculatorState {
   carRented: boolean
   gas: number
   petrol: number
-  vales: ValeTrip[]
-  showVales: boolean
+  vouchers: IVoucherTrip[]
+  showVouchers: boolean
   calculated: boolean
 }
 
-export interface ValeDetail {
+export interface IVoucherDetail {
   id: string
-  type: 'fabrica' | 'otro'
+  type: 'factory' | 'other'
   name: string
   trips: number
   pricePerTrip: number
@@ -31,7 +32,7 @@ export interface ValeDetail {
   fixedFeeSubtotal: number
 }
 
-export interface CalculatorResult {
+export interface ICalculatorResult {
   adjustedTotal: number
   agencyAmount: number
   agencyDisplayPercent: number
@@ -39,11 +40,11 @@ export interface CalculatorResult {
   carAmount: number | null
   gas: number
   petrol: number
-  valeDetails: ValeDetail[]
-  fabricaTotal: number
+  voucherDetails: IVoucherDetail[]
+  factoryTotal: number
   fixedFeeTotal: number
-  gananciaFabricaTotal: number
-  otroTotal: number
+  factoryEarningsTotal: number
+  otherTotal: number
   finalAgency: number
   percentTotal: number
   isPercentValid: boolean

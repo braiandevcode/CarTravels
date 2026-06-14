@@ -1,243 +1,194 @@
-# CarTravels v1.6.0
+# CarTravels v1.7.0
 
-Calculadora de jornada diseñada para choferes de agencias de autos y taxis. Simplifica tus cálculos diarios.
-
----
+Calculadora de jornada para choferes de agencias de autos y taxis. Ayuda a cerrar el turno con menos pasos manuales: total del día, vales, porcentajes, gastos, resultado final y comprobante.
 
 ## Tabla de Contenidos
 
 - [Objetivo](#objetivo)
-- [Comandos Rápidos](#comandos-rápidos)
 - [Stack Tecnológico](#stack-tecnológico)
-- [Librerías Principales](#librerías-principales)
-- [Estructura de Archivos](#estructura-de-archivos)
-- [Características Principales](#características-principales)
+- [Instalación](#instalación)
+- [Variables de Entorno](#variables-de-entorno)
+- [Uso Local](#uso-local)
+- [Características](#características)
+- [Flujo de Cálculo](#flujo-de-cálculo)
+- [Estructura del Proyecto](#estructura-del-proyecto)
 - [Capturas de Pantalla](#capturas-de-pantalla)
 - [Despliegue en Vercel](#despliegue-en-vercel)
+- [Documentación Relacionada](#documentación-relacionada)
 - [Licencia](#licencia)
-
----
 
 ## Objetivo
 
-`carTravels` resuelve el problema tedioso y propenso a errores que enfrentan los choferes al finalizar su jornada:
+`carTravels` resuelve el cierre diario de un chofer cuando debe combinar importes de una app externa, gastos de combustible, porcentajes de reparto y viajes con vale.
 
-- ✅ Ingreso simple de datos (total facturado, gastos de gas/nafta)
-- ✅ Cálculos automáticos de porcentajes (agencia, chofer, auto alquilado)
-- ✅ Manejo de viajes con vale (fábrica y otros) con precios negociados
-- ✅ Validación en tiempo real con mensajes claros (Zod)
-- ✅ Generación de comprobante en PDF y compartir por WhatsApp
-- ✅ Datos guardados localmente en tu dispositivo (sin registro)
-- ✅ Modo claro/oscuro con persistencia de preferencia
-- ✅ Wizard paso a paso con validación por etapa y auto-cálculo al finalizar
-- ✅ Guía de onboarding interactiva al primer ingreso
-- ✅ Landing page con presentación y acceso rápido
-- ✅ Paleta violeta (#8b5cf6) y verde manzana (#22c55e) para acciones primarias
+La app permite:
 
----
-
-## Comandos Rápidos
-
-| Acción | Comando |
-|--------|---------|
-| Instalar dependencias | `pnpm install` |
-| Iniciar servidor de desarrollo | `pnpm dev` |
-| Build para producción | `pnpm build` |
-| Preview del build | `pnpm preview` |
-| Lint | `pnpm lint` |
-
----
+- Ingresar el total facturado del día.
+- Cargar gastos de gas y nafta.
+- Configurar porcentajes de agencia, conductor y vehículo alquilado.
+- Registrar vales de tipo `Fábrica` u `Otro`.
+- Bloquear el cálculo si hay vales incompletos.
+- Mostrar resultados solo después de presionar **Calcular resultados**.
+- Generar y compartir un comprobante en PDF o imagen.
+- Persistir datos localmente en el dispositivo.
 
 ## Stack Tecnológico
 
-| Tecnología | Versión | Propósito |
-|------------|---------|-----------|
-| **React** | 19.2.6 | Librería de UI |
-| **TypeScript** | 6.0.2 | Tipado estricto |
-| **Vite** | 8.0.12 | Build tool y dev server |
-| **Tailwind CSS** | 4.3.0 | Estilos utility-first |
-| **React Router** | 7.15.1 | Ruteo SPA |
+| Tecnología | Versión | Uso |
+| --- | --- | --- |
+| React | 19.2.6 | UI |
+| TypeScript | 6.0.2 | Tipado |
+| Vite | 8.0.12 | Build y dev server |
+| Tailwind CSS | 4.3.0 | Estilos |
+| React Router | 7.15.1 | Rutas SPA |
+| Zod | 4.4.3 | Validación |
+| React Hook Form | 7.76.1 | Formularios |
+| lucide-react | 1.16.0 | Íconos |
+| html-to-image | 1.11.13 | Exportar comprobante como imagen |
+| jsPDF | 4.2.1 | Exportar comprobante como PDF |
 
----
+## Instalación
 
-## Librerías Principales
+Requisitos:
 
-| Librería | Versión | Uso |
-|----------|---------|-----|
-| `html-to-image` | 1.11.13 | Convertir HTML a imagen (para compartir) |
-| `jspdf` | 4.2.1 | Generar PDF del comprobante |
-| `lucide-react` | 1.16.0 | Íconos de la UI |
-| `react-icons` | 5.6.0 | Íconos de marcas (GitHub, Instagram) |
-| `zod` | 4.4.3 | Validación de esquemas con mensajes en español |
-| `clsx` | 2.1.1 | Conditional class joining |
-| `tailwind-merge` | 3.6.0 | Resolución inteligente de conflictos Tailwind |
+- Node.js compatible con Vite 8.
+- pnpm instalado.
 
----
-
-## Estructura de Archivos
-
-Arquitectura modular siguiendo **Separation of Concerns (SoC)**:
-
+```bash
+pnpm install
 ```
+
+## Variables de Entorno
+
+Las variables son opcionales y se usan para configurar banners de patrocinio. Crear `.env.local` si se necesitan valores locales:
+
+```bash
+VITE_S_OLAVARRIA_SERVICIOS_URL_IMAGE=<SECRET_PLACEHOLDER>
+VITE_S_OLAVARRIA_SERVICIOS_URL_LOGO=<SECRET_PLACEHOLDER>
+VITE_S_OLAVARRIA_SERVICIOS=<SECRET_PLACEHOLDER>
+```
+
+No commitear valores reales de URLs privadas, tokens ni credenciales.
+
+## Uso Local
+
+| Acción | Comando |
+| --- | --- |
+| Instalar dependencias | `pnpm install` |
+| Iniciar desarrollo | `pnpm dev` |
+| Build de producción | `pnpm build` |
+| Preview del build | `pnpm preview` |
+| Lint | `pnpm lint` |
+
+Ejemplo de flujo:
+
+1. Ejecutar `pnpm dev`.
+2. Abrir la URL local que imprime Vite.
+3. Presionar **Empezar**.
+4. Completar total, vales, porcentajes y gastos.
+5. Presionar **Calcular resultados**.
+6. Revisar el desglose y abrir **Ver Recibo** para exportar.
+
+## Características
+
+- Wizard de 5 pasos: ingreso, vales, porcentajes, gastos y resultados.
+- Botón **Calcular resultados** obligatorio antes de mostrar el desglose.
+- Cualquier cambio en datos relevantes invalida el cálculo anterior.
+- Reducer central para cambios de estado de la calculadora.
+- Persistencia en `localStorage` con guardado debounced.
+- Migración básica de formatos anteriores de estado local.
+- Vales guardables: solo los vales guardados persisten al recargar.
+- Toggle de vales bloqueado cuando existen vales guardados.
+- Scroll automático al agregar un nuevo vale.
+- Onboarding de primer uso con persistencia en `localStorage`.
+- Modo claro/oscuro con preferencia persistida.
+- Modal de confirmación para reiniciar datos.
+- Error boundary con acción de recarga.
+- Banners de patrocinio configurables por variables `VITE_*`.
+
+## Flujo de Cálculo
+
+### Vales
+
+- `Fábrica`: requiere nombre, cantidad de viajes, precio real y precio fijo de planilla.
+- `Otro`: requiere nombre, cantidad de viajes y precio real.
+- Los vales incompletos bloquean **Calcular resultados**.
+- Los vales `Fábrica` ajustan el total base.
+- Los vales `Otro` no ajustan el total base, pero sí reducen lo que queda para la agencia.
+
+### Fórmulas
+
+```ts
+fabricaTotal = sum(viajes * precioReal)
+fixedFeeTotal = sum(viajes * precioFijo)
+gananciaFabricaTotal = fabricaTotal - fixedFeeTotal
+
+adjustedTotal = total - gananciaFabricaTotal
+
+agencyAmount = adjustedTotal * agencyPercent / 100
+driverAmount = adjustedTotal * driverPercent / 100
+carAmount = carRented
+  ? max(0, adjustedTotal * carPercent / 100 - (gas + petrol))
+  : null
+
+finalAgency = agencyAmount - fixedFeeTotal - otroTotal
+```
+
+La suma de porcentajes debe ser `100%`. Si el vehículo no está alquilado, solo cuentan agencia y conductor. Si está alquilado, cuentan agencia, conductor y vehículo.
+
+## Estructura del Proyecto
+
+```bash
 src/
-├── main.tsx                   # Entry point de React
-├── App.tsx                    # Router y configuración principal
-├── index.css                  # Tailwind v4 + tema violeta personalizado
-│
-├── core/                      # LÓGICA CENTRAL (sin dependencia de UI)
-│   ├── types/
-│   │   └── calculator.ts      # Interfaces: CalculatorState, ValeTrip, Result
+├── App.tsx
+├── ErrorBoundary.tsx
+├── main.tsx
+├── index.css
+├── core/
+│   ├── config/
+│   │   ├── calculates.config.ts
+│   │   ├── landing.config.ts
+│   │   ├── router.config.tsx
+│   │   └── sponsor.config.ts
 │   ├── context/
-│   │   ├── CalculatorContext.tsx  # State management + localStorage
-│   │   └── ThemeContext.tsx       # Toggle dark/light mode + persistencia
-│   ├── schemas/                   # Validación Zod
-│   │   ├── calculator.schema.ts  # Schemas de totales y porcentajes
-│   │   └── vale.schema.ts        # Schema de vales con z.enum
-│   └── hooks/
-│       ├── useCalculator.ts   # Lógica pura de cálculos
-│       └── useReceiptExport.ts  # Exportar PDF y compartir imagen
-│
-├── modules/                   # CARACTERÍSTICAS POR DOMINIO
-│   ├── calculator/            # Módulo principal de la calculadora
+│   │   ├── CalculatorContext.tsx
+│   │   └── ThemeContext.tsx
+│   ├── enum/
+│   ├── hooks/
+│   │   ├── useCalculator.ts
+│   │   └── useReceiptExport.ts
+│   ├── reducer/
+│   │   └── calculate.reducer.ts
+│   ├── schemas/
+│   └── types/
+├── modules/
+│   ├── calculator/
+│   │   ├── components/
+│   │   │   ├── ReceiptContent.tsx
+│   │   │   ├── VoucherCard.tsx
+│   │   │   └── VoucherDetailList.tsx
+│   │   ├── hooks/
+│   │   │   ├── useFocusTrap.ts
+│   │   │   └── useVoucherValidation.ts
+│   │   ├── modals/
 │   │   ├── pages/
-│   │   │   ├── WizardPage.tsx       # Orquestador wizard 5 pasos + validación
-│   │   │   └── OnboardingGuide.tsx  # Guía interactiva de primer uso
-│   │   ├── sections/
-│   │   │   ├── ConfigSection.tsx   # Porcentajes + toggle vehículo alquilado
-│   │   │   ├── IncomeSection.tsx   # Input del total facturado
-│   │   │   ├── ExpensesSection.tsx # Gas (GNV) + Nafta
-│   │   │   ├── ValesSection.tsx    # Viajes con vale (fábrica/otro)
-│   │   │   └── ResultsSection.tsx  # Desglose de resultados
-│   │   └── modals/
-│   │       ├── ReceiptModal.tsx    # Vista previa + PDF + compartir
-│   │       └── ConfirmResetModal.tsx # Confirmación antes de resetear
-│   │
-│   ├── layout/                 # Módulo de layout persistente
-│   │   ├── Layout.tsx          # Shell: ThemeProvider + Header + Outlet + Footer
-│   │   ├── Header.tsx          # Navegación sticky + toggle dark/light
-│   │   └── Footer.tsx          # Links legales + redes sociales
-│   │
-│   └── pages/                  # Módulo de páginas
-│       ├── HomePage.tsx        # Landing ↔ Wizard según estado
-│       ├── LandingPage.tsx     # Hero + "Empezar"
-│       ├── FAQPage.tsx         # Preguntas frecuentes
-│       ├── AboutPage.tsx       # Acerca de carTravels
-│       ├── TermsPage.tsx       # Términos y condiciones
-│       └── PrivacyPage.tsx     # Política de privacidad
-│
-└── shared/                     # COMPONENTES REUTILIZABLES
+│   │   └── sections/
+│   │       ├── ConfigSection.tsx
+│   │       ├── ExpensesSection.tsx
+│   │       ├── IncomeSection.tsx
+│   │       ├── ResultsSection.tsx
+│   │       └── VouchersSection.tsx
+│   ├── layout/
+│   └── pages/
+└── shared/
+    ├── components/
+    │   ├── LoadingScreen.tsx
+    │   ├── MaintenancePage.tsx
+    │   ├── ModalPortal.tsx
+    │   └── SponsorBanner.tsx
     ├── lib/
-    │   └── utils.ts            # cn() helper (clsx + tailwind-merge)
-    ├── ui/                     # Componentes UI genéricos
-    │   ├── Button.tsx          # Botones con variantes
-    │   ├── Input.tsx           # Input con label grande, prefijo $, error
-    │   ├── PercentageInput.tsx # Input de porcentaje violeta
-    │   ├── Toggle.tsx          # Switch toggle verde manzana
-    │   ├── StepIndicator.tsx   # Indicador de progreso 5 pasos
-    │   └── Accordion.tsx       # Acordeón para FAQ
-    └── components/
-        └── LoadingScreen.tsx   # Splash screen animado
+    └── ui/
 ```
-
-### Reglas de Arquitectura
-
-| Capa | Puede importar de | No puede importar de |
-|------|-------------------|----------------------|
-| `core/` | Librerías externas (zod) | `modules/`, `shared/` |
-| `core/schemas/` | `zod` | `modules/`, `shared/` |
-| `modules/` | `core/`, `shared/` | Otros `modules/*` (solo a través de contratos claros) |
-| `shared/` | Librerías externas | `modules/`, `core/` (excepto tipos) |
-
----
-
-## Archivos de Configuración (Raíz)
-
-```
-carTravels/
-├── public/
-│   ├── favicon.svg
-│   ├── robots.txt
-│   └── sitemap.xml
-│
-├── vercel.json               # Config SPA para Vercel (rewrites + headers)
-├── vite.config.ts            # Config Vite + React + Tailwind v4
-├── tsconfig.json             # Config TypeScript root
-├── eslint.config.js          # Config ESLint flat
-├── AGENTS.md                 # Especificaciones para agentes AI
-├── package.json
-├── pnpm-lock.yaml
-└── .gitignore
-```
-
----
-
-## Características Principales
-
-### Flujo Wizard
-
-El asistente guía al conductor en 5 pasos con validación antes de avanzar:
-
-| Paso | Sección | Validación |
-|------|---------|------------|
-| 1 | **Total del día** — Ingresá lo que facturaste | `total > 0` |
-| 2 | **Viajes con Vale** — Definí vales con toggle ON | Si toggle activado: debe haber vales con datos completos |
-| 3 | **Porcentajes** — Agencia, conductor y vehículo (si alquilado) | Suma = 100% |
-| 4 | **Gastos** — Gas (GNV) y Nafta | Siempre válido |
-| 5 | **Resultados** — Desglose completo + botón "Ver Recibo" | Se calcula automáticamente al llegar. Botón "Reiniciar" siempre visible en barra superior |
-
-- El botón **"Siguiente"** se deshabilita hasta que el paso actual sea válido.
-- Si volvés atrás y cambiás datos, al regresar al paso 5 se recalcula automáticamente.
-- No hay botón "Calcular resultados": el cálculo ocurre al llegar al último paso.
-- El botón **"Reiniciar"** (rojo) está siempre visible en la barra superior para reiniciar todos los datos con confirmación.
-
-### Cálculos Automáticos
-- **Porcentajes configurables**: Agencia, Conductor, Vehículo (si alquilado)
-- **Validación en tiempo real**: Los porcentajes deben sumar 100%
-- **Ajuste por vales tipo "Fábrica"**: El precio fijo de planilla se descuenta del precio real acumulado. La ganancia del conductor en esos viajes (`precioReal − precioFijo` = `gananciaFábrica`) se resta del total del día (`total − gananciaFábrica`). El fijo acumulado se deduce del porcentaje de la agencia.
-- **Cálculo de agencia final**: `agencia − fijoFábricas` (si hay fábrica) `− totalOtros` (si hay otros)
-- **Visual de vales**: Líneas de resumen "+ Precio real fábricas" y "- Fijo fábricas" eliminadas. Detalle individual muestra "fijo planilla" en naranja sin signo negativo
-- **Labels actualizados**: "Tu parte" → "Conductor", "Gas (GNV)" → "Gas", "Reparto" → "Porcentajes"
-
-### Validación con Zod
-- **Mensajes claros en español**: "Máximo 99 viajes", "Completá el total del día"
-- **Validación en tiempo real** en cada campo al escribir
-- **Límite de 2 dígitos** en el campo "N° Viajes" (máximo 99 viajes realistas)
-- **Validación de vales**: No permite calcular si hay vales sin datos completos (viajes o precio en 0)
-
-### Interfaz Adaptable
-- **Modo claro/oscuro**: Toggle con ícono Sol/Luna en el header, persistente en localStorage
-- **Wizard paso a paso**: 5 pasos con `StepIndicator` circular + etiquetas en desktop, compacto en mobile
-- **Onboarding interactivo**: Guía multi-paso al primer ingreso con botón "Saltar", persiste en localStorage
-- **Transiciones responsive**: Slide horizontal en mobile (≤768px), fade + translateY en desktop (>768px)
-- **Paleta violeta (#8b5cf6)**: Acciones primarias, botón "Siguiente", % sign
-- **Verde manzana (#22c55e)**: Estados activos (toggle ON), elementos completados
-- **Landing page**: Hero con CTA "Empezar", 3 tarjetas de características
-- **Labels más grandes y visibles**: `text-base font-bold` con color primario, gap reducido al input
-- **Inputs con bordes reforzados**: Mayor contraste y área táctil para mejor percepción
-- **Modales vía portal**: `ReceiptModal` y `OnboardingGuide` se renderizan con `createPortal(document.body)` — elimina bugs de `position: fixed` con ancestros transform
-- **Botón "Reiniciar" persistente**: Visible en todos los pasos del wizard en la barra superior
-- **Scroll automático a nuevo vale**: Al agregar un vale, la vista se desplaza suavemente al nuevo elemento
-
-### Persistencia
-- Los datos se guardan automáticamente en `localStorage`
-- La preferencia de tema (claro/oscuro) también persiste
-- No requiere registro ni conexión a internet
-- Reset seguro con confirmación
-
-### Exportación
-- **Descargar PDF**: Comprobante listo para imprimir o guardar
-- **Compartir por WhatsApp**: Convierte el comprobante a imagen y usa Web Share API
-- **Export sin manipulación del DOM**: Clona el elemento offscreen, aplica estilos de export al clon, renderiza con `html-to-image`, y remueve el clon — zero flash visual
-- **Estados durante exportación**: Botones se deshabilitan y muestran "Exportando..." mientras se genera; modal se auto-cierra al finalizar
-
-### Ruteo SPA
-- `/` - Landing page → wizard de cálculo (manejado por estado interno, no por ruta)
-- `/faq` - Preguntas frecuentes
-- `/about` - Acerca de carTravels
-- `/terms` - Términos y condiciones
-- `/privacy` - Política de privacidad
-
----
 
 ## Capturas de Pantalla
 
@@ -250,24 +201,37 @@ El asistente guía al conductor en 5 pasos con validación antes de avanzar:
   <img src="./public/images/006.png" alt="Comprobante PDF" width="400" style="max-width: 100%; height: auto; margin: 8px; border-radius: 8px;" />
 </div>
 
----
-
 ## Despliegue en Vercel
 
-El proyecto incluye `vercel.json` preconfigurado para SPA:
+El proyecto incluye `vercel.json` para servir la SPA:
 
 ```json
 {
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
-  "headers": [{ "source": "/(.*)", "headers": [{ "key": "X-Content-Type-Options", "value": "nosniff" }] }]
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [{ "key": "X-Content-Type-Options", "value": "nosniff" }]
+    }
+  ]
 }
 ```
 
-Esto asegura que:
-- Refresh en cualquier ruta funcione (`/faq`, `/about`, etc.)
-- Headers de seguridad básicos estén presentes
+Rutas disponibles:
 
----
+- `/`
+- `/faq`
+- `/about`
+- `/terms`
+- `/privacy`
+
+## Documentación Relacionada
+
+- [AGENTS.md](./AGENTS.md)
+- [Buenas prácticas React](./.agents.custom/skills/best-practiced/references/best-practice-react.md)
+- [Buenas prácticas TypeScript](./.agents.custom/skills/best-practiced/references/best-practice-ts.md)
+- [Reglas](./.agents.custom/skills/rules/RULES.md)
+- [Estilo de código](./.agents.custom/skills/style-code/skills/references/style-code.md)
 
 ## Licencia
 

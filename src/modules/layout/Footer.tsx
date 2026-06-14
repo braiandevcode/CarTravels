@@ -1,11 +1,10 @@
 import { Link } from 'react-router-dom'
 import { legalLinks, socialLinks } from '../../core/config/footer.config'
-import { Car } from 'lucide-react'
 import { FaCar } from 'react-icons/fa'
+import type { ReactNode } from 'react'
 
-const currentYear: number = new Date().getFullYear()
-
-const Footer = () => {
+const Footer = ():ReactNode => {
+  const currentYear: number = new Date().getFullYear()
   return (
     <footer className="bg-bg-card border-t border-border-subtle mt-auto">
       <div className="mx-auto max-w-5xl px-4 py-8 md:px-6">

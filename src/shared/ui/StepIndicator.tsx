@@ -1,18 +1,19 @@
 import { Check } from 'lucide-react'
+import type { ReactNode } from 'react'
 
-interface StepIndicatorProps {
+interface IStepIndicatorProps {
   currentStep: number
   totalSteps: number
   labels: string[]
 }
 
-const StepIndicator = ({ currentStep, totalSteps, labels }: StepIndicatorProps) => {
+const StepIndicator = ({ currentStep, totalSteps, labels }: IStepIndicatorProps): ReactNode => {
   return (
     <div className="flex items-center justify-center gap-1 md:gap-2 mb-6">
       {Array.from({ length: totalSteps }, (_, i) => {
-        const step = i + 1
-        const isActive = step === currentStep
-        const isCompleted = step < currentStep
+        const step:number = i + 1
+        const isActive:boolean = step === currentStep
+        const isCompleted: boolean = step < currentStep
 
         return (
           <div key={step} className="flex items-center gap-1 md:gap-2">
@@ -25,6 +26,7 @@ const StepIndicator = ({ currentStep, totalSteps, labels }: StepIndicatorProps) 
                       ? 'bg-accent-violet text-white shadow-glow-violet ring-2 ring-accent-violet/40'
                       : 'bg-bg-hover text-text-muted border border-border-subtle'
                 }`}
+                {...(isActive ? { 'aria-current': 'step' as const } : {})}
               >
                 {isCompleted ? (
                   <Check className="h-4 w-4 md:h-4.5 md:w-4.5" aria-hidden="true" />

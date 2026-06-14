@@ -1,5 +1,5 @@
-import { Calculator, Clock, Download, FileText, Shield, Zap } from "lucide-react"
-import type { Feature } from "../types/about"
+import { Calculator, Clock, Download, FileText, Shield, Zap } from 'lucide-react'
+import type { Feature } from '../types/about'
 
 export const features:Feature[] = [
   {

@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import jsPDF from 'jspdf'
-import { renderOffscreen } from '../../modules/utils/canvasRenderer'
+import { renderOffscreen } from '../../shared/lib/canvasRenderer'
 import { ENameReceip } from '../enum/ENameReceip'
 import { EExtentionFile } from '../enum/EExtentionFile'
 
@@ -13,7 +13,7 @@ export const useReceiptExport = () => {
     )
     if (!blob) return
 
-    const file: File = new File([blob], `resumen-${Date.now()}.png`, { type: 'image/png' })
+    const file: File = new File([blob], `summary-${Date.now()}.png`, { type: 'image/png' })
 
     if (navigator.share && navigator.canShare?.({ files: [file] })) {
       await navigator.share({ files: [file] })
@@ -21,7 +21,7 @@ export const useReceiptExport = () => {
       const url: string = URL.createObjectURL(blob)
       const a: HTMLAnchorElement = document.createElement('a')
       a.href = url
-      a.download = `resumen-${Date.now()}.png`
+      a.download = `summary-${Date.now()}.png`
       a.click()
       URL.revokeObjectURL(url)
     }

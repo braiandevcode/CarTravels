@@ -287,15 +287,6 @@ body {
   box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
 }
 
-.light .input-glass {
-  border-color: var(--color-border-subtle);
-}
-
-.light .input-glass:focus {
-  border-color: var(--color-accent-violet);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
-}
-
 .input-error {
   border-color: var(--color-accent-red) !important;
 }
@@ -308,15 +299,6 @@ body {
 .btn-primary-glow {
   background: linear-gradient(135deg, var(--color-accent-violet) 0%, var(--color-accent-violet-soft) 100%);
   transition: all 0.2s ease;
-}
-
-.btn-primary-glow:hover {
-  box-shadow: var(--shadow-glow-violet);
-  transform: translateY(-1px);
-}
-
-.btn-primary-glow:active {
-  transform: translateY(0);
 }
 
 .btn-primary-glow:hover {

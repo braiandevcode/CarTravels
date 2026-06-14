@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { CalculatorProvider } from '../../core/context/CalculatorContext'
 import LandingPage from './LandingPage'
 import WizardPage from '../calculator/pages/WizardPage'
 
-const HomePage = () => {
-  const [mode, setMode] = useState<'landing' | 'wizard'>('landing')
+type TMode = 'landing' | 'wizard';
+
+const HomePage = ():ReactNode => {
+  const [mode, setMode] = useState<TMode>('landing')
 
   if (mode === 'landing') {
     return <LandingPage onStart={() => setMode('wizard')} />

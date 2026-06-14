@@ -1,22 +1,24 @@
-import { ChevronDown } from "lucide-react"
-import { useState } from "react"
+import { ChevronDown } from 'lucide-react'
+import { useState, type ReactNode } from 'react'
 
-interface AccordionItemProps {
+interface IAccordionItemProps {
   question: string
   answer: string
   isDefaultOpen?: boolean
 }
 
-const AccordionItem = ({ question, answer, isDefaultOpen = false }: AccordionItemProps) => {
+const AccordionItem = ({ question, answer, isDefaultOpen = false }: IAccordionItemProps):ReactNode => {
   const [isOpen, setIsOpen] = useState<boolean>(isDefaultOpen)
 
   return (
     <div className="card-glass rounded-xl overflow-hidden card-accent-top">
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen((prev) => !prev)}
         className="w-full flex items-center justify-between p-5 text-left transition-colors cursor-pointer hover:bg-bg-input/30"
         aria-expanded={isOpen}
+        aria-controls={`accordion-panel-${question.replace(/\s+/g, '-').toLowerCase()}`}
+        id={`accordion-btn-${question.replace(/\s+/g, '-').toLowerCase()}`}
       >
         <span className="text-base font-semibold text-text-primary pr-4 font-display">
           {question}
@@ -35,6 +37,9 @@ const AccordionItem = ({ question, answer, isDefaultOpen = false }: AccordionIte
         </div>
       </button>
       <div
+        id={`accordion-panel-${question.replace(/\s+/g, '-').toLowerCase()}`}
+        role="region"
+        aria-labelledby={`accordion-btn-${question.replace(/\s+/g, '-').toLowerCase()}`}
         className={`overflow-hidden transition-all duration-300 ease-in-out ${
           isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
         }`}

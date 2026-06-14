@@ -5,12 +5,48 @@ import {
   CheckCircle,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { SPONSORS } from '../../core/config/sponsor.config'
+import SponsorBanner from '../../shared/components/SponsorBanner'
 import Button  from '../../shared/ui/Button'
 import { benefits, features } from '../../core/config/aboutPage.config'
+import { useState, useEffect, type ReactNode } from 'react'
 
-const AboutPage = () => {
+const AboutPage = ():ReactNode => {
+  const [showSponsor, setShowSponsor] = useState(false)
+
+  useEffect(() => {
+    setShowSponsor(true)
+  }, [])
+
   return (
     <div className="min-h-[calc(100vh-140px)]">
+      {/* Desktop: fixed right sidebar (xl+) */}
+      <div
+        className={`hidden xl:block fixed right-4 top-1/2 -translate-y-1/2 z-10 w-80 transition-all duration-700 ease-out ${showSponsor ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}
+      >
+        <SponsorBanner
+          imageUrl={SPONSORS[0].imageUrl}
+          linkUrl={SPONSORS[0].linkUrl}
+          alt={SPONSORS[0].alt}
+          dismissible
+        />
+      </div>
+      {/* Mobile: sticky slide from top with dismiss */}
+      <div className="sticky top-[60px] z-20 xl:hidden bg-bg-primary">
+        <div
+          className={`transition-all duration-700 ease-out overflow-hidden ${showSponsor ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'}`}
+        >
+          <div className="mx-auto max-w-5xl px-4 pt-2 md:px-6">
+            <SponsorBanner
+              imageUrl={SPONSORS[0].imageUrl}
+              linkUrl={SPONSORS[0].linkUrl}
+              alt={SPONSORS[0].alt}
+              dismissible
+            />
+          </div>
+        </div>
+      </div>
+
       <div className="mx-auto max-w-5xl px-4 py-8 md:px-6 md:py-10">
         <Link
           to="/"

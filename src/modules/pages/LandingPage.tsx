@@ -1,33 +1,57 @@
-import { ArrowRight, Car, Calculator, FileText, Smartphone } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { ArrowRight } from 'lucide-react'
+import { FaCar } from 'react-icons/fa'
+import features from '../../core/config/landing.config'
+import { SPONSORS } from '../../core/config/sponsor.config'
+import SponsorBanner from '../../shared/components/SponsorBanner'
+import type { ReactNode } from 'react'
 
-interface LandingPageProps {
+interface ILandingPageProps {
   onStart: () => void
 }
 
-const LandingPage = ({ onStart }: LandingPageProps) => {
-  const features = [
-    {
-      icon: <Calculator className="h-5 w-5 text-accent-violet" aria-hidden="true" />,
-      title: 'Calculá al instante',
-      desc: 'Ingresá el total, los vales y los gastos. Todo se ajusta solo.',
-    },
-    {
-      icon: <FileText className="h-5 w-5 text-accent-green" aria-hidden="true" />,
-      title: 'Comprobante al toque',
-      desc: 'Descargá PDF o compartí por WhatsApp el resumen de tu jornada.',
-    },
-    {
-      icon: <Smartphone className="h-5 w-5 text-accent-violet-soft" aria-hidden="true" />,
-      title: 'Sin registro, sin vueltas',
-      desc: 'Todo queda guardado en tu dispositivo. Usalo sin internet.',
-    },
-  ]
+const LandingPage = ({ onStart }: ILandingPageProps):ReactNode => {
+  const [showSponsor, setShowSponsor] = useState(false)
+
+  useEffect(() => {
+    setShowSponsor(true)
+  }, [])
 
   return (
-    <div className="mx-auto max-w-2xl px-4 pb-16 pt-8 md:pt-16 animate-fade-in-up">
+    <>
+      {/* Desktop: fixed left sidebar (xl+) */}
+      <div
+        className={`hidden xl:block fixed left-4 top-1/2 -translate-y-1/2 z-10 w-60 transition-all duration-700 ease-out ${showSponsor ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}`}
+      >
+        <SponsorBanner
+          imageUrl={SPONSORS[0].imageUrl}
+          logoUrl={SPONSORS[0].logoUrl ?? SPONSORS[0].imageUrl}
+          alt={SPONSORS[0].alt}
+          dismissible
+        />
+      </div>
+
+      {/* Mobile: sticky slide from top with dismiss */}
+      <div className="sticky top-[60px] z-20 xl:hidden bg-bg-primary">
+        <div
+          className={`transition-all duration-700 ease-out overflow-hidden ${showSponsor ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'}`}
+        >
+          <div className="mx-auto max-w-2xl px-4 pt-2">
+            <SponsorBanner
+              imageUrl={SPONSORS[0].imageUrl}
+              logoUrl={SPONSORS[0].logoUrl ?? SPONSORS[0].imageUrl}
+              linkUrl={SPONSORS[0].linkUrl}
+              alt={SPONSORS[0].alt}
+              dismissible
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-2xl px-4 pb-16 pt-8 md:pt-16 animate-fade-in-up">
       <div className="flex flex-col items-center text-center gap-6 md:gap-8">
         <div className="flex h-16 w-16 md:h-20 md:w-20 items-center justify-center rounded-2xl bg-accent-violet/15 border border-accent-violet/20 shadow-glow-violet">
-          <Car className="h-8 w-8 md:h-10 md:w-10 text-accent-violet" aria-hidden="true" />
+          <FaCar className="h-8 w-8 md:h-10 md:w-10 text-accent-violet" aria-hidden="true" />
         </div>
 
         <div className="space-y-3">
@@ -53,21 +77,36 @@ const LandingPage = ({ onStart }: LandingPageProps) => {
         </button>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 md:mt-12 w-full">
-          {features.map((f) => (
+          {
+           features.map((f) => {
+            // ASIGNO A CONSTANTE CON MAYUSCULA PARA QUE REACT LO ENTIENDA
+            const Icon = f.icon;
+            return (
             <div
-              key={f.title}
+              key={f.id}
               className="card-glass rounded-xl p-4 md:p-5 text-left space-y-2 hover:border-accent-violet/30 transition-all duration-200"
             >
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-bg-hover">
-                {f.icon}
+                { <Icon className={`h-5 w-5 ${f.iconColor}`} aria-hidden='true' /> }
               </div>
               <h3 className="text-sm font-bold text-text-primary font-display">{f.title}</h3>
               <p className="text-xs text-text-muted leading-relaxed">{f.desc}</p>
             </div>
-          ))}
+            )
+          })}
         </div>
       </div>
+
+      {/* Bottom: permanent banner (non-dismissible) */}
+      <div className="mt-12 md:mt-16">
+        <SponsorBanner
+          imageUrl={SPONSORS[0].imageUrl}
+          linkUrl={SPONSORS[0].linkUrl}
+          alt={SPONSORS[0].alt}
+        />
+      </div>
     </div>
+    </>
   )
 }
 

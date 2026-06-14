@@ -1,0 +1,1 @@
+export type TAnimateWizard = "animate-slide-in-right" | "animate-slide-in-left" | "animate-fade-in";

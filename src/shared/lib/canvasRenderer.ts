@@ -1,4 +1,4 @@
-import { toCanvas } from "html-to-image";
+import { toCanvas } from 'html-to-image';
 
 interface IRgb{
   r: number; 
@@ -14,7 +14,7 @@ const parseRgb = (color: string): IRgb | null => {
   const g: number = Number(m[2])
   const b: number = Number(m[3])
 
-  // RECHAZAR SI ALGUN VALOR ES MAYOR A 255
+  // RECHAZO SI ALGUN VALOR ES MAYOR A 255
   if (r > 255 || g > 255 || b > 255) return null
 
   return { r, g, b }
@@ -26,20 +26,22 @@ const luminance = (color: string): number | null => {
   return 0.299 * p.r + 0.587 * p.g + 0.114 * p.b
 }
 
-const fixExportStyles = (element: HTMLElement): void => {
-  element.style.overflow = 'visible'
-  element.style.maxHeight = 'none'
-  element.style.height = 'auto'
-  element.style.background = '#ffffff'
-  element.style.color = '#0f172a'
-  element.style.position = 'relative'
-  element.style.zIndex = '1'
-  element.style.border = 'none'
-  element.style.borderRadius = '0'
-  element.style.margin = '0'
-  element.style.boxShadow = 'none'
+const fixExportStyles = (el: HTMLElement): void => {
+  const STYLE: CSSStyleDeclaration = el.style;
+  STYLE.overflow = 'visible'
+  STYLE.maxHeight = 'none'
+  STYLE.height = 'auto'
+  STYLE.background = '#ffffff'
+  STYLE.color = '#0f172a'
+  STYLE.position = 'relative'
+  STYLE.zIndex = '1'
+  STYLE.border = 'none'
+  STYLE.borderRadius = '0'
+  STYLE.margin = '0'
+  STYLE.boxShadow = 'none'
 
-  const all: NodeListOf<HTMLElement> = element.querySelectorAll<HTMLElement>('*')
+  const all: NodeListOf<HTMLElement> = el.querySelectorAll<HTMLElement>('*')
+
   all.forEach((el) => {
     const computed: CSSStyleDeclaration = getComputedStyle(el)
     const bgLum: number | null = luminance(computed.backgroundColor)

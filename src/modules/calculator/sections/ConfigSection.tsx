@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import useCalculatorContext from '../../../core/context/CalculatorContext'
 import Toggle from '../../../shared/ui/Toggle'
+import HelpHint from '../../../shared/ui/HelpHint'
 import PercentageInput from '../../../shared/ui/PercentageInput'
 import { AlertCircle, CheckCircle2 } from 'lucide-react'
 
@@ -21,11 +22,16 @@ const ConfigSection = () => {
   return (
     <div className="flex flex-col gap-4">
       <div className="p-3 rounded-xl bg-bg-input border border-border-subtle">
-        <Toggle
-          label="Vehículo alquilado"
-          enabled={state.carRented}
-          onChange={(v) => dispatch({ type: 'SET_CAR_RENTED', payload: v })}
-        />
+        <div className="flex items-center gap-2">
+          <div className="flex-1">
+            <Toggle
+              label="Vehículo alquilado"
+              enabled={state.carRented}
+              onChange={(v) => dispatch({ type: 'SET_CAR_RENTED', payload: v })}
+            />
+          </div>
+          <HelpHint text="Al activarlo, el % del vehículo se descuenta de la agencia y se agrega al reparto. Ajustá los porcentajes para que sumen 100%." side="bottom" />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

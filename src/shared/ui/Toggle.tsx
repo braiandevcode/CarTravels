@@ -1,13 +1,22 @@
-import { useId } from 'react'
+import { useId, useEffect, useRef, type ReactNode } from 'react'
 
-interface ToggleProps {
+interface IToggleProps {
   label: string
   enabled: boolean
+  disabled?: boolean
   onChange: (enabled: boolean) => void
 }
 
-const Toggle = ({ label, enabled, onChange }: ToggleProps) => {
+const Toggle = ({ label, enabled, disabled = false, onChange }: IToggleProps):ReactNode => {
   const labelId:string = useId()
+  const liveRef = useRef<HTMLSpanElement>(null)
+
+  const HANDLE_LIVE_REGION_UPDATE = (): void => {
+    if (liveRef.current) {
+      liveRef.current.textContent = `${label}: ${enabled ? 'activado' : 'desactivado'}`
+    }
+  }
+  useEffect(HANDLE_LIVE_REGION_UPDATE, [enabled, label])
 
   return (
     <div className="flex items-center justify-between">
@@ -17,8 +26,10 @@ const Toggle = ({ label, enabled, onChange }: ToggleProps) => {
         role="switch"
         aria-checked={enabled}
         aria-labelledby={labelId}
-        onClick={() => onChange(!enabled)}
-        className={`relative inline-flex h-8 w-14 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-accent-green/30 focus:ring-offset-2 focus:ring-offset-bg-deep ${
+        onClick={() => !disabled && onChange(!enabled)}
+        className={`relative inline-flex h-8 w-14 shrink-0 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-accent-green/30 focus:ring-offset-2 focus:ring-offset-bg-deep ${
+          disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+        } ${
           enabled ? 'bg-accent-green' : 'bg-border-subtle'
         }`}
         style={
@@ -34,6 +45,12 @@ const Toggle = ({ label, enabled, onChange }: ToggleProps) => {
           }`}
         />
       </button>
+      <span
+        ref={liveRef}
+        role="status"
+        aria-live="polite"
+        className="sr-only"
+      />
     </div>
   )
 }

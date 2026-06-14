@@ -1,6 +1,6 @@
 import { type InputHTMLAttributes, forwardRef, useId } from 'react'
 
-interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
+interface IInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label: string
   prefix?: string
   error?: string
@@ -8,7 +8,7 @@ interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'>
   numeric?: boolean
 }
 
-const Input = forwardRef<HTMLInputElement, InputProps>(
+const Input = forwardRef<HTMLInputElement, IInputProps>(
   ({ label, prefix, error, formattedValue, numeric, className = '', inputMode, id: externalId, ...props }, ref) => {
     const generatedId: string = useId()
     const inputId: string = externalId || generatedId
@@ -27,7 +27,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             id={inputId}
-            type={numeric ? 'text' : 'text'}
+            type="text"
             inputMode={numeric ? 'numeric' : (inputMode || 'text')}
             pattern={numeric ? '[0-9]*' : undefined}
             aria-invalid={error ? 'true' : undefined}

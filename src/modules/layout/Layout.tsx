@@ -2,8 +2,9 @@ import { Outlet } from 'react-router-dom'
 import { ThemeProvider } from '../../core/context/ThemeContext'
 import Header from './Header'
 import Footer from './Footer'
+import type { ReactNode } from 'react'
 
-const Layout = () => {
+const Layout = ():ReactNode => {
   return (
     <ThemeProvider>
       <div className="min-h-screen flex flex-col bg-bg-deep">

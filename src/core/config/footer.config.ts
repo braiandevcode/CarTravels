@@ -1,6 +1,6 @@
-import { SiGithub, SiInstagram } from "react-icons/si";
-import type { LegalLink, SocialLink } from "../types/footer";
-import { FileText, Shield } from "lucide-react";
+import { SiGithub, SiInstagram } from 'react-icons/si';
+import type { LegalLink, SocialLink } from '../types/footer';
+import { FileText, Shield } from 'lucide-react';
 
 export const legalLinks: LegalLink[] = [
   { to: "/terms", label: "Términos y Condiciones", icon: FileText },

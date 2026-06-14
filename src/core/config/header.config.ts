@@ -1,4 +1,4 @@
-import type { NavLinks } from "../types/header";
+import type { NavLinks } from '../types/header';
 
 export const navLinks:NavLinks[] = [
   { to: "/", label: "Inicio" },

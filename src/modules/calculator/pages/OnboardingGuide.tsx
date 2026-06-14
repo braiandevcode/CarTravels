@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { X, Car, Calculator, Percent, Fuel, FileText, Check } from 'lucide-react'
 
@@ -9,27 +9,27 @@ interface OnboardingGuideProps {
 
 const steps = [
   {
-    icon: <Calculator className="h-6 w-6 text-accent-violet" aria-hidden="true" />,
+    icon: <Calculator className="h-6 w-6 text-accent-violet" role="img" aria-label="Calculadora" />,
     title: 'Ingresá el total del día',
     desc: 'Poné lo que facturaste en todo el turno. Este es el punto de partida para todos los cálculos.',
   },
   {
-    icon: <Car className="h-6 w-6 text-accent-green" aria-hidden="true" />,
+    icon: <Car className="h-6 w-6 text-accent-green" role="img" aria-label="Auto" />,
     title: 'Agregá los vales',
     desc: 'Si tuviste viajes con vale, seleccioná el tipo y completá los datos. Los vales tipo "Fábrica" tienen un precio fijo de planilla.',
   },
   {
-    icon: <Percent className="h-6 w-6 text-accent-violet-soft" aria-hidden="true" />,
+    icon: <Percent className="h-6 w-6 text-accent-violet-soft" role="img" aria-label="Porcentajes" />,
     title: 'Ajustá los porcentajes',
     desc: 'Configurá el % que se lleva la agencia y el tuyo. Si el vehículo es alquilado, activá el toggle y ajustá ese % también.',
   },
   {
-    icon: <Fuel className="h-6 w-6 text-accent-red" aria-hidden="true" />,
+    icon: <Fuel className="h-6 w-6 text-accent-red" role="img" aria-label="Combustible" />,
     title: 'Cargá los gastos',
     desc: 'Anotá lo que gastaste en gas (GNV) y nafta. Estos se descuentan del vehículo si está alquilado.',
   },
   {
-    icon: <FileText className="h-6 w-6 text-accent-green" aria-hidden="true" />,
+    icon: <FileText className="h-6 w-6 text-accent-green" role="img" aria-label="Resultados" />,
     title: 'Revisá los resultados',
     desc: 'Todo calculado al instante. Podés ver el detalle completo, descargar PDF o compartir por WhatsApp.',
   },
@@ -37,6 +37,11 @@ const steps = [
 
 const OnboardingGuide = ({ isOpen, onClose }: OnboardingGuideProps) => {
   const [step, setStep] = useState(0)
+  const stepsRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    stepsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  }, [step])
 
   const handleClose = () => {
     localStorage.setItem('cartravels-onboarding', 'seen')
@@ -94,7 +99,7 @@ const OnboardingGuide = ({ isOpen, onClose }: OnboardingGuideProps) => {
             {s.desc}
           </p>
 
-          <div className="flex gap-1.5 mt-2">
+          <div ref={stepsRef} className="flex gap-1.5 mt-2">
             {steps.map((_, i) => (
               <div
                 key={i}

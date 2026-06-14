@@ -1,12 +1,13 @@
-import { useMemo, useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import useCalculatorContext from "../../../core/context/CalculatorContext";
-import { calculateResult } from "../../../core/hooks/useCalculator";
-import { useReceiptExport } from "../../../core/hooks/useReceiptExport";
-import Button from "../../../shared/ui/Button";
-import { X, Download, Share2, AlertTriangle } from "lucide-react";
-import type { CalculatorResult } from "../../../core/types/calculator";
-import { FaCar } from "react-icons/fa";
+import { useMemo, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import useCalculatorContext from '../../../core/context/CalculatorContext';
+import { calculateResult } from '../../../core/hooks/useCalculator';
+import { useReceiptExport } from '../../../core/hooks/useReceiptExport';
+import Button from '../../../shared/ui/Button';
+import { X, Download, Share2, AlertTriangle } from 'lucide-react';
+import type { ICalculatorResult } from '../../../core/types/calculator';
+// @ts-ignore: ICalculatorResult is used via the type annotation on line 18
+import { FaCar } from 'react-icons/fa';
 
 interface ReceiptModalProps {
   isOpen: boolean;
@@ -15,7 +16,7 @@ interface ReceiptModalProps {
 
 const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
   const { state } = useCalculatorContext();
-  const result: CalculatorResult = useMemo(() => calculateResult(state),[state]);
+  const result: ICalculatorResult = useMemo(() => calculateResult(state),[state]);
   const { shareImage, downloadPDF } = useReceiptExport();
   const modalRef = useRef<HTMLDivElement | null>(null);
   const D: Document = document;
@@ -176,7 +177,7 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
                 <div className="flex justify-between p-2 rounded-lg hover:bg-bg-input/50 transition-colors">
                   <span className="text-text-secondary">
                     Agencia ({result.agencyDisplayPercent}%){" "}
-                    {result.valeDetails.length > 0
+                    {result.voucherDetails.length > 0
                       ? "+ desc"
                       : ""}
                   </span>
@@ -186,14 +187,14 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
                     ${result.finalAgency.toLocaleString()}
                   </span>
                 </div>
-                {result.valeDetails.length > 0 && (
+                {result.voucherDetails.length > 0 && (
                   <span className="text-[11px] text-text-muted/70 font-mono text-right px-2">
                     ${result.agencyAmount.toLocaleString()}
                     {result.fixedFeeTotal > 0 && (
                       <> - ${result.fixedFeeTotal.toLocaleString()}</>
                     )}
-                    {result.otroTotal > 0 && (
-                      <> - ${result.otroTotal.toLocaleString()}</>
+                    {result.otherTotal > 0 && (
+                      <> - ${result.otherTotal.toLocaleString()}</>
                     )}
                   </span>
                 )}
@@ -267,7 +268,7 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
                 );
               })()}
 
-            {result.valeDetails.length > 0 && (
+            {result.voucherDetails.length > 0 && (
               <>
                 <div className="subtle-divider" />
                 <div className="space-y-2">
@@ -278,16 +279,16 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
                   </div>
 
                   <div className="mt-1 pl-2">
-                    {result.valeDetails.map((v, i) => (
+                    {result.voucherDetails.map((v) => (
                       <div
-                        key={i}
+                        key={v.id}
                         className="py-1.5 text-xs border-l-2 border-border-subtle pl-2 mb-1"
                       >
                         <div className="flex justify-between">
                           <span className="text-text-secondary font-medium">
                             {v.name}
                             <span className="text-text-muted ml-1">
-                              ({v.type === "fabrica" ? "Fábrica" : "Otro"})
+                              ({v.type === "factory" ? "Fábrica" : "Otro"})
                             </span>
                           </span>
                         </div>
@@ -299,7 +300,7 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
                             +${v.subtotal.toLocaleString()}
                           </span>
                         </div>
-                        {v.type === "fabrica" && v.fixedFeePerTrip > 0 && (
+                        {v.type === "factory" && v.fixedFeePerTrip > 0 && (
                           <div className="flex justify-between mt-0.5">
                             <span className="text-text-muted/80">
                               {v.trips} × ${v.fixedFeePerTrip.toLocaleString()}{" "}

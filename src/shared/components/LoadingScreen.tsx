@@ -1,11 +1,11 @@
-import { Car } from "lucide-react";
+import { Car } from 'lucide-react';
 
 const LoadingScreen = () => {
   return (
     <div className="min-h-dvh bg-bg-deep flex flex-col items-center justify-center">
       <div className="flex flex-col items-center gap-4 animate-fade-in">
         <div className="relative">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-amber/15 animate-pulse-glow">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-amber/15 motion-safe:animate-pulse-glow">
             <Car className="h-8 w-8 text-accent-amber" />
           </div>
           <div className="absolute -inset-2 rounded-3xl bg-accent-amber/5 blur-md animate-pulse" />

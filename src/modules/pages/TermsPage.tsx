@@ -2,9 +2,8 @@ import { ArrowLeft, FileText } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 
-const currentYear: number = new Date().getFullYear()
-
 const TermsPage = ():ReactNode => {
+  const currentYear: number = new Date().getFullYear()
   return (
     <div className="min-h-[calc(100vh-140px)]">
       <div className="mx-auto max-w-3xl px-4 py-8 md:px-6 md:py-10">

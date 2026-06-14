@@ -1,10 +1,10 @@
 import { z } from 'zod/v4'
 
-export const valeTypeSchema = z.enum(['fabrica', 'otro'])
+export const voucherTypeSchema = z.enum(['factory', 'other'])
 
-export const valeTripSchema = z.object({
+export const voucherTripSchema = z.object({
   id: z.string(),
-  type: valeTypeSchema,
+  type: voucherTypeSchema,
   name: z.string()
     .min(1, 'Ingresá un nombre para el vale')
     .max(40, 'El nombre es muy largo'),
@@ -15,21 +15,23 @@ export const valeTripSchema = z.object({
   pricePerTrip: z.coerce.number()
     .min(0, 'El precio no puede ser negativo')
     .max(999999, 'Precio muy alto'),
-  discountPerTrip: z.coerce.number()
+  fixedFeePerTrip: z.coerce.number()
     .min(0, 'El descuento no puede ser negativo')
     .max(999999, 'Descuento muy alto'),
 })
 
-export const valesArraySchema = z.array(valeTripSchema)
+export const vouchersArraySchema = z.array(voucherTripSchema)
 
-export type ValeTripForm = z.infer<typeof valeTripSchema>
+export type TVoucherTripForm = z.infer<typeof voucherTripSchema>
 
-export function validateValeTrip(data: unknown) {
-  const result = valeTripSchema.safeParse(data)
+export const validateVoucherTrip =(data: unknown) => {
+  const result = voucherTripSchema.safeParse(data)
   if (!result.success) {
+    const tree = z.treeifyError(result.error);
+
     return {
       success: false as const,
-      errors: result.error.flatten().fieldErrors,
+      errors: tree.properties // DEVUELVO 'properties' COMPLETO PARA INCLUIR TODOS LOS CAMPOS DEL FORMULARIO
     }
   }
   return { success: true as const, data: result.data }

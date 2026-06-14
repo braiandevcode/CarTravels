@@ -1,22 +1,27 @@
-import { useState, useEffect } from "react";
-import { RouterProvider } from "react-router-dom";
-import LoadingScreen from "./shared/components/LoadingScreen";
-import { router } from "./core/config/router.config";
+import { useState, useEffect, useRef, type ReactNode } from 'react';
+import { RouterProvider } from 'react-router-dom';
+import LoadingScreen from './shared/components/LoadingScreen';
+import { router } from './core/config/router.config';
 
-const App = () => {
+const App = (): ReactNode => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const timerRef = useRef<number>(0);
+
+  const HANDLE_LOADING_TIMEOUT = (): void => {
+    timerRef.current = setTimeout(() => setIsLoading(false), 800);
+  };
+
+  const HANDLE_LOADING_CLEANUP = (): void => {
+    clearTimeout(timerRef.current);
+  };
 
   useEffect(() => {
-    const timer: number = setTimeout(() => {
-      setIsLoading(false);
-    }, 800);
+    HANDLE_LOADING_TIMEOUT();
+    return HANDLE_LOADING_CLEANUP;
+  }, []);
 
-    return () => clearTimeout(timer);
-  }, []); // on Mount
-
-  // SI ESTA CARGANDO
   if (isLoading) {
-    return <LoadingScreen />; //MOSTRAR LOADING
+    return <LoadingScreen />;
   }
 
   return <RouterProvider router={router} />;

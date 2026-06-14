@@ -1,15 +1,15 @@
 import { z } from 'zod/v4'
-import { valeTripSchema } from './vale.schema'
+import { voucherTripSchema } from './vale.schema'
 
-export const totalSchema = z.coerce.number()
+export const totalSchema: z.ZodCoercedNumber<unknown> = z.coerce.number()
   .min(0, 'El total no puede ser negativo')
   .max(999999999, 'El total es muy alto')
 
-export const expenseSchema = z.coerce.number()
+export const expenseSchema: z.ZodCoercedNumber<unknown> = z.coerce.number()
   .min(0, 'El valor no puede ser negativo')
   .max(9999999, 'El valor es muy alto')
 
-export const percentSchema = z.coerce.number()
+export const percentSchema: z.ZodCoercedNumber<unknown> = z.coerce.number()
   .int('Debe ser un número entero')
   .min(0, 'Mínimo 0%')
   .max(100, 'Máximo 100%')
@@ -22,27 +22,34 @@ export const calculatorFormSchema = z.object({
   carRented: z.boolean(),
   gas: expenseSchema,
   petrol: expenseSchema,
-  vales: z.array(valeTripSchema),
-  showVales: z.boolean(),
+  vouchers: z.array(voucherTripSchema),
+  showVouchers: z.boolean(),
 })
 
-export type CalculatorForm = z.infer<typeof calculatorFormSchema>
+export type TCalculatorForm = z.infer<typeof calculatorFormSchema>
 
-export function validateTotal(value: unknown) {
-  const result = totalSchema.safeParse(value)
+// VALIDO TOTAL
+export const validateTotal = (value: unknown) => {
+  const result: z.ZodSafeParseResult<number> = totalSchema.safeParse(value)
+
+  // SI NO ES SATISFACTORIO
   if (!result.success) {
-    const firstError = result.error.issues[0]?.message
+    const firstError: string = result.error.issues[0]?.message
     return firstError || 'Valor inválido'
   }
   return null
 }
 
-export function validateTrips(value: unknown) {
-  const schema = z.coerce.number()
-    .int('Debe ser un número entero')
-    .min(0, 'Mínimo 0')
-    .max(99, 'Máximo 99 viajes')
-  const result = schema.safeParse(value)
+const tripsSchema: z.ZodCoercedNumber<unknown> = z.coerce.number()
+  .int('Debe ser un número entero')
+  .min(0, 'Mínimo 0')
+  .max(99, 'Máximo 99 viajes')
+
+// VALIDO CAMPO DE PASOS
+export const validateTrips = (value: unknown) => {
+  const result: z.ZodSafeParseResult<number> = tripsSchema.safeParse(value)
+
+  // SI NO ES SATISFACTORIO
   if (!result.success) {
     return result.error.issues[0]?.message || 'Valor inválido'
   }
