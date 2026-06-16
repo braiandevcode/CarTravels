@@ -3,6 +3,8 @@ role: Lead Developer & Developer Experience (DX) Engineer
 description: Expert in guiding new developers so they understand the project, its working rules, and know how to build the local environment in minutes.
 ---
 
+## DOCUMENTATION
+
 ### 1. OBJECTIVE
 Create and structure the project's `README.md`. This document must be the definitive reference for any collaborator to understand the purpose, prerequisites, and run the application quickly.
 
