@@ -70,14 +70,6 @@
   --shadow-card-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
 }
 
-.light .text-text-muted\/70 {
-  color: #6b5e8a;
-}
-
-.light .text-text-muted\/80 {
-  color: #4c3f7a;
-}
-
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -324,9 +316,17 @@ body {
   transform: translateY(0);
 }
 
+.overflow-hidden {
+  overflow: hidden;
+}
+
 .subtle-divider {
   height: 1px;
   background: linear-gradient(90deg, transparent 0%, var(--color-border-subtle) 20%, var(--color-border-subtle) 80%, transparent 100%);
+}
+
+.min-safe {
+  min-height: calc(100vh - 140px);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,9 +1,22 @@
+import { useCallback, type ReactNode, type ChangeEvent } from 'react'
 import useCalculatorContext from '../../../core/context/useCalculatorContext'
 import Input from '../../../shared/ui/Input'
 
-const ExpensesSection = () => {
+const parseNumericInput = (e: ChangeEvent<HTMLInputElement>): number => {
+  return Number(e.target.value.replace(/\D/g, ''))
+}
+
+const ExpensesSection = (): ReactNode => {
   const { state, dispatch } = useCalculatorContext()
   const totalExpenses: number = state.gas + state.petrol
+
+  const handleGasChange = useCallback((e: ChangeEvent<HTMLInputElement>): void => {
+    dispatch({ type: 'SET_GAS', payload: parseNumericInput(e) })
+  }, [dispatch])
+
+  const handlePetrolChange = useCallback((e: ChangeEvent<HTMLInputElement>): void => {
+    dispatch({ type: 'SET_PETROL', payload: parseNumericInput(e) })
+  }, [dispatch])
 
   return (
     <div className="flex flex-col gap-3">
@@ -22,10 +35,7 @@ const ExpensesSection = () => {
           numeric
           placeholder="0"
           value={state.gas || ''}
-          onChange={(e) => {
-            const raw = e.target.value.replace(/\D/g, '')
-            dispatch({ type: 'SET_GAS', payload: Number(raw) })
-          }}
+          onChange={handleGasChange}
           formattedValue={state.gas}
         />
         <Input
@@ -34,10 +44,7 @@ const ExpensesSection = () => {
           numeric
           placeholder="0"
           value={state.petrol || ''}
-          onChange={(e) => {
-            const raw: string = e.target.value.replace(/\D/g, '')
-            dispatch({ type: 'SET_PETROL', payload: Number(raw) })
-          }}
+          onChange={handlePetrolChange}
           formattedValue={state.petrol}
         />
       </div>

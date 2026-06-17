@@ -1,4 +1,4 @@
-import { useId, type ReactNode } from 'react'
+import { useCallback, useId, type ReactNode, type ChangeEvent } from 'react'
 import { Pencil } from 'lucide-react'
 
 interface IPercentageInputProps {
@@ -11,6 +11,11 @@ interface IPercentageInputProps {
 const PercentageInput = ({ label, value, onChange, hint }: IPercentageInputProps):ReactNode => {
   const inputId: string = useId()
   const hintId: string = `${inputId}-hint`
+
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>): void => {
+    const raw = e.target.value.replace(/\D/g, '')
+    onChange(Number(raw))
+  }, [onChange])
 
   return (
     <div className="flex flex-col gap-1">
@@ -25,10 +30,7 @@ const PercentageInput = ({ label, value, onChange, hint }: IPercentageInputProps
           inputMode="numeric"
           pattern="[0-9]*"
           value={value}
-          onChange={(e) => {
-            const raw = e.target.value.replace(/\D/g, '')
-            onChange(Number(raw))
-          }}
+          onChange={handleChange}
           aria-describedby={hint ? hintId : undefined}
           className="w-full rounded-xl input-glass px-4 py-3.5 pr-12 text-lg font-semibold text-text-primary font-display tracking-wide [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         />

@@ -43,6 +43,10 @@ const SponsorBanner = ({
     }
   }, [imgAlt, linkUrl]);
 
+  const handleDismiss = useCallback((): void => {
+    setDismissed(true)
+  }, [])
+
   if (dismissed) return null;
 
   const renderImage = (): ReactNode =>
@@ -107,7 +111,7 @@ const SponsorBanner = ({
         {dismissible && (
           <button
             type="button"
-            onClick={() => setDismissed(true)}
+            onClick={handleDismiss}
             className="absolute top-1 right-1 z-30 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 shadow-sm text-text-muted backdrop-blur-sm border border-border-subtle cursor-pointer"
             aria-label="Cerrar banner de patrocinio"
           >

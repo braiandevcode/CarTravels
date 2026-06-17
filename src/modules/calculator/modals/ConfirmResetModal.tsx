@@ -1,6 +1,7 @@
-import { type ReactNode } from 'react'
+import { useCallback, type ReactNode } from 'react'
 import { X, AlertTriangle } from 'lucide-react'
 import Button  from '../../../shared/ui/Button'
+import IconButton from '../../../shared/styles/IconButton'
 import ModalPortal from '../../../shared/components/ModalPortal'
 import { useFocusTrap } from '../hooks/useFocusTrap'
 
@@ -14,6 +15,10 @@ const TITLE_ID: string = 'confirm-reset-title'
 
 const ConfirmResetModal = ({ isOpen, onConfirm, onCancel }: IConfirmResetModalProps): ReactNode => {
   const modalRef = useFocusTrap(isOpen)
+
+  const handleStopPropagation = useCallback((e: React.MouseEvent): void => {
+    e.stopPropagation()
+  }, [])
 
   if (!isOpen) return null
 
@@ -29,7 +34,7 @@ const ConfirmResetModal = ({ isOpen, onConfirm, onCancel }: IConfirmResetModalPr
         aria-modal="true"
         aria-labelledby={TITLE_ID}
         className="w-full max-w-sm rounded-2xl bg-bg-card border border-border-subtle shadow-xl p-6 animate-scale-in"
-        onClick={(e) => e.stopPropagation()}
+        onClick={handleStopPropagation}
       >
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
@@ -38,14 +43,9 @@ const ConfirmResetModal = ({ isOpen, onConfirm, onCancel }: IConfirmResetModalPr
             </div>
             <h3 id={TITLE_ID} className="text-lg font-bold text-text-primary font-display">¿Restablecer?</h3>
           </div>
-          <button
-            type="button"
-            onClick={onCancel}
-            className="rounded-full p-1.5 text-text-secondary hover:bg-bg-hover transition-colors cursor-pointer"
-            aria-label="Cancelar"
-          >
+          <IconButton onClick={onCancel} ariaLabel="Cancelar">
             <X className="h-4 w-4" aria-hidden="true" />
-          </button>
+          </IconButton>
         </div>
 
         <p className="text-text-secondary text-sm mb-6">

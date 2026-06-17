@@ -1,11 +1,11 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo, type ReactNode } from 'react'
 import useCalculatorContext from '../../../core/context/useCalculatorContext'
 import Toggle from '../../../shared/ui/Toggle'
 import HelpHint from '../../../shared/ui/HelpHint'
 import PercentageInput from '../../../shared/ui/PercentageInput'
 import { AlertCircle, CheckCircle2 } from 'lucide-react'
 
-const ConfigSection = () => {
+const ConfigSection = (): ReactNode => {
   const { state, dispatch } = useCalculatorContext()
   const PERCENT_TOTAL = 100
 
@@ -19,6 +19,22 @@ const ConfigSection = () => {
   const isValid: boolean = percentTotal === PERCENT_TOTAL
   const difference: number = PERCENT_TOTAL - percentTotal
 
+  const handleToggleCarRented = useCallback((v: boolean): void => {
+    dispatch({ type: 'SET_CAR_RENTED', payload: v })
+  }, [dispatch])
+
+  const handleAgencyPercentChange = useCallback((v: number): void => {
+    dispatch({ type: 'SET_AGENCY_PERCENT', payload: v })
+  }, [dispatch])
+
+  const handleDriverPercentChange = useCallback((v: number): void => {
+    dispatch({ type: 'SET_DRIVER_PERCENT', payload: v })
+  }, [dispatch])
+
+  const handleCarPercentChange = useCallback((v: number): void => {
+    dispatch({ type: 'SET_CAR_PERCENT', payload: v })
+  }, [dispatch])
+
   return (
     <div className="flex flex-col gap-4">
       <div className="p-3 rounded-xl bg-bg-input border border-border-subtle">
@@ -27,10 +43,10 @@ const ConfigSection = () => {
             <Toggle
               label="Vehículo alquilado"
               enabled={state.carRented}
-              onChange={(v) => dispatch({ type: 'SET_CAR_RENTED', payload: v })}
+              onChange={handleToggleCarRented}
             />
           </div>
-          <HelpHint text="Al activarlo, el % del vehículo se descuenta de la agencia y se agrega al reparto. Ajustá los porcentajes para que sumen 100%." side="bottom" />
+          <HelpHint text="Al activarlo, el % del vehículo se descuenta de la agencia y se agrega al reparto. Ajustá los porcentajes para que sumen 100%." side="bottom" align="end" />
         </div>
       </div>
 
@@ -38,13 +54,13 @@ const ConfigSection = () => {
         <PercentageInput
           label="% Agencia"
           value={state.agencyPercent}
-          onChange={(v) => dispatch({ type: 'SET_AGENCY_PERCENT', payload: v })}
+          onChange={handleAgencyPercentChange}
           hint={state.carRented ? '% Para la agencia' : '% Que se lleva la agencia'}
         />
         <PercentageInput
           label="% Conductor"
           value={state.driverPercent}
-          onChange={(v) => dispatch({ type: 'SET_DRIVER_PERCENT', payload: v })}
+          onChange={handleDriverPercentChange}
           hint="Tu porcentaje"
         />
       </div>
@@ -53,7 +69,7 @@ const ConfigSection = () => {
         <PercentageInput
           label="% Vehículo"
           value={state.carPercent}
-          onChange={(v) => dispatch({ type: 'SET_CAR_PERCENT', payload: v })}
+          onChange={handleCarPercentChange}
           hint="Porcentaje para gastos del vehículo"
         />
       )}

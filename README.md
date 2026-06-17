@@ -1,4 +1,4 @@
-# CarTravels v1.7.0
+# CarTravels v1.7.1
 
 Calculadora de jornada para choferes de agencias de autos y taxis. Ayuda a cerrar el turno con menos pasos manuales: total del día, vales, porcentajes, gastos, resultado final y comprobante.
 
@@ -42,7 +42,6 @@ La app permite:
 | Tailwind CSS | 4.3.0 | Estilos |
 | React Router | 7.15.1 | Rutas SPA |
 | Zod | 4.4.3 | Validación |
-| React Hook Form | 7.76.1 | Formularios |
 | lucide-react | 1.16.0 | Íconos |
 | html-to-image | 1.11.13 | Exportar comprobante como imagen |
 | jsPDF | 4.2.1 | Exportar comprobante como PDF |
@@ -103,6 +102,8 @@ Ejemplo de flujo:
 - Toggle de vales bloqueado cuando existen vales guardados.
 - Scroll automático al agregar un nuevo vale.
 - Onboarding de primer uso con persistencia en `localStorage`.
+- Botón de ayuda flotante (FAB) con onboarding reutilizable.
+- Sistema de tooltips responsive: `HelpHint` e `InfoReveal` con posicionamiento adaptable (`side`, `align`) y animación en desktop.
 - Modo claro/oscuro con preferencia persistida.
 - Modal de confirmación para reiniciar datos.
 - Error boundary con acción de recarga.
@@ -150,7 +151,11 @@ src/
 ├── index.css
 ├── core/
 │   ├── config/
+│   │   ├── aboutPage.config.ts
 │   │   ├── calculates.config.ts
+│   │   ├── FAQPage.config.ts
+│   │   ├── footer.config.ts
+│   │   ├── header.config.ts
 │   │   ├── landing.config.ts
 │   │   ├── router.config.tsx
 │   │   └── sponsor.config.ts
@@ -160,13 +165,29 @@ src/
 │   │   ├── calculatorContextValue.ts
 │   │   └── useCalculatorContext.ts
 │   ├── enum/
+│   │   ├── EExtentionFile.ts
+│   │   ├── ENameReceip.ts
+│   │   ├── ENameTypesEntity.ts
+│   │   └── EStoreKey.ts
 │   ├── hooks/
 │   │   ├── useCalculator.ts
 │   │   └── useReceiptExport.ts
 │   ├── reducer/
 │   │   └── calculate.reducer.ts
 │   ├── schemas/
-│   └── types/
+│   │   ├── calculator.schema.ts
+│   │   └── vale.schema.ts
+│   ├── types/
+│   │   ├── about.ts
+│   │   ├── action.ts
+│   │   ├── calculator.ts
+│   │   ├── calculatorContextType.ts
+│   │   ├── featureItems.ts
+│   │   ├── footer.ts
+│   │   ├── header.ts
+│   │   └── sponsor.ts
+│   └── utils/
+│       └── calculatorStorage.ts
 ├── modules/
 │   ├── calculator/
 │   │   ├── components/
@@ -175,17 +196,37 @@ src/
 │   │   │   └── VoucherDetailList.tsx
 │   │   ├── hooks/
 │   │   │   ├── useFocusTrap.ts
+│   │   │   ├── usePreCalculation.ts
+│   │   │   ├── useVoucherDraft.ts
 │   │   │   └── useVoucherValidation.ts
 │   │   ├── modals/
+│   │   │   ├── ConfirmResetModal.tsx
+│   │   │   └── ReceiptModal.tsx
 │   │   ├── pages/
-│   │   └── sections/
-│   │       ├── ConfigSection.tsx
-│   │       ├── ExpensesSection.tsx
-│   │       ├── IncomeSection.tsx
-│   │       ├── ResultsSection.tsx
-│   │       └── VouchersSection.tsx
+│   │   │   ├── OnboardingGuide.tsx
+│   │   │   └── WizardPage.tsx
+│   │   ├── sections/
+│   │   │   ├── ConfigSection.tsx
+│   │   │   ├── ExpensesSection.tsx
+│   │   │   ├── IncomeSection.tsx
+│   │   │   ├── PostCalculationView.tsx
+│   │   │   ├── PreCalculationView.tsx
+│   │   │   ├── ResultsSection.tsx
+│   │   │   └── VouchersSection.tsx
+│   │   └── types/
+│   │       ├── animateWizard.ts
+│   │       └── direction.ts
 │   ├── layout/
+│   │   ├── Footer.tsx
+│   │   ├── Header.tsx
+│   │   └── Layout.tsx
 │   └── pages/
+│       ├── AboutPage.tsx
+│       ├── FAQPage.tsx
+│       ├── HomePage.tsx
+│       ├── LandingPage.tsx
+│       ├── PrivacyPage.tsx
+│       └── TermsPage.tsx
 └── shared/
     ├── components/
     │   ├── LoadingScreen.tsx
@@ -193,7 +234,23 @@ src/
     │   ├── ModalPortal.tsx
     │   └── SponsorBanner.tsx
     ├── lib/
+    │   ├── canvasRenderer.ts
+    │   ├── debounce.ts
+    │   └── utils.ts
+    ├── styles/
+    │   ├── IconButton.tsx
+    │   ├── LoadingDots.tsx
+    │   └── StatusBanner.tsx
     └── ui/
+        ├── Accordion.tsx
+        ├── AccordionItems.tsx
+        ├── Button.tsx
+        ├── HelpHint.tsx
+        ├── InfoReveal.tsx
+        ├── Input.tsx
+        ├── PercentageInput.tsx
+        ├── StepIndicator.tsx
+        └── Toggle.tsx
 ```
 
 ## Capturas de Pantalla
@@ -234,10 +291,10 @@ Rutas disponibles:
 ## Documentación Relacionada
 
 - [AGENTS.md](./AGENTS.md)
-- [Buenas prácticas React](./.agents.custom/skills/best-practiced/references/best-practice-react.md)
-- [Buenas prácticas TypeScript](./.agents.custom/skills/best-practiced/references/best-practice-ts.md)
-- [Reglas](./.agents.custom/skills/rules/RULES.md)
-- [Estilo de código](./.agents.custom/skills/style-code/skills/references/style-code.md)
+- [Buenas prácticas React](./.agent/skills/best-practiced/references/best-practice-react.md)
+- [Buenas prácticas TypeScript](./.agent/skills/best-practiced/references/best-practice-ts.md)
+- [Reglas](./.agent/skills/rules/RULES.md)
+- [Estilo de código](./.agent/skills/style-code/skills/references/style-code.md)
 
 ## Licencia
 

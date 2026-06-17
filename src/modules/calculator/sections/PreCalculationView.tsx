@@ -1,14 +1,29 @@
-import { useMemo } from 'react';
+import { useCallback, type ReactNode } from 'react';
 import useCalculatorContext from '../../../core/context/useCalculatorContext';
-import { calculateResult } from '../../../core/hooks/useCalculator';
 import Button from '../../../shared/ui/Button';
+import StatusBanner from '../../../shared/styles/StatusBanner';
 import { Calculator, AlertTriangle, BarChart } from 'lucide-react';
-import type { ICalculatorResult, IVoucherTrip } from '../../../core/types/calculator';
-import { ENameTypesEntity } from '../../../core/enum/ENameTypesEntity';
+import usePreCalculation from '../hooks/usePreCalculation';
 
-const PreCalculationView = () => {
+const PreCalculationView = (): ReactNode => {
   const { state, dispatch } = useCalculatorContext();
-  const result: ICalculatorResult = useMemo(() => calculateResult(state), [state]);
+
+  const handleCalculate = useCallback((): void => {
+    dispatch({ type: 'CALCULATE' })
+  }, [dispatch])
+
+  const {
+    result,
+    HAS_VOUCHER,
+    SHOW_VOUCHER_ACTIVE,
+    HAS_VALID_VOUCHER,
+    HAS_INVALID_VOUCHER,
+    FACTORY_COUNT,
+    OTHER_COUNT,
+    FACTORY_TRIPS,
+    FIXED_FEE_SUM,
+    CAN_CALCULATE,
+  } = usePreCalculation(state)
 
   if (state.total === 0) {
     return (
@@ -20,26 +35,6 @@ const PreCalculationView = () => {
       </div>
     );
   }
-
-  const HAS_VOUCHER: boolean = state.vouchers.length > 0;
-  const SHOW_VOUCHER_ACTIVE: boolean = state.showVouchers;
-
-  const HAS_VALID_VOUCHER: boolean = SHOW_VOUCHER_ACTIVE && HAS_VOUCHER
-    ? state.vouchers.every((v) => v.saved && !v.editing && v.trips > 0 && v.pricePerTrip > 0 && v.name.trim().length > 0)
-    : true;
-
-  const HAS_INVALID_VOUCHER: boolean = SHOW_VOUCHER_ACTIVE && HAS_VOUCHER && !HAS_VALID_VOUCHER;
-
-  const FACTORY_FILTERED: IVoucherTrip[] = state.vouchers.filter((v) => v.type === ENameTypesEntity.FACTORY);
-  const OTHER_FILTERED: IVoucherTrip[] = state.vouchers.filter((v) => v.type === ENameTypesEntity.OTHER);
-
-  const FACTORY_COUNT: number = FACTORY_FILTERED.length;
-  const OTHER_COUNT: number = OTHER_FILTERED.length;
-
-  const FACTORY_TRIPS: number = FACTORY_FILTERED.reduce((s, v) => s + v.trips, 0);
-  const FIXED_FEE_SUM: number = FACTORY_FILTERED.reduce((s, v) => s + v.fixedFeePerTrip * v.trips, 0);
-
-  const CAN_CALCULATE: boolean = result.isPercentValid && HAS_VALID_VOUCHER;
 
   return (
     <div className="flex flex-col gap-4 animate-fade-in">
@@ -73,15 +68,9 @@ const PreCalculationView = () => {
       )}
 
       {HAS_INVALID_VOUCHER && (
-        <div className="p-2.5 rounded-xl bg-accent-red/10 border border-accent-red/20 flex items-start gap-2">
-          <AlertTriangle
-            className="h-4 w-4 text-accent-red flex-shrink-0 mt-0.5"
-            aria-hidden="true"
-          />
-          <span className="text-xs text-text-secondary">
-            Guardá o actualizá los vales antes de calcular
-          </span>
-        </div>
+        <StatusBanner variant="error" icon={<AlertTriangle className="h-full w-full" aria-hidden="true" />}>
+          Guardá o actualizá los vales antes de calcular
+        </StatusBanner>
       )}
 
       {!SHOW_VOUCHER_ACTIVE && (
@@ -91,21 +80,14 @@ const PreCalculationView = () => {
       )}
 
       {!result.isPercentValid && (
-        <div className="p-2.5 rounded-xl bg-accent-red/10 border border-accent-red/20 flex items-start gap-2">
-          <AlertTriangle
-            className="h-4 w-4 text-accent-red flex-shrink-0 mt-0.5"
-            aria-hidden="true"
-          />
-          <span className="text-xs text-text-secondary">
-            Los porcentajes suman {result.percentTotal}% — andá a{" "}
-            <strong>Reparto</strong> para ajustarlos
-          </span>
-        </div>
+        <StatusBanner variant="error" icon={<AlertTriangle className="h-full w-full" aria-hidden="true" />}>
+          Los porcentajes suman {result.percentTotal}% — andá a <strong>Reparto</strong> para ajustarlos
+        </StatusBanner>
       )}
 
       <Button
         variant="primary"
-        onClick={() => dispatch({ type: "CALCULATE" })}
+        onClick={handleCalculate}
         className="py-4 text-lg"
         disabled={!CAN_CALCULATE}
       >

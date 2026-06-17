@@ -1,6 +1,8 @@
 import { Car } from 'lucide-react';
+import type { ReactNode } from 'react';
+import LoadingDots from '../styles/LoadingDots';
 
-const LoadingScreen = () => {
+const LoadingScreen = (): ReactNode => {
   return (
     <div className="min-h-dvh bg-bg-deep flex flex-col items-center justify-center">
       <div className="flex flex-col items-center gap-4 animate-fade-in">
@@ -21,11 +23,7 @@ const LoadingScreen = () => {
         </div>
 
         <div className="flex items-center gap-2 mt-4">
-          <div className="flex gap-1">
-            <div className="w-2 h-2 rounded-full bg-accent-amber animate-bounce" style={{ animationDelay: '0ms' }} />
-            <div className="w-2 h-2 rounded-full bg-accent-amber animate-bounce" style={{ animationDelay: '150ms' }} />
-            <div className="w-2 h-2 rounded-full bg-accent-amber animate-bounce" style={{ animationDelay: '300ms' }} />
-          </div>
+          <LoadingDots />
         </div>
       </div>
     </div>

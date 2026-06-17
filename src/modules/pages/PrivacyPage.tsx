@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 const PrivacyPage = ():ReactNode => {
   const CURRENT_YEAR: number = new Date().getFullYear()
   return (
-    <div className="min-h-[calc(100vh-140px)]">
+    <div className="min-safe">
       <div className="mx-auto max-w-3xl px-4 py-8 md:px-6 md:py-10">
         <Link
           to="/"

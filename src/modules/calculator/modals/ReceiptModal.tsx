@@ -1,48 +1,55 @@
-import { useMemo, useEffect, useRef, useState, type MouseEvent } from 'react';
+import { useMemo, useEffect, useState, type MouseEvent, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import useCalculatorContext from '../../../core/context/useCalculatorContext';
 import { calculateResult } from '../../../core/hooks/useCalculator';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 import { useReceiptExport } from '../../../core/hooks/useReceiptExport';
 import Button from '../../../shared/ui/Button';
+import IconButton from '../../../shared/styles/IconButton';
+import ReceiptContent from '../components/ReceiptContent';
 import { X, Download, Share2, AlertTriangle } from 'lucide-react';
 import type { ICalculatorResult } from '../../../core/types/calculator';
-import { FaCar } from 'react-icons/fa';
 
 interface ReceiptModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
+const BODY_BLOCK_SCROLL = (isOpen: boolean): (() => void) => {
+  if (isOpen) {
+    document.body.classList.add('overflow-hidden');
+    window.dispatchEvent(new CustomEvent('modal:open'));
+  } else {
+    document.body.classList.remove('overflow-hidden');
+  }
+  return () => document.body.classList.remove('overflow-hidden');
+};
+
+const HANDLE_ESCAPE = (onClose: () => void) => (e: KeyboardEvent): void => {
+  if (e.key === 'Escape') {
+    onClose();
+  }
+};
+
+const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps): ReactNode => {
   const { state } = useCalculatorContext();
-  const result: ICalculatorResult = useMemo(() => calculateResult(state),[state]);
+  const result: ICalculatorResult = useMemo(() => calculateResult(state), [state]);
   const { shareImage, downloadPDF } = useReceiptExport();
-  const modalRef = useRef<HTMLDivElement | null>(null);
+  const modalRef = useFocusTrap(isOpen);
+  const [exporting, setExporting] = useState(false);
 
-  useEffect(() => {
-    const BODY_STYLE: CSSStyleDeclaration = document.body.style;
-    if (isOpen) {
-      BODY_STYLE.overflow = "hidden";
-      window.dispatchEvent(new CustomEvent("modal:open"));
-    } else {
-      BODY_STYLE.overflow = "";
-    }
-    return () => {
-      BODY_STYLE.overflow = "";
-    };
-  }, [isOpen]);
+  const HANDLE_SCROLL_LOCK = (): (() => void) => BODY_BLOCK_SCROLL(isOpen);
 
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent):void => {
-      if (e.key === "Escape") {
-        onClose();
-      }
-    };
-    if (isOpen) {
-      document.addEventListener("keydown", handleEscape);
-    }
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen, onClose]);
+  useEffect(HANDLE_SCROLL_LOCK, [isOpen]);
+
+  const HANDLE_KEYBOARD_CLOSE = (): (() => void) | undefined => {
+    if (!isOpen) return undefined;
+    const ON_ESCAPE = HANDLE_ESCAPE(onClose);
+    document.addEventListener('keydown', ON_ESCAPE);
+    return () => document.removeEventListener('keydown', ON_ESCAPE);
+  };
+
+  useEffect(HANDLE_KEYBOARD_CLOSE, [isOpen, onClose]);
 
   const handleBackdropClick = (e: MouseEvent<HTMLDivElement>): void => {
     if (e.target === e.currentTarget) {
@@ -50,43 +57,10 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
     }
   };
 
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const modal = modalRef.current;
-    if (!modal) return;
-
-    const focusableElements: NodeListOf<HTMLElement> =
-      modal.querySelectorAll<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-      );
-    const firstElement: HTMLElement = focusableElements[0];
-    const lastElement: HTMLElement = focusableElements[focusableElements.length - 1];
-
-    firstElement?.focus();
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Tab") {
-        if (e.shiftKey && document.activeElement === firstElement) {
-          e.preventDefault();
-          lastElement?.focus();
-        } else if (!e.shiftKey && document.activeElement === lastElement) {
-          e.preventDefault();
-          firstElement?.focus();
-        }
-      }
-    };
-
-    modal.addEventListener("keydown", handleKeyDown);
-    return () => modal.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen]);
-
-  const [exporting, setExporting] = useState(false);
-
   const handleShare = async (): Promise<void> => {
     setExporting(true);
     try {
-      await shareImage("receipt-content");
+      await shareImage('receipt-content');
       onClose();
     } finally {
       setExporting(false);
@@ -96,7 +70,7 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
   const handleDownload = async (): Promise<void> => {
     setExporting(true);
     try {
-      await downloadPDF("receipt-content", `resumen-${Date.now()}.pdf`);
+      await downloadPDF('receipt-content', `resumen-${Date.now()}.pdf`);
       onClose();
     } finally {
       setExporting(false);
@@ -105,7 +79,7 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
 
   if (!isOpen) return null;
 
-  const MODAL_TITLE_ID: string = "receipt-modal-title";
+  const MODAL_TITLE_ID: string = 'receipt-modal-title';
 
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 p-4 animate-fade-in" onClick={handleBackdropClick}>
@@ -123,206 +97,12 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
           >
             Recibo de Jornada
           </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            autoFocus
-            className="rounded-full p-2 text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-colors cursor-pointer"
-            aria-label="Cerrar"
-          >
+          <IconButton onClick={onClose} ariaLabel="Cerrar" size="md" autoFocus>
             <X className="h-5 w-5" aria-hidden="true" />
-          </button>
+          </IconButton>
         </div>
 
-        <div
-          id="receipt-content"
-          className="flex-1 overflow-y-auto p-6 min-h-0"
-        >
-          <div className="text-center mb-6">
-            <div className="inline-flex items-center gap-2 mb-2">
-              <div className="w-10 h-10 rounded-full bg-accent-amber/20 flex items-center justify-center">
-                <span className="text-xl" role="img" aria-label="Auto">
-                  <FaCar />
-                </span>
-              </div>
-            </div>
-            <h1 className="text-2xl font-black text-text-primary font-display tracking-tight">
-              CarTravels
-            </h1>
-            <p className="text-xs text-text-muted mt-1 font-display">
-              Resumen de jornada
-            </p>
-            <div className="subtle-divider mt-4" />
-          </div>
-
-          <div className="border border-border-subtle rounded-xl p-4 space-y-3 text-sm bg-bg-card-subtle">
-            <div className="flex justify-between items-baseline p-2 rounded-lg bg-bg-input">
-              <span className="text-text-secondary font-medium">
-                Ganancia del día
-              </span>
-              <span className="text-xl font-black text-text-primary font-display">
-                ${result.adjustedTotal.toLocaleString()}
-              </span>
-            </div>
-
-            <div className="subtle-divider" />
-
-            <div className="space-y-2">
-              <span className="text-xs font-semibold text-text-muted uppercase tracking-wider font-display pl-2">
-                Distribución
-              </span>
-
-              <div>
-                <div className="flex justify-between p-2 rounded-lg hover:bg-bg-input/50 transition-colors">
-                  <span className="text-text-secondary">
-                    Agencia ({result.agencyDisplayPercent}%){" "}
-                    {result.voucherDetails.length > 0
-                      ? "+ desc"
-                      : ""}
-                  </span>
-                  <span
-                    className={`font-semibold font-display ${result.finalAgency >= 0 ? "text-accent-amber" : "text-accent-red"}`}
-                  >
-                    ${result.finalAgency.toLocaleString()}
-                  </span>
-                </div>
-                {result.voucherDetails.length > 0 && (
-                  <span className="text-[11px] text-text-muted/70 font-mono text-right px-2">
-                    ${result.agencyAmount.toLocaleString()}
-                    {result.fixedFeeTotal > 0 && (
-                      <> - ${result.fixedFeeTotal.toLocaleString()}</>
-                    )}
-                    {result.otherTotal > 0 && (
-                      <> - ${result.otherTotal.toLocaleString()}</>
-                    )}
-                  </span>
-                )}
-              </div>
-
-              <div className="flex justify-between p-2 rounded-lg hover:bg-bg-input/50 transition-colors">
-                <span className="text-text-secondary">
-                  Conductor ({state.driverPercent}%)
-                </span>
-                <span className="font-semibold text-accent-teal font-display">
-                  +${result.driverAmount.toLocaleString()}
-                </span>
-              </div>
-            </div>
-
-            {(state.gas > 0 || state.petrol > 0) && (
-              <>
-                <div className="subtle-divider" />
-                <div className="space-y-2">
-                  <span className="text-xs font-semibold text-text-muted uppercase tracking-wider font-display pl-2">
-                    Gastos
-                  </span>
-                  {state.gas > 0 && (
-                    <div className="flex justify-between p-2 rounded-lg hover:bg-bg-input/50 transition-colors">
-                      <span className="text-text-secondary">Gas</span>
-                      <span className="font-semibold text-accent-red font-display">
-                        -${state.gas.toLocaleString()}
-                      </span>
-                    </div>
-                  )}
-                  {state.petrol > 0 && (
-                    <div className="flex justify-between p-2 rounded-lg hover:bg-bg-input/50 transition-colors">
-                      <span className="text-text-secondary">Nafta</span>
-                      <span className="font-semibold text-accent-red font-display">
-                        -${state.petrol.toLocaleString()}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
-
-            {state.carRented &&
-              result.carAmount !== null &&
-              (() => {
-                const grossCar =
-                  result.adjustedTotal * (state.carPercent / 100);
-                const totalExpenses = state.gas + state.petrol;
-                return (
-                  <>
-                    <div className="subtle-divider" />
-                    <div className="flex justify-between p-2 rounded-lg hover:bg-bg-input/50 transition-colors">
-                      <span className="text-text-secondary">
-                        Vehículo ({state.carPercent}%)
-                      </span>
-                      <span
-                        className={`font-semibold font-display ${result.carAmount >= 0 ? "text-accent-teal" : "text-accent-red"}`}
-                      >
-                        {result.carAmount >= 0 ? "+" : ""}$
-                        {result.carAmount.toLocaleString()}
-                      </span>
-                    </div>
-                    <div className="text-[11px] text-text-muted/70 -mt-1 pl-2 font-mono">
-                      ${grossCar.toLocaleString()}
-                      {totalExpenses > 0 && (
-                        <> - ${totalExpenses.toLocaleString()}</>
-                      )}
-                      {" = "}${result.carAmount.toLocaleString()}
-                    </div>
-                  </>
-                );
-              })()}
-
-            {result.voucherDetails.length > 0 && (
-              <>
-                <div className="subtle-divider" />
-                <div className="space-y-2">
-                  <div className="flex justify-between px-2">
-                    <span className="text-xs font-semibold text-text-muted uppercase tracking-wider font-display">
-                      Vales
-                    </span>
-                  </div>
-
-                  <div className="mt-1 pl-2">
-                    {result.voucherDetails.map((v) => (
-                      <div
-                        key={v.id}
-                        className="py-1.5 text-xs border-l-2 border-border-subtle pl-2 mb-1"
-                      >
-                        <div className="flex justify-between">
-                          <span className="text-text-secondary font-medium">
-                            {v.name}
-                            <span className="text-text-muted ml-1">
-                              ({v.type === "factory" ? "Fábrica" : "Otro"})
-                            </span>
-                          </span>
-                        </div>
-                        <div className="flex justify-between mt-0.5">
-                          <span className="text-text-muted/80">
-                            {v.trips} × ${v.pricePerTrip.toLocaleString()}
-                          </span>
-                          <span className="text-accent-teal/90">
-                            +${v.subtotal.toLocaleString()}
-                          </span>
-                        </div>
-                        {v.type === "factory" && v.fixedFeePerTrip > 0 && (
-                          <div className="flex justify-between mt-0.5">
-                            <span className="text-text-muted/80">
-                              {v.trips} × ${v.fixedFeePerTrip.toLocaleString()}{" "}
-                              fijo planilla
-                            </span>
-                            <span className="text-orange-400">
-                              ${v.fixedFeeSubtotal.toLocaleString()}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-
-          <div className="mt-5 text-center text-xs text-text-muted font-display">
-            Generado por carTravels &mdash;{" "}
-            {new Date().toLocaleDateString("es-AR")}
-          </div>
-        </div>
+        <ReceiptContent />
 
         {!result.isPercentValid && (
           <div className="mx-4 mb-2 p-3 rounded-xl bg-accent-red/10 border border-accent-red/30 flex items-start gap-2.5 shrink-0 no-print">
@@ -350,10 +130,10 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
           >
             <Download className="h-4 w-4" aria-hidden="true" />
             {exporting
-              ? "Exportando..."
+              ? 'Exportando...'
               : result.isPercentValid
-                ? "Descargar PDF"
-                : "Ajusta los porcentajes"}
+                ? 'Descargar PDF'
+                : 'Ajusta los porcentajes'}
           </Button>
           <Button
             variant="secondary"
@@ -362,10 +142,10 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps) => {
           >
             <Share2 className="h-4 w-4" aria-hidden="true" />
             {exporting
-              ? "Exportando..."
+              ? 'Exportando...'
               : result.isPercentValid
-                ? "Compartir por WhatsApp"
-                : "Porcentajes incompletos"}
+                ? 'Compartir por WhatsApp'
+                : 'Porcentajes incompletos'}
           </Button>
         </div>
       </div>

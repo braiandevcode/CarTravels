@@ -1,5 +1,5 @@
-import { useState, useCallback, type JSX } from 'react'
-import { ArrowLeft, ArrowRight, RotateCcw } from 'lucide-react'
+import { useState, useCallback, type ReactNode } from 'react'
+import { ArrowLeft, ArrowRight, CircleHelp, LogOut, RotateCcw } from 'lucide-react'
 import useCalculatorContext from '../../../core/context/useCalculatorContext'
 import HelpHint from '../../../shared/ui/HelpHint'
 import StepIndicator from '../../../shared/ui/StepIndicator'
@@ -23,7 +23,7 @@ const STEP_HELP_TEXTS: string[] = [
   '',
 ]
 
-const stepComponents: (() => JSX.Element)[] = [
+const stepComponents: (() => ReactNode)[] = [
   IncomeSection,
   VouchersSection,
   ConfigSection,
@@ -49,12 +49,12 @@ interface IWizardPageProps {
   onBackToLanding: () => void
 }
 
-const StepRenderer = ({ step }: { step: number }): JSX.Element => {
+const StepRenderer = ({ step }: { step: number }): ReactNode => {
   const StepComponent = stepComponents[step]
   return <StepComponent />
 }
 
-const WizardPage = ({ onBackToLanding }: IWizardPageProps) => {
+const WizardPage = ({ onBackToLanding }: IWizardPageProps): ReactNode => {
   const { state, dispatch } = useCalculatorContext()
   const [currentStep, setCurrentStep] = useState<number>(0)
   const [direction, setDirection] = useState<TDirection | null>(null)
@@ -95,6 +95,18 @@ const WizardPage = ({ onBackToLanding }: IWizardPageProps) => {
 
   const handleReset = useCallback(() => setConfirmResetOpen(true), [])
 
+  const handleShowOnboarding = useCallback((): void => {
+    setShowOnboarding(true)
+  }, [])
+
+  const handleCloseOnboarding = useCallback((): void => {
+    setShowOnboarding(false)
+  }, [])
+
+  const handleViewReceipt = useCallback((): void => {
+    setReceiptOpen(true)
+  }, [])
+
   const confirmReset = useCallback(() => {
     dispatch({ type: 'RESET' })
     setConfirmResetOpen(false)
@@ -103,10 +115,12 @@ const WizardPage = ({ onBackToLanding }: IWizardPageProps) => {
   }, [dispatch])
 
   return (
+    <>
     <div className="mx-auto max-w-2xl px-4 pb-8 pt-4 md:px-6 md:pt-6 animate-fade-in-up">
       <div className="flex justify-end mb-4 gap-2">
         {
           (state.total > 0 || state.vouchers.some((v) => v.saved)) && <span className="inline-flex items-center gap-1.5">
+            <HelpHint text="Reinicia todos los valores del formulario: total, porcentajes, gastos y vales guardados. Esta acción no se puede deshacer." side="bottom" align="end" />
             <button
               type="button"
               onClick={handleReset}
@@ -115,21 +129,14 @@ const WizardPage = ({ onBackToLanding }: IWizardPageProps) => {
               <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
               Reiniciar
             </button>
-            <HelpHint text="Reinicia todos los valores del formulario: total, porcentajes, gastos y vales guardados. Esta acción no se puede deshacer." side="bottom" />
           </span>
         }
         <button
           type="button"
-          onClick={() => setShowOnboarding(true)}
-          className="rounded-lg bg-bg-hover px-3 py-1.5 text-xs font-medium text-text-muted transition-colors hover:text-text-primary cursor-pointer font-display border border-border-subtle"
-        >
-          ¿Cómo funciona?
-        </button>
-        <button
-          type="button"
           onClick={onBackToLanding}
-          className="rounded-lg bg-bg-hover px-3 py-1.5 text-xs font-medium text-text-muted transition-colors hover:text-text-primary cursor-pointer font-display border border-border-subtle"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-bg-hover px-3 py-1.5 text-xs font-medium text-text-muted transition-colors hover:text-text-primary cursor-pointer font-display border border-border-subtle"
         >
+          <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
           Salir
         </button>
       </div>
@@ -144,7 +151,7 @@ const WizardPage = ({ onBackToLanding }: IWizardPageProps) => {
         <div className={animateClass}>
           {currentStep < 4 && <StepRenderer step={currentStep} />}
           {currentStep === 4 && (
-            <ResultsSection onViewReceipt={() => setReceiptOpen(true)} />
+            <ResultsSection onViewReceipt={handleViewReceipt} />
           )}
         </div>
       </div>
@@ -181,7 +188,7 @@ const WizardPage = ({ onBackToLanding }: IWizardPageProps) => {
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </button>
               {!stepValid(state, currentStep) && (
-                <HelpHint text={STEP_HELP_TEXTS[currentStep]} side="bottom" />
+                <HelpHint text={STEP_HELP_TEXTS[currentStep]} side="top" align="end" />
               )}
             </span>
           )}
@@ -190,7 +197,7 @@ const WizardPage = ({ onBackToLanding }: IWizardPageProps) => {
 
       <OnboardingGuide
         isOpen={showOnboarding}
-        onClose={() => setShowOnboarding(false)}
+        onClose={handleCloseOnboarding}
       />
 
       <ReceiptModal isOpen={receiptOpen} onClose={HANDLE_CLOSE_RECEIPT} />
@@ -200,6 +207,16 @@ const WizardPage = ({ onBackToLanding }: IWizardPageProps) => {
         onCancel={HANDLE_CANCEL_RESET}
       />
     </div>
+
+    <button
+      type="button"
+      onClick={handleShowOnboarding}
+      className="fixed bottom-6 right-6 z-40 inline-flex items-center gap-2 rounded-full bg-accent-violet px-5 py-3 text-sm font-bold text-white shadow-lg hover:shadow-glow-violet transition-all duration-200 cursor-pointer font-display"
+    >
+      <CircleHelp className="h-5 w-5" aria-hidden="true" />
+      ¿Cómo funciona?
+    </button>
+    </>
   )
 }
 

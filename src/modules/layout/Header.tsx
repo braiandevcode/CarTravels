@@ -1,5 +1,5 @@
 import { Menu, X, Sun, Moon } from 'lucide-react'
-import { useState, useEffect, type ReactNode } from 'react'
+import { useCallback, useState, useEffect, type ReactNode } from 'react'
 import { NavLink, useNavigate, type NavigateFunction } from 'react-router-dom'
 import { navLinks } from '../../core/config/header.config'
 import { useTheme } from '../../core/context/ThemeContext'
@@ -23,9 +23,13 @@ const Header = ():ReactNode => {
     setIsMenuOpen(false)
   }
 
-  const handleNavClick = () => {
+  const handleNavClick = useCallback((): void => {
     setIsMenuOpen(false)
-  }
+  }, [])
+
+  const handleMenuToggle = useCallback((): void => {
+    setIsMenuOpen((prev) => !prev)
+  }, [])
 
   return (
     <header className="sticky top-0 z-50 bg-gradient-to-r from-bg-card via-bg-card to-bg-card-subtle border-b border-border-subtle backdrop-blur-sm">
@@ -55,16 +59,18 @@ const Header = ():ReactNode => {
               to={link.to}
               onClick={handleNavClick}
               className={({ isActive }) =>
-                `px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer font-display tracking-wide ${
+                `px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center gap-1.5 transition-all duration-200 cursor-pointer font-display tracking-wide ${
                   isActive
                     ? 'bg-accent-violet/15 text-accent-violet border border-accent-violet/20'
                     : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary border border-transparent'
                 }`
               }
             >
+              <link.icon className="h-4 w-4" aria-hidden="true" />
               {link.label}
             </NavLink>
           ))}
+
         </nav>
 
         <div className="flex items-center gap-1.5">
@@ -80,7 +86,7 @@ const Header = ():ReactNode => {
 
           <button
             type="button"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            onClick={handleMenuToggle}
             className="md:hidden flex items-center justify-center h-9 w-9 rounded-lg bg-bg-card border border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-hover transition-colors cursor-pointer"
             aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
             aria-expanded={isMenuOpen}
@@ -106,15 +112,16 @@ const Header = ():ReactNode => {
                 to={link.to}
                 onClick={handleNavClick}
                 className={({ isActive }) =>
-                  `px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer font-display tracking-wide ${
+                  `px-4 py-3 rounded-xl text-sm font-medium inline-flex items-center gap-2 transition-all duration-200 cursor-pointer font-display tracking-wide ${
                     isActive
                     ? 'bg-accent-violet/15 text-accent-violet border-l-4 border-accent-violet'
                     : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary border-l-4 border-transparent'
                   }`
                 }
-              >
-                {link.label}
-              </NavLink>
+                >
+                  <link.icon className="h-4 w-4" aria-hidden="true" />
+                  {link.label}
+                </NavLink>
             ))}
           </div>
         </nav>

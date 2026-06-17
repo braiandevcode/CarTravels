@@ -26,7 +26,7 @@ const StepIndicator = ({ currentStep, totalSteps, labels }: IStepIndicatorProps)
                       ? 'bg-accent-violet text-white shadow-glow-violet ring-2 ring-accent-violet/40'
                       : 'bg-bg-hover text-text-muted border border-border-subtle'
                 }`}
-                {...(isActive ? { 'aria-current': 'step' as const } : {})}
+                aria-current={isActive ? 'step' : undefined}
               >
                 {isCompleted ? (
                   <Check className="h-4 w-4 md:h-4.5 md:w-4.5" aria-hidden="true" />

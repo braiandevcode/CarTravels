@@ -11,7 +11,7 @@ const ThemeContext = createContext<ThemeContextType | null>(null)
 
 const STORAGE_KEY: string = 'cartravels-theme'
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
+export function ThemeProvider({ children }: { children: ReactNode }): ReactNode {
   const [theme, setTheme] = useState<Theme>(() => {
     try {
       const stored: string | null = localStorage.getItem(STORAGE_KEY)
@@ -22,7 +22,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     return 'dark'
   })
 
-  useEffect(() => {
+  const HANDLE_THEME_SYNC = (): void => {
     const root: HTMLElement = document.documentElement
     if (theme === 'light') {
       root.classList.add('light')
@@ -30,7 +30,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       root.classList.remove('light')
     }
     localStorage.setItem(STORAGE_KEY, theme)
-  }, [theme])
+  }
+
+  useEffect(HANDLE_THEME_SYNC, [theme])
 
   const toggleTheme = (): void => {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))

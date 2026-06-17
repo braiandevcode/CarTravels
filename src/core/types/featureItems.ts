@@ -9,4 +9,3 @@ export interface IFeatureItem {
 }
 
 export type TLandingList = IFeatureItem[];
-export type TOnBoardingGuideList = IFeatureItem[]

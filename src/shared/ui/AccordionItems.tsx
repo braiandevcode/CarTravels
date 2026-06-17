@@ -1,5 +1,5 @@
 import { ChevronDown } from 'lucide-react'
-import { useState, type ReactNode } from 'react'
+import { useCallback, useState, type ReactNode } from 'react'
 
 interface IAccordionItemProps {
   question: string
@@ -10,11 +10,15 @@ interface IAccordionItemProps {
 const AccordionItem = ({ question, answer, isDefaultOpen = false }: IAccordionItemProps):ReactNode => {
   const [isOpen, setIsOpen] = useState<boolean>(isDefaultOpen)
 
+  const handleToggle = useCallback((): void => {
+    setIsOpen((prev) => !prev)
+  }, [])
+
   return (
     <div className="card-glass rounded-xl overflow-hidden card-accent-top">
       <button
         type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={handleToggle}
         className="w-full flex items-center justify-between p-5 text-left transition-colors cursor-pointer hover:bg-bg-input/30"
         aria-expanded={isOpen}
         aria-controls={`accordion-panel-${question.replace(/\s+/g, '-').toLowerCase()}`}

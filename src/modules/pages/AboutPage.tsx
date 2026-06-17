@@ -21,7 +21,7 @@ const AboutPage = ():ReactNode => {
   useEffect(SHOW_SPONSOR_WITH_TRANSITION, [])
 
   return (
-    <div className="min-h-[calc(100vh-140px)]">
+    <div className="min-safe">
       {/* Desktop: fixed right sidebar (xl+) */}
       <div
         className={`hidden xl:block fixed right-4 top-1/2 -translate-y-1/2 z-10 w-80 transition-all duration-700 ease-out ${showSponsor ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}

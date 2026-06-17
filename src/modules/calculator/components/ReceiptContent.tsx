@@ -1,11 +1,11 @@
-import { useMemo } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import useCalculatorContext from '../../../core/context/useCalculatorContext';
 import { calculateResult } from '../../../core/hooks/useCalculator';
 import type { ICalculatorResult } from '../../../core/types/calculator';
 import VoucherDetailList from './VoucherDetailList';
 import { FaCar } from 'react-icons/fa';
 
-const CarSectionReceipt = ({ state, result }: { state: ReturnType<typeof useCalculatorContext>['state']; result: ICalculatorResult }) => {
+const CarSectionReceipt = ({ state, result }: { state: ReturnType<typeof useCalculatorContext>['state']; result: ICalculatorResult }): ReactNode => {
   const grossCar = result.adjustedTotal * (state.carPercent / 100);
   const totalExpenses = state.gas + state.petrol;
   return (
@@ -26,7 +26,7 @@ const CarSectionReceipt = ({ state, result }: { state: ReturnType<typeof useCalc
   );
 };
 
-const ReceiptContent = () => {
+const ReceiptContent = (): ReactNode => {
   const { state } = useCalculatorContext();
   const result: ICalculatorResult = useMemo(() => calculateResult(state), [state]);
 

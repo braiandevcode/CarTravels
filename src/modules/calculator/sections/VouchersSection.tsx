@@ -1,20 +1,24 @@
+import { useCallback, type ReactNode } from 'react'
 import Button from '../../../shared/ui/Button'
 import Toggle from '../../../shared/ui/Toggle'
 import VoucherCard from '../components/VoucherCard'
 import { Plus } from 'lucide-react'
 import { useVoucherValidation } from '../hooks/useVoucherValidation'
 
-const VouchersSection = () => {
+const VouchersSection = (): ReactNode => {
   const {
     vouchers,
     showVouchers,
-    errors,
     vouchersContainerRef,
     dispatch,
     addVoucher,
     saveVoucher,
     hasSavedVouchers,
   } = useVoucherValidation()
+
+  const handleShowVouchersChange = useCallback((v: boolean): void => {
+    dispatch({ type: 'SET_SHOW_VOUCHERS', payload: v })
+  }, [dispatch])
 
   return (
     <>
@@ -23,7 +27,7 @@ const VouchersSection = () => {
           label="¿Tuviste viajes con vale?"
           enabled={showVouchers}
           disabled={hasSavedVouchers}
-          onChange={(v) => dispatch({ type: 'SET_SHOW_VOUCHERS', payload: v })}
+          onChange={handleShowVouchersChange}
         />
         {hasSavedVouchers && (
           <p className="mt-2 text-xs text-text-muted/70">
@@ -38,7 +42,6 @@ const VouchersSection = () => {
             <VoucherCard
               key={voucher.id}
               voucher={voucher}
-              errors={errors}
               dispatch={dispatch}
               saveVoucher={saveVoucher}
             />

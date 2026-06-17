@@ -1,4 +1,4 @@
-import { useId, useEffect, useRef, type ReactNode } from 'react'
+import { useCallback, useId, useEffect, useRef, type ReactNode } from 'react'
 
 interface IToggleProps {
   label: string
@@ -18,6 +18,12 @@ const Toggle = ({ label, enabled, disabled = false, onChange }: IToggleProps):Re
   }
   useEffect(HANDLE_LIVE_REGION_UPDATE, [enabled, label])
 
+  const handleToggle = useCallback((): void => {
+    if (!disabled) {
+      onChange(!enabled)
+    }
+  }, [disabled, enabled, onChange])
+
   return (
     <div className="flex items-center justify-between">
       <span id={labelId} className="text-sm font-medium text-text-secondary font-display">{label}</span>
@@ -26,7 +32,7 @@ const Toggle = ({ label, enabled, disabled = false, onChange }: IToggleProps):Re
         role="switch"
         aria-checked={enabled}
         aria-labelledby={labelId}
-        onClick={() => !disabled && onChange(!enabled)}
+        onClick={handleToggle}
         className={`relative inline-flex h-8 w-14 shrink-0 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-accent-green/30 focus:ring-offset-2 focus:ring-offset-bg-deep ${
           disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
         } ${

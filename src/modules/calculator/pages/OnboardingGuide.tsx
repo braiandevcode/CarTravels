@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef, type ReactNode, useCallback, useEffect } from 'react'
 import { createPortal } from 'react-dom'
+import IconButton from '../../../shared/styles/IconButton'
 import { X, Car, Calculator, Percent, Fuel, FileText, Check } from 'lucide-react'
 
 interface OnboardingGuideProps {
@@ -35,38 +36,44 @@ const steps = [
   },
 ]
 
-const OnboardingGuide = ({ isOpen, onClose }: OnboardingGuideProps) => {
+const OnboardingGuide = ({ isOpen, onClose }: OnboardingGuideProps): ReactNode => {
   const [step, setStep] = useState(0)
   const stepsRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    stepsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-  }, [step])
+  useEffect(() => { stepsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }) }, [step])
 
-  const handleClose = () => {
+  const handleClose = useCallback((): void => {
     localStorage.setItem('cartravels-onboarding', 'seen')
     onClose()
     setStep(0)
-  }
+  }, [onClose])
 
-  const handleNext = () => {
+  const handleNext = useCallback((): void => {
     if (step < steps.length - 1) {
       setStep((s) => s + 1)
     } else {
       handleClose()
     }
-  }
+  }, [step, handleClose])
 
-  const handleSkip = () => handleClose()
+  const handleSkip = useCallback((): void => {
+    handleClose()
+  }, [handleClose])
+
+  const handleOverlayClick = useCallback((e: React.MouseEvent<HTMLDivElement>): void => {
+    if (e.target === e.currentTarget) {
+      handleClose()
+    }
+  }, [handleClose])
 
   if (!isOpen) return null
 
   const s = steps[step]
 
-  const modal = (
+  return createPortal(
     <div
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 p-4 animate-fade-in"
-      onClick={(e) => { if (e.target === e.currentTarget) handleClose() }}
+      onClick={handleOverlayClick}
     >
       <div
         role="dialog"
@@ -78,14 +85,9 @@ const OnboardingGuide = ({ isOpen, onClose }: OnboardingGuideProps) => {
           <span className="text-xs font-semibold text-text-muted font-display tracking-wide uppercase">
             {step + 1} de {steps.length}
           </span>
-          <button
-            type="button"
-            onClick={handleClose}
-            className="rounded-full p-1.5 text-text-muted hover:text-text-primary hover:bg-bg-hover transition-colors cursor-pointer"
-            aria-label="Cerrar guía"
-          >
+          <IconButton onClick={handleClose} ariaLabel="Cerrar guía" className="text-text-muted hover:text-text-primary">
             <X className="h-4 w-4" aria-hidden="true" />
-          </button>
+          </IconButton>
         </div>
 
         <div className="p-6 flex flex-col items-center text-center gap-4">
@@ -99,10 +101,19 @@ const OnboardingGuide = ({ isOpen, onClose }: OnboardingGuideProps) => {
             {s.desc}
           </p>
 
-          <div ref={stepsRef} className="flex gap-1.5 mt-2">
+          <div
+            ref={stepsRef}
+            role="progressbar"
+            aria-label="Progreso de la guía"
+            aria-valuenow={step + 1}
+            aria-valuemin={1}
+            aria-valuemax={steps.length}
+            className="flex gap-1.5 mt-2"
+          >
             {steps.map((_, i) => (
               <div
                 key={i}
+                aria-label={`Paso ${i + 1}`}
                 className={`h-1.5 w-6 rounded-full transition-all duration-300 ${
                   i === step ? 'bg-accent-violet' : 'bg-border-subtle'
                 }`}
@@ -133,10 +144,9 @@ const OnboardingGuide = ({ isOpen, onClose }: OnboardingGuideProps) => {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
-
-  return createPortal(modal, document.body)
 }
 
 export default OnboardingGuide

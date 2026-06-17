@@ -15,10 +15,12 @@ const App = (): ReactNode => {
     clearTimeout(timerRef.current);
   };
 
-  useEffect(() => {
+  const HANDLE_INITIAL_LOADING = (): (() => void) => {
     HANDLE_LOADING_TIMEOUT();
     return HANDLE_LOADING_CLEANUP;
-  }, []);
+  };
+
+  useEffect(HANDLE_INITIAL_LOADING, []);
 
   if (isLoading) {
     return <LoadingScreen />;

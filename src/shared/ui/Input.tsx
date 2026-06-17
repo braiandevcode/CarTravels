@@ -34,7 +34,7 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
             aria-describedby={error ? errorId : (formattedValue !== undefined && formattedValue > 0 ? formattedId : undefined)}
             className={`w-full rounded-xl input-glass px-4 py-3.5 text-lg font-semibold text-text-primary placeholder:text-text-muted/50 font-display tracking-wide ${
               prefix ? 'pl-10' : ''
-            } ${error ? 'input-error' : ''} ${className}`}
+            } ${error ? 'input-error' : ''} disabled:bg-bg-card disabled:border-border-subtle/50 disabled:text-text-muted disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
             {...props}
           />
         </div>

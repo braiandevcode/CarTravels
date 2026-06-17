@@ -5,7 +5,7 @@ interface IModalPortalProps {
   children: ReactNode
 }
 
-const ModalPortal = ({ children }: IModalPortalProps) => {
+const ModalPortal = ({ children }: IModalPortalProps): ReactNode => {
   return createPortal(children, document.body)
 }
 

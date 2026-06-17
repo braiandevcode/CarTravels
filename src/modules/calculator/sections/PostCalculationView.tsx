@@ -5,12 +5,19 @@ import Button from '../../../shared/ui/Button';
 import VoucherDetailList from '../components/VoucherDetailList';
 import { Eye, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import type { ICalculatorResult } from '../../../core/types/calculator';
+import type { ReactNode } from 'react';
 
 interface IPostCalculationViewProps {
   onViewReceipt: () => void;
 }
 
-const CarSection = ({ state, result }: { state: ReturnType<typeof useCalculatorContext>['state']; result: ICalculatorResult }) => {
+interface ICarSectionProps {
+  state: ReturnType<typeof useCalculatorContext>['state'];
+  result: ICalculatorResult;
+}
+
+const CarSection = ({ state, result }: ICarSectionProps): ReactNode => {
+  const carAmount: number = result.carAmount as number;
   const grossCar: number = result.adjustedTotal * (state.carPercent / 100);
   const totalExpenses: number = state.gas + state.petrol;
   return (
@@ -18,20 +25,20 @@ const CarSection = ({ state, result }: { state: ReturnType<typeof useCalculatorC
       <div className="subtle-divider my-2" />
       <div className="flex justify-between py-2 px-3 rounded-lg bg-accent-red/5">
         <span className="text-text-secondary">Vehículo ({state.carPercent}%)</span>
-        <span className={`font-semibold font-display ${result.carAmount! >= 0 ? "text-accent-teal" : "text-accent-red"}`}>
-          {result.carAmount! >= 0 ? "+" : ""}${result.carAmount!.toLocaleString()}
+        <span className={`font-semibold font-display ${carAmount >= 0 ? "text-accent-teal" : "text-accent-red"}`}>
+          {carAmount >= 0 ? "+" : ""}${carAmount.toLocaleString()}
         </span>
       </div>
       <div className="text-xs text-text-muted/70 -mt-0.5 mb-1 pl-3 font-mono bg-bg-input/50 py-1.5 px-3 rounded-lg">
         ${grossCar.toLocaleString()} ({state.carPercent}%)
         {totalExpenses > 0 && <> - ${totalExpenses.toLocaleString()} gastos</>}
-        {" = "}${result.carAmount!.toLocaleString()}
+        {" = "}${carAmount.toLocaleString()}
       </div>
     </>
   );
 };
 
-const PostCalculationView = ({ onViewReceipt }: IPostCalculationViewProps) => {
+const PostCalculationView = ({ onViewReceipt }: IPostCalculationViewProps): ReactNode => {
   const { state } = useCalculatorContext();
   const result: ICalculatorResult = useMemo(() => calculateResult(state), [state]);
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, type ReactNode } from 'react'
 import { HelpCircle, ArrowLeft } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { SPONSORS } from '../../core/config/sponsor.config'
@@ -6,7 +6,7 @@ import SponsorBanner from '../../shared/components/SponsorBanner'
 import faqItems from '../../core/config/FAQPage.config'
 import Accordion from '../../shared/ui/Accordion'
 
-const FAQPage = () => {
+const FAQPage = (): ReactNode => {
   const [showSponsor, setShowSponsor] = useState(false)
 
   const SHOW_SPONSOR_WITH_TRANSITION = (): (() => void) => {
@@ -16,7 +16,7 @@ const FAQPage = () => {
   useEffect(SHOW_SPONSOR_WITH_TRANSITION, [])
 
   return (
-    <div className="min-h-[calc(100vh-140px)]">
+    <div className="min-safe">
       {/* Desktop: fixed left sidebar (xl+) */}
       <div
         className={`hidden xl:block fixed left-4 top-1/2 -translate-y-1/2 z-30 w-60 transition-all duration-700 ease-out ${showSponsor ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}`}

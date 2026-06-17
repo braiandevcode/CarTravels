@@ -1,170 +1,87 @@
 import Input from '../../../shared/ui/Input'
 import HelpHint from '../../../shared/ui/HelpHint'
+import InfoReveal from '../../../shared/ui/InfoReveal'
 import { CheckCircle2, Trash2, Save, Edit } from 'lucide-react'
 import type { IVoucherTrip } from '../../../core/types/calculator'
 import type { TAction } from '../../../core/types/action'
-import { validateTrips } from '../../../core/schemas/calculator.schema'
-import { useCallback, useEffect, useState, type ChangeEvent, type Dispatch, type ReactNode } from 'react'
-
-type TVoucherEditableField = keyof Pick<IVoucherTrip, 'trips' | 'pricePerTrip' | 'fixedFeePerTrip'>
-
-const hasVoucherChanges = (draftVoucher: IVoucherTrip, savedVoucher: IVoucherTrip): boolean => (
-  draftVoucher.type !== savedVoucher.type ||
-  draftVoucher.name !== savedVoucher.name ||
-  draftVoucher.trips !== savedVoucher.trips ||
-  draftVoucher.pricePerTrip !== savedVoucher.pricePerTrip ||
-  draftVoucher.fixedFeePerTrip !== savedVoucher.fixedFeePerTrip
-)
-
-interface IVoucherErrors {
-  trips?: string
-  name?: string
-}
+import { useCallback, type ChangeEvent, type Dispatch, type ReactNode } from 'react'
+import useVoucherDraft from '../hooks/useVoucherDraft'
 
 interface IVoucherCardProps {
   voucher: IVoucherTrip
-  errors: Record<string, IVoucherErrors | undefined>
   dispatch: Dispatch<TAction>
   saveVoucher: (id: string) => void
 }
 
-const VoucherCard = ({ voucher, errors, dispatch, saveVoucher }: IVoucherCardProps): ReactNode => {
-  const [draftVoucher, setDraftVoucher] = useState<IVoucherTrip>(voucher)
-  const [isEditing, setIsEditing] = useState<boolean>(!voucher.saved)
-  const [draftTripError, setDraftTripError] = useState<string | undefined>()
-  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null)
+const VoucherCard = ({ voucher, dispatch, saveVoucher }: IVoucherCardProps): ReactNode => {
+  const {
+    currentVoucher,
+    subtotal,
+    fixedFeeSubtotal,
+    voucherErrors,
+    CAN_SAVE,
+    IS_READ_ONLY,
+    SHOULD_SHOW_ACTION_BUTTON,
+    ACTION_LABEL,
+    feedbackMessage,
+    isEditing,
+    handleTypeChange,
+    handleNameChange,
+    handleNumericChange,
+    handleEdit,
+    handleSave,
+    handleRemove,
+  } = useVoucherDraft({ voucher, dispatch, saveVoucher })
 
-  const currentVoucher: IVoucherTrip = isEditing ? draftVoucher : voucher
-  const subtotal: number = currentVoucher.trips * currentVoucher.pricePerTrip
-  const fixedFeeSubtotal: number = currentVoucher.type === 'factory' ? currentVoucher.trips * currentVoucher.fixedFeePerTrip : 0
-  const voucherErrors: IVoucherErrors = {
-    ...((errors[voucher.id] ?? {}) as IVoucherErrors),
-    trips: draftTripError ?? errors[voucher.id]?.trips,
-  }
-  const HAS_CHANGES: boolean = voucher.saved ? hasVoucherChanges(draftVoucher, voucher) : true
-  const HAS_REQUIRED_FIELDS: boolean = currentVoucher.trips > 0 && currentVoucher.pricePerTrip > 0 && currentVoucher.name.trim().length > 0
-  const CAN_SAVE: boolean = HAS_REQUIRED_FIELDS && HAS_CHANGES
-  const IS_READ_ONLY: boolean = voucher.saved && !isEditing
-  const SHOULD_SHOW_ACTION_BUTTON: boolean = !voucher.saved || isEditing
-  const ACTION_LABEL: string = voucher.saved ? 'Actualizar' : 'Guardar'
+  const handleNumericTripsChange = useCallback((e: ChangeEvent<HTMLInputElement>): void => {
+    handleNumericChange('trips', e.target.value)
+  }, [handleNumericChange])
 
-  const CLEAR_FEEDBACK_MESSAGE = (): (() => void) | undefined => {
-    if (!feedbackMessage) return undefined
+  const handleNumericPriceChange = useCallback((e: ChangeEvent<HTMLInputElement>): void => {
+    handleNumericChange('pricePerTrip', e.target.value)
+  }, [handleNumericChange])
 
-    const timerId: number = window.setTimeout(() => {
-      setFeedbackMessage(null)
-    }, 1800)
-
-    return () => window.clearTimeout(timerId)
-  }
-  useEffect(CLEAR_FEEDBACK_MESSAGE, [feedbackMessage])
-
-  const showFeedback = useCallback((message: string): void => {
-    setFeedbackMessage(message)
-  }, [])
-
-  const parseNumericField = (field: TVoucherEditableField, raw: string): number => {
-    if (field === 'trips') {
-      const cleaned: string = raw.replace(/\D/g, '').slice(0, 2)
-      return Math.min(Number(cleaned), 99)
-    }
-
-    return Number(raw.replace(/\D/g, ''))
-  }
-
-  const updateDraft = useCallback((nextVoucher: IVoucherTrip): void => {
-    setDraftVoucher(nextVoucher)
-
-    if (!voucher.saved) {
-      dispatch({ type: 'UPDATE_VOUCHER', payload: nextVoucher })
-      return
-    }
-
-    const hasPendingChanges: boolean = hasVoucherChanges(nextVoucher, voucher)
-    if (voucher.editing !== hasPendingChanges) {
-      dispatch({ type: 'UPDATE_VOUCHER', payload: { ...voucher, editing: hasPendingChanges } })
-    }
-  }, [dispatch, voucher])
-
-  const handleTypeChange = useCallback((event: ChangeEvent<HTMLSelectElement>): void => {
-    const nextType: IVoucherTrip['type'] = event.target.value as IVoucherTrip['type']
-    const nextVoucher: IVoucherTrip = {
-      ...currentVoucher,
-      type: nextType,
-      fixedFeePerTrip: nextType === 'other' ? 0 : currentVoucher.fixedFeePerTrip,
-    }
-
-    updateDraft(nextVoucher)
-  }, [currentVoucher, updateDraft])
-
-  const handleNameChange = useCallback((event: ChangeEvent<HTMLInputElement>): void => {
-    updateDraft({ ...currentVoucher, name: event.target.value })
-  }, [currentVoucher, updateDraft])
-
-  const handleNumericChange = useCallback((field: TVoucherEditableField, raw: string): void => {
-    const parsed: number = parseNumericField(field, raw)
-    const nextVoucher: IVoucherTrip = { ...currentVoucher, [field]: parsed }
-
-    if (field === 'trips') {
-      const error: string | null = validateTrips(parsed)
-      setDraftTripError(error ?? undefined)
-    }
-
-    updateDraft(nextVoucher)
-  }, [currentVoucher, updateDraft])
-
-  const handleEdit = useCallback((): void => {
-    setDraftVoucher(voucher)
-    setIsEditing(true)
-    setFeedbackMessage(null)
-  }, [voucher])
-
-  const handleSave = useCallback((): void => {
-    if (!CAN_SAVE) return
-
-    if (voucher.saved) {
-      dispatch({ type: 'UPDATE_VOUCHER', payload: { ...draftVoucher, saved: true, editing: false } })
-      setIsEditing(false)
-      showFeedback('Vale actualizado')
-      return
-    }
-
-    saveVoucher(voucher.id)
-    setIsEditing(false)
-    showFeedback('Vale guardado')
-  }, [CAN_SAVE, dispatch, draftVoucher, saveVoucher, showFeedback, voucher.id, voucher.saved])
+  const handleNumericFixedFeeChange = useCallback((e: ChangeEvent<HTMLInputElement>): void => {
+    handleNumericChange('fixedFeePerTrip', e.target.value)
+  }, [handleNumericChange])
 
   return (
     <div className="rounded-xl border border-border-subtle bg-bg-card-subtle p-4 flex flex-col gap-3 transition-all duration-300 hover:border-border-emphasis animate-fade-in-up">
-      <div className="flex items-center justify-between">
-        <select
-          value={currentVoucher.type}
-          onChange={handleTypeChange}
-          disabled={IS_READ_ONLY}
-          className="rounded-lg border border-border-subtle bg-bg-input px-3 py-1.5 text-sm font-medium text-text-primary font-display outline-none focus:ring-2 focus:ring-accent-amber/50 cursor-pointer disabled:cursor-not-allowed disabled:opacity-70"
-          aria-label="Tipo de vale"
-        >
-          <option value="factory">Fábrica</option>
-          <option value="other">Otro</option>
-        </select>
+      <div className="flex items-start justify-between">
+        <div className="flex flex-col gap-1">
+          <select
+            value={currentVoucher.type}
+            onChange={handleTypeChange}
+            disabled={IS_READ_ONLY}
+            className="rounded-lg border-2 border-accent-amber/35 bg-bg-card px-3 py-2 text-sm font-semibold text-text-primary font-display outline-none focus:ring-2 focus:ring-accent-amber/50 focus:border-accent-amber/50 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 disabled:border-border-subtle disabled:bg-bg-input"
+            aria-label="Tipo de vale"
+          >
+            <option value="factory">Fábrica</option>
+            <option value="other">Otro</option>
+          </select>
+          <InfoReveal text="Elige el tipo de vale a crear" className="text-accent-amber/70" align="start" side="bottom" />
+        </div>
         {voucher.saved && !isEditing && (
-          <div className="flex items-center gap-1 animate-fade-in">
-            <button
-              type="button"
-              onClick={handleEdit}
-              className="text-accent-amber/80 hover:text-accent-amber transition-colors cursor-pointer p-1.5 rounded-lg hover:bg-accent-amber/10"
-              aria-label="Editar vale"
-            >
-              <Edit className="h-5 w-5" aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              onClick={() => dispatch({ type: 'REMOVE_VOUCHER', payload: voucher.id })}
-              className="text-accent-red/70 hover:text-accent-red transition-colors cursor-pointer p-1.5 rounded-lg hover:bg-accent-red/10"
-              aria-label="Eliminar vale"
-            >
-              <Trash2 className="h-5 w-5" aria-hidden="true" />
-            </button>
+          <div className="flex flex-col items-end gap-1">
+            <div className="flex items-center gap-1 animate-fade-in">
+              <button
+                type="button"
+                onClick={handleEdit}
+                className="p-2 rounded-lg border border-border-subtle bg-bg-card/60 text-accent-amber hover:text-accent-amber-soft hover:bg-accent-amber/10 hover:border-accent-amber/30 transition-all cursor-pointer"
+                aria-label="Editar vale"
+              >
+                <Edit className="h-5 w-5" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={handleRemove}
+                className="p-2 rounded-lg border border-border-subtle bg-bg-card/60 text-accent-red hover:text-accent-red-soft hover:bg-accent-red/10 hover:border-accent-red/30 transition-all cursor-pointer"
+                aria-label="Eliminar vale"
+              >
+                <Trash2 className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </div>
+            <InfoReveal text="Edita o elimina el vale" align="end" side="bottom" />
           </div>
         )}
       </div>
@@ -175,7 +92,6 @@ const VoucherCard = ({ voucher, errors, dispatch, saveVoucher }: IVoucherCardPro
         value={currentVoucher.name}
         onChange={handleNameChange}
         disabled={IS_READ_ONLY}
-        className="disabled:cursor-not-allowed disabled:opacity-70"
       />
 
       <Input
@@ -184,10 +100,9 @@ const VoucherCard = ({ voucher, errors, dispatch, saveVoucher }: IVoucherCardPro
         placeholder="0"
         maxLength={2}
         value={currentVoucher.trips || ''}
-        onChange={(e) => handleNumericChange('trips', e.target.value)}
+        onChange={handleNumericTripsChange}
         error={voucherErrors.trips}
         disabled={IS_READ_ONLY}
-        className="disabled:cursor-not-allowed disabled:opacity-70"
       />
 
       <div className="grid grid-cols-2 gap-3">
@@ -197,9 +112,8 @@ const VoucherCard = ({ voucher, errors, dispatch, saveVoucher }: IVoucherCardPro
           numeric
           placeholder="0"
           value={currentVoucher.pricePerTrip || ''}
-          onChange={(e) => handleNumericChange('pricePerTrip', e.target.value)}
+          onChange={handleNumericPriceChange}
           disabled={IS_READ_ONLY}
-          className="disabled:cursor-not-allowed disabled:opacity-70"
         />
         {currentVoucher.type === 'factory' && (
           <Input
@@ -208,9 +122,8 @@ const VoucherCard = ({ voucher, errors, dispatch, saveVoucher }: IVoucherCardPro
             numeric
             placeholder="0"
             value={currentVoucher.fixedFeePerTrip || ''}
-            onChange={(e) => handleNumericChange('fixedFeePerTrip', e.target.value)}
+            onChange={handleNumericFixedFeeChange}
             disabled={IS_READ_ONLY}
-            className="disabled:cursor-not-allowed disabled:opacity-70"
           />
         )}
       </div>
@@ -249,13 +162,17 @@ const VoucherCard = ({ voucher, errors, dispatch, saveVoucher }: IVoucherCardPro
             type="button"
             onClick={handleSave}
             disabled={!CAN_SAVE}
-            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-border-subtle bg-bg-input/40 px-3 py-2 text-sm font-medium text-accent-teal transition-all duration-200 hover:border-accent-teal/30 hover:bg-accent-teal/5 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-border-subtle disabled:hover:bg-bg-input/40 cursor-pointer font-display"
+            className={`flex flex-1 items-center justify-center gap-2 rounded-lg border px-3 py-3 text-sm font-bold transition-all duration-200 active:scale-[0.98] cursor-pointer font-display ${
+              CAN_SAVE
+                ? 'border-accent-teal/50 bg-accent-teal/30 text-accent-teal hover:bg-accent-teal/40 hover:border-accent-teal/70'
+                : 'border-border-subtle bg-bg-input/40 text-text-muted/50 opacity-40 cursor-not-allowed'
+            }`}
             aria-label={`${ACTION_LABEL} vale`}
           >
             <Save className="h-3.5 w-3.5" aria-hidden="true" />
             {ACTION_LABEL}
           </button>
-          <HelpHint text="Completá nombre, viajes y precio real para habilitar el guardado. El vale persiste al recargar la página solo si está guardado." side="top" />
+          <HelpHint text="Completá nombre, viajes y precio real para habilitar el guardado. El vale persiste al recargar la página solo si está guardado." side="top" align="end" />
         </div>
       )}
     </div>
