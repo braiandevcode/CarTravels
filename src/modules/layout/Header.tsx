@@ -3,7 +3,7 @@ import { useCallback, useState, useEffect, type ReactNode } from 'react'
 import { NavLink, useNavigate, type NavigateFunction } from 'react-router-dom'
 import { navLinks } from '../../core/config/header.config'
 import { useTheme } from '../../core/context/ThemeContext'
-import { FaCar } from 'react-icons/fa'
+
 
 const Header = ():ReactNode => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
@@ -39,12 +39,10 @@ const Header = ():ReactNode => {
           onClick={handleLogoClick}
           className="flex items-center gap-3 cursor-pointer"
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-violet/15 border border-accent-violet/20">
-            <FaCar className="h-5 w-5 text-accent-violet" aria-hidden="true" />
-          </div>
+          <img src="/logo.png" alt="LiquidChofer" className="h-11 w-11 rounded-xl" />
           <div className="flex flex-col">
             <span className="text-xl font-black text-text-primary font-display tracking-tight">
-              CarTravels
+              LiquidChofer
             </span>
             <span className="text-[10px] text-text-muted font-display">
               Calculadora de jornada

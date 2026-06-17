@@ -61,7 +61,7 @@ const FAQPage = (): ReactNode => {
             Preguntas Frecuentes
           </h1>
           <p className="text-base text-text-secondary max-w-md">
-            Todo lo que necesitás saber sobre CarTravels. Si no encontrás tu respuesta,
+            Todo lo que necesitás saber sobre LiquidChofer. Si no encontrás tu respuesta,
             no dudes en contactarnos.
           </p>
         </div>

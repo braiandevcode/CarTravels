@@ -41,7 +41,7 @@ const ReceiptContent = (): ReactNode => {
           </div>
         </div>
         <h1 className="text-2xl font-black text-text-primary font-display tracking-tight">
-          CarTravels
+          LiquidChofer
         </h1>
         <p className="text-xs text-text-muted mt-1 font-display">
           Resumen de jornada
@@ -136,7 +136,7 @@ const ReceiptContent = (): ReactNode => {
       </div>
 
       <div className="mt-5 text-center text-xs text-text-muted font-display">
-        Generado por carTravels &mdash; {new Date().toLocaleDateString("es-AR")}
+        Generado por LiquidChofer &mdash; {new Date().toLocaleDateString("es-AR")}
       </div>
     </div>
   );

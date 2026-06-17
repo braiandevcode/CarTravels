@@ -61,7 +61,7 @@ const WizardPage = ({ onBackToLanding }: IWizardPageProps): ReactNode => {
   const [receiptOpen, setReceiptOpen] = useState<boolean>(false)
   const [confirmResetOpen, setConfirmResetOpen] = useState<boolean>(false)
   const [showOnboarding, setShowOnboarding] = useState<boolean>(() => {
-    const SEEN_VALUE_OF_KEY: string | null = localStorage.getItem(EStoreKey.CAR_TRAVELS_ON_BOARDING)
+    const SEEN_VALUE_OF_KEY: string | null = localStorage.getItem(EStoreKey.LIQUID_CHOFER_ON_BOARDING)
     return !SEEN_VALUE_OF_KEY
   })
 

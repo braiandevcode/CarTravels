@@ -35,7 +35,7 @@ const PrivacyPage = ():ReactNode => {
               Tu privacidad es importante
             </h2>
             <p className="text-text-secondary leading-relaxed">
-              En CarTravels nos tomamos muy en serio que tus datos estén protegidos.
+              En LiquidChofer nos tomamos muy en serio que tus datos estén protegidos.
               Esta página explica qué hacemos con la información que ingresas.
             </p>
           </section>
@@ -143,7 +143,7 @@ const PrivacyPage = ():ReactNode => {
 
           <div className="text-center py-4">
             <p className="text-sm text-text-muted">
-              © {CURRENT_YEAR} CarTravels. Todos los derechos reservados.
+              © {CURRENT_YEAR} LiquidChofer. Todos los derechos reservados.
             </p>
           </div>
         </div>

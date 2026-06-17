@@ -9,7 +9,7 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | null>(null)
 
-const STORAGE_KEY: string = 'cartravels-theme'
+const STORAGE_KEY: string = 'liquidchofer-theme'
 
 export function ThemeProvider({ children }: { children: ReactNode }): ReactNode {
   const [theme, setTheme] = useState<Theme>(() => {

@@ -1,4 +1,4 @@
-# CarTravels v1.7.1
+# LiquidChofer v2.0.0
 
 Calculadora de jornada para choferes de agencias de autos y taxis. Ayuda a cerrar el turno con menos pasos manuales: total del día, vales, porcentajes, gastos, resultado final y comprobante.
 
@@ -19,7 +19,7 @@ Calculadora de jornada para choferes de agencias de autos y taxis. Ayuda a cerra
 
 ## Objetivo
 
-`carTravels` resuelve el cierre diario de un chofer cuando debe combinar importes de una app externa, gastos de combustible, porcentajes de reparto y viajes con vale.
+`LiquidChofer` resuelve el cierre diario de un chofer cuando debe combinar importes de una app externa, gastos de combustible, porcentajes de reparto y viajes con vale.
 
 La app permite:
 
@@ -59,12 +59,19 @@ pnpm install
 
 ## Variables de Entorno
 
-Las variables son opcionales y se usan para configurar banners de patrocinio. Crear `.env.local` si se necesitan valores locales:
+| Variable | Obligatoria | Descripción |
+|---|---|---|
+| `VITE_DOMAIN` | Sí (producción) | Dominio del sitio ej. `liquidchofer.app`. Se usa en metadatos SEO (canonical, og:image), sitemap.xml y robots.txt. |
+| `VITE_GA_ID` | No | ID de Google Analytics (formato `G-XXXXXXXXXX`). Si no se setea, no se carga GA. |
+| `VITE_S_OLAVARRIA_SERVICIOS_URL_IMAGE` | No | Banner de patrocinio — imagen. |
+| `VITE_S_OLAVARRIA_SERVICIOS_URL_LOGO` | No | Banner de patrocinio — logo. |
+| `VITE_S_OLAVARRIA_SERVICIOS` | No | URL del patrocinador. |
+
+Crear `.env.production.local` para producción local:
 
 ```bash
-VITE_S_OLAVARRIA_SERVICIOS_URL_IMAGE=<SECRET_PLACEHOLDER>
-VITE_S_OLAVARRIA_SERVICIOS_URL_LOGO=<SECRET_PLACEHOLDER>
-VITE_S_OLAVARRIA_SERVICIOS=<SECRET_PLACEHOLDER>
+VITE_DOMAIN=liquidchofer.app
+VITE_GA_ID=G-XXXXXXXXXX
 ```
 
 No commitear valores reales de URLs privadas, tokens ni credenciales.
@@ -108,6 +115,9 @@ Ejemplo de flujo:
 - Modal de confirmación para reiniciar datos.
 - Error boundary con acción de recarga.
 - Banners de patrocinio configurables por variables `VITE_*`.
+- Favicon unificado con `favicon.png` (64×64 recortado) y logo en componentes con `logo.png` (1024×1024).
+- Metadatos Open Graph y Twitter Cards para preview al compartir en redes.
+- Dominio configurable vía `VITE_DOMAIN` para SEO (canonical, sitemap, robots.txt).
 
 ## Flujo de Cálculo
 
@@ -280,6 +290,15 @@ El proyecto incluye `vercel.json` para servir la SPA:
 }
 ```
 
+### Variables de entorno en Vercel
+
+Ir a Project Settings → Environment Variables → agregar:
+
+| Name | Value | Environment |
+|---|---|---|
+| `VITE_DOMAIN` | `liquidchofer.app` | Production |
+| `VITE_GA_ID` | `G-XXXXXXXXXX` | Production |
+
 Rutas disponibles:
 
 - `/`
@@ -300,7 +319,7 @@ Rutas disponibles:
 
 MIT License
 
-Copyright (c) 2026 carTravels
+Copyright (c) 2026 LiquidChofer
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

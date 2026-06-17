@@ -5,9 +5,9 @@ interface IFaqItems{
 
 const faqItems: IFaqItems[] = [
   {
-    question: '¿Cómo funciona CarTravels?',
+    question: '¿Cómo funciona LiquidChofer?',
     answer:
-      'CarTravels es una calculadora pensada para simplificar tus cuentas del día. Solo tenés que ingresar el total de la jornada, tus gastos (gas o nafta), si el auto es alquilado o no, y los vales. La app calcula sola cuánto le toca a la agencia, cuánto te queda a vos y cuánto va para el auto.',
+      'LiquidChofer es una calculadora pensada para simplificar tus cuentas del día. Solo tenés que ingresar el total de la jornada, tus gastos (gas o nafta), si el auto es alquilado o no, y los vales. La app calcula sola cuánto le toca a la agencia, cuánto te queda a vos y cuánto va para el auto.',
   },
   {
     question: '¿Aplica a todos los choferes de cualquier agencia?',
@@ -17,7 +17,7 @@ const faqItems: IFaqItems[] = [
   {
     question: '¿Tengo que crear una cuenta?',
     answer:
-      'No. CarTravels funciona directo en el navegador de tu teléfono o computadora sin necesidad de registrarte. Tus datos se guardan solo en tu dispositivo, por lo que nadie más tiene acceso a ellos. No necesitás email ni contraseña.',
+      'No. LiquidChofer funciona directo en el navegador de tu teléfono o computadora sin necesidad de registrarte. Tus datos se guardan solo en tu dispositivo, por lo que nadie más tiene acceso a ellos. No necesitás email ni contraseña.',
   },
   {
     question: '¿Qué pasa con mis datos? ¿Son seguros?',
@@ -57,7 +57,7 @@ const faqItems: IFaqItems[] = [
   {
     question: '¿Funciona sin internet?',
     answer:
-      'Sí. Una vez que entrás a la página por primera vez, podés usar CarTravels sin gastar datos ni necesitar WiFi. Es ideal para seguir trabajando en zonas donde te quedás sin señal.',
+      'Sí. Una vez que entrás a la página por primera vez, podés usar LiquidChofer sin gastar datos ni necesitar WiFi. Es ideal para seguir trabajando en zonas donde te quedás sin señal.',
   },
 ]
 

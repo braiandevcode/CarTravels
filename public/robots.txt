@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cartravels.app/sitemap.xml
+Sitemap: https://%VITE_DOMAIN%/sitemap.xml

@@ -3,7 +3,7 @@ role: Senior React Frontend Reviewer / Performance Engineer
 description: Analyze code, UI architecture, accessibility, and performance; 
 ---
 
-## 1. PROJECT OBJECTIVE: "carTravels"
+## 1. PROJECT OBJECTIVE: "LiquidChofer"
 Build a web/app focused on workers who are "drivers" for private car agencies. **frontend repository**: React + Vite + TypeScript + Tailwind; deploy on Vercel.
 
 ## 2. OPERATIONAL PRINCIPLES

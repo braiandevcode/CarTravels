@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { legalLinks, socialLinks } from '../../core/config/footer.config'
-import { FaCar } from 'react-icons/fa'
+
 import type { ReactNode } from 'react'
 
 const Footer = ():ReactNode => {
@@ -11,11 +11,9 @@ const Footer = ():ReactNode => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="flex flex-col gap-3">
             <Link to="/" className="flex items-center gap-2 cursor-pointer">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-teal/15 border border-accent-teal/20">
-                <FaCar className="h-4 w-4 text-accent-teal" aria-hidden="true" />
-              </div>
+              <img src="/logo.png" alt="LiquidChofer" className="h-10 w-10 rounded-lg" />
               <span className="text-lg font-black text-text-primary font-display tracking-tight">
-                CarTravels
+                LiquidChofer
               </span>
             </Link>
             <p className="text-sm text-text-secondary max-w-xs">
@@ -67,7 +65,7 @@ const Footer = ():ReactNode => {
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-2">
           <p className="text-xs text-text-muted font-display">
-            © {currentYear} CarTravels. Todos los derechos reservados.
+            © {currentYear} LiquidChofer. Todos los derechos reservados.
           </p>
         </div>
       </div>

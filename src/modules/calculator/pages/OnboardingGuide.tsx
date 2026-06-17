@@ -43,7 +43,7 @@ const OnboardingGuide = ({ isOpen, onClose }: OnboardingGuideProps): ReactNode =
   useEffect(() => { stepsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }) }, [step])
 
   const handleClose = useCallback((): void => {
-    localStorage.setItem('cartravels-onboarding', 'seen')
+    localStorage.setItem('liquidchofer-onboarding', 'seen')
     onClose()
     setStep(0)
   }, [onClose])

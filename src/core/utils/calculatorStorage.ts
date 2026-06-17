@@ -5,7 +5,7 @@ import type { ICalculatorState, IVoucherTrip } from '../types/calculator'
 
 export const loadStoredState = (): ICalculatorState | null => {
   try {
-    const STORED: string | null = localStorage.getItem(EStoreKey.CAR_TRAVELS)
+    const STORED: string | null = localStorage.getItem(EStoreKey.LIQUID_CHOFER)
     if (STORED) {
       const PARSED = JSON.parse(STORED)
       const CAR_NOT_RENTED: boolean = PARSED.carRented === false
@@ -49,7 +49,7 @@ export const saveStateToStorage = (state: ICalculatorState): void => {
         .filter((v) => v.saved)
         .map((v) => ({ ...v, editing: false })),
     }
-    localStorage.setItem(EStoreKey.CAR_TRAVELS, JSON.stringify(stateToSave))
+    localStorage.setItem(EStoreKey.LIQUID_CHOFER, JSON.stringify(stateToSave))
   } catch {
     // IGNORO ERRORES DE STORAGE
   }

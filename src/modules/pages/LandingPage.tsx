@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { ArrowRight } from 'lucide-react'
-import { FaCar } from 'react-icons/fa'
+
 import features from '../../core/config/landing.config'
 import { SPONSORS } from '../../core/config/sponsor.config'
 import SponsorBanner from '../../shared/components/SponsorBanner'
@@ -53,9 +53,7 @@ const LandingPage = ({ onStart }: ILandingPageProps):ReactNode => {
 
       <div className="mx-auto max-w-2xl px-4 pb-16 pt-8 md:pt-16 animate-fade-in-up">
       <div className="flex flex-col items-center text-center gap-6 md:gap-8">
-        <div className="flex h-16 w-16 md:h-20 md:w-20 items-center justify-center rounded-2xl bg-accent-violet/15 border border-accent-violet/20 shadow-glow-violet">
-          <FaCar className="h-8 w-8 md:h-10 md:w-10 text-accent-violet" aria-hidden="true" />
-        </div>
+        <img src="/logo.png" alt="LiquidChofer" className="h-20 w-20 md:h-24 md:w-24 rounded-2xl shadow-glow-violet" />
 
         <div className="space-y-3">
           <h1 className="text-3xl md:text-5xl font-black text-text-primary font-display tracking-tight leading-tight">
@@ -65,7 +63,7 @@ const LandingPage = ({ onStart }: ILandingPageProps):ReactNode => {
           </h1>
           <p className="text-base md:text-lg text-text-secondary max-w-lg mx-auto leading-relaxed">
             Olvidate de los cálculos tediosos al final del turno.{' '}
-            <span className="text-text-primary font-semibold">CarTravels</span> hace el trabajo
+            <span className="text-text-primary font-semibold">LiquidChofer</span> hace el trabajo
             por vos: ingresá los datos y tené todo listo en segundos.
           </p>
         </div>
