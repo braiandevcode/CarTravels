@@ -17,7 +17,7 @@ const Footer = ():ReactNode => {
               </span>
             </Link>
             <p className="text-sm text-text-secondary max-w-xs">
-              Calculadora de jornada diseñada para choferes de agencias de autos y taxis.
+              Calculadora de jornada diseñada para choferes de agencias de remis.
               Simplifica tus cálculos diarios.
             </p>
           </div>

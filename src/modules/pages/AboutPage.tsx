@@ -96,7 +96,7 @@ const AboutPage = ():ReactNode => {
               <p className="text-text-secondary mb-6 leading-relaxed">
                 Sabemos que al finalizar una jornada larga, lo último que querés es
                 ponerte a hacer cuentas en una libreta. LiquidChofer fue creado
-                específicamente para choferes de agencias de autos y taxis.
+                específicamente para choferes de agencias de remis.
               </p>
               <ul className="space-y-3">
                 {benefits.map((benefit, index) => (

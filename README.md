@@ -1,6 +1,6 @@
 # LiquidChofer v2.0.0
 
-Calculadora de jornada para choferes de agencias de autos y taxis. Ayuda a cerrar el turno con menos pasos manuales: total del día, vales, porcentajes, gastos, resultado final y comprobante.
+Calculadora de jornada para choferes de agencias de remis. Ayuda a cerrar el turno con menos pasos manuales: total del día, vales, porcentajes, gastos, resultado final y comprobante.
 
 ## Tabla de Contenidos
 
