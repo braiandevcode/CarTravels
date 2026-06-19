@@ -4,19 +4,37 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/logo.png" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
     <meta name="theme-color" content="#8b5cf6" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="robots" content="index, follow, max-snippet:150, max-image-preview:large" />
+    <meta
+      name="robots"
+      content="index, follow, max-snippet:150, max-image-preview:large"
+    />
     <link rel="canonical" href="https://%VITE_DOMAIN%/" />
 
     <title>LiquidChofer - Calculadora de Liquidación para Conductores</title>
-    <meta name="description" content="LiquidChofer: Calculadora diaria para choferes de agencias de remis. Calcula ingresos, gastos de gasolina, ganancias de agencia y chofer. Simplifica tu liquidación en segundos." />
-    <meta name="keywords" content="calculadora chofer, agencia de remis, gastos gasolina, ingresos chofer, liquidación diaria, chofer privado, viaje a fábricas" />
+    <meta
+      name="description"
+      content="LiquidChofer: Calculadora diaria para choferes de agencias de remis. Calcula ingresos, gastos de gasolina, ganancias de agencia y chofer. Simplifica tu liquidación en segundos."
+    />
+    <meta
+      name="keywords"
+      content="calculadora chofer, agencia de remis, gastos gasolina, ingresos chofer, liquidación diaria, chofer privado, viaje a fábricas"
+    />
     <meta name="author" content="LiquidChofer" />
 
-    <meta property="og:title" content="LiquidChofer - Calculadora de Liquidación para Conductores" />
-    <meta property="og:description" content="Simplifica tu liquidación diaria como conductor. Calcula ingresos, gastos de gasolina y ganancias automáticamente." />
+    <meta
+      property="og:title"
+      content="LiquidChofer - Calculadora de Liquidación para Conductores"
+    />
+    <meta
+      property="og:description"
+      content="Simplifica tu liquidación diaria como conductor. Calcula ingresos, gastos de gasolina y ganancias automáticamente."
+    />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://%VITE_DOMAIN%/" />
     <meta property="og:locale" content="es_ES" />
@@ -27,41 +45,61 @@
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content="https://%VITE_DOMAIN%/logo.png" />
-    <meta name="twitter:title" content="LiquidChofer - Calculadora de Liquidación para Conductores" />
-    <meta name="twitter:description" content="Simplifica tu liquidación diaria como conductor. Calcula ingresos, gastos y ganancias automáticamente." />
-    <meta name="google-site-verification" content="sYAt_bOVr5Oovgvb1mwW9GWxfL-NZ0OFiYHs53IrV-k" />
+    <meta
+      name="twitter:title"
+      content="LiquidChofer - Calculadora de Liquidación para Conductores"
+    />
+    <meta
+      name="twitter:description"
+      content="Simplifica tu liquidación diaria como conductor. Calcula ingresos, gastos y ganancias automáticamente."
+    />
+    <meta
+      name="google-site-verification"
+      content="sYAt_bOVr5Oovgvb1mwW9GWxfL-NZ0OFiYHs53IrV-k"
+    />
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "LiquidChofer",
-      "description": "Calculadora de liquidación diaria para choferes de agencias de remis. Calcula ingresos, gastos de gasolina y ganancias.",
-      "applicationCategory": "FinanceApplication",
-      "operatingSystem": "Web",
-      "browserRequirements": "Requires JavaScript",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "inLanguage": "es"
-    }
-    </script>
-  <script>
-    (function() {
-      var GA_ID = '%VITE_GA_ID%';
-      if (GA_ID && GA_ID.length > 0 && GA_ID.indexOf('VITE_GA_ID') === -1) {
-        var s = document.createElement('script');
-        s.async = true;
-        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
-        document.head.appendChild(s);
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){ dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', GA_ID);
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "LiquidChofer",
+        "description": "Calculadora de liquidación diaria para choferes de agencias de remis. Calcula ingresos, gastos de gasolina y ganancias.",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web",
+        "browserRequirements": "Requires JavaScript",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "inLanguage": "es"
       }
-    })();
-  </script>
+    </script>
+    <script>
+      (function () {
+        var GA_ID = "%VITE_GA_ID%";
+        if (GA_ID && GA_ID.length > 0 && GA_ID.indexOf("VITE_GA_ID") === -1) {
+          // 1. Crear la tubería global si no existe
+          window.dataLayer = window.dataLayer || [];
+
+          // 2. EXPORTAR GTAG AL OBJETO WINDOW EXPLICÍTAMENTE
+          window.gtag =
+            window.gtag ||
+            function () {
+              dataLayer.push(arguments);
+            };
+
+          // 3. Registrar la inicialización en la cola
+          window.gtag("js", new Date());
+          window.gtag("config", GA_ID);
+
+          // 4. Cargar el script externo de forma asíncrona
+          var s = document.createElement("script");
+          s.async = true;
+          s.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID;
+          document.head.appendChild(s);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
