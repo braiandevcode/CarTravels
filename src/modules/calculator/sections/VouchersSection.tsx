@@ -47,7 +47,7 @@ const VouchersSection = (): ReactNode => {
             />
           ))}
 
-          <Button variant="ghost" onClick={addVoucher}>
+          <Button variant="ghost" onClick={addVoucher} className='flex items-center justify-center gap-2'>
             <Plus className="h-4 w-4" aria-hidden="true" />
             Agregar Vale
           </Button>

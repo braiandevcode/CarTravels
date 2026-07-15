@@ -88,7 +88,7 @@ const PreCalculationView = (): ReactNode => {
       <Button
         variant="primary"
         onClick={handleCalculate}
-        className="py-4 text-lg"
+        className="py-4 text-lg flex items-center justify-center gap-2"
         disabled={!CAN_CALCULATE}
       >
         <Calculator className="h-5 w-5" aria-hidden="true" />
