@@ -138,7 +138,7 @@ const PostCalculationView = ({ onViewReceipt }: IPostCalculationViewProps): Reac
       )}
 
       <div className="mt-5">
-        <Button variant="primary" onClick={onViewReceipt} disabled={!result.isPercentValid}>
+        <Button variant="primary" onClick={onViewReceipt} disabled={!result.isPercentValid} className='flex items-center justify-center gap-2'>
           <Eye className="h-4 w-4" aria-hidden="true" />
           {result.isPercentValid ? "Ver Recibo" : "Ajustá los %"}
         </Button>
