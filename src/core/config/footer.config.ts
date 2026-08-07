@@ -1,4 +1,4 @@
-import { SiGithub, SiInstagram } from 'react-icons/si';
+import { SiGithub } from 'react-icons/si';
 import type { LegalLink, SocialLink } from '../types/footer';
 import { FileText, Shield } from 'lucide-react';
 
