@@ -13,9 +13,4 @@ export const socialLinks: SocialLink[] = [
     label: "GitHub",
     icon: SiGithub,
   },
-  {
-    href: import.meta.env.VITE_IG,
-    label: "Instagram",
-    icon: SiInstagram,
-  },
 ];

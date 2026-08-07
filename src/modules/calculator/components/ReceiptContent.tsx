@@ -3,7 +3,6 @@ import useCalculatorContext from '../../../core/context/useCalculatorContext';
 import { calculateResult } from '../../../core/hooks/useCalculator';
 import type { ICalculatorResult } from '../../../core/types/calculator';
 import VoucherDetailList from './VoucherDetailList';
-import { FaCar } from 'react-icons/fa';
 
 const CarSectionReceipt = ({ state, result }: { state: ReturnType<typeof useCalculatorContext>['state']; result: ICalculatorResult }): ReactNode => {
   const grossCar = result.adjustedTotal * (state.carPercent / 100);
@@ -36,7 +35,7 @@ const ReceiptContent = (): ReactNode => {
         <div className="inline-flex items-center gap-2 mb-2">
           <div className="w-10 h-10 rounded-full bg-accent-amber/20 flex items-center justify-center">
             <span role="img" aria-label="Auto">
-              <FaCar aria-hidden="true" />
+              <img src="/logo.png" alt="LiquidChofer" className="h-11 w-11 rounded-xl" />
             </span>
           </div>
         </div>

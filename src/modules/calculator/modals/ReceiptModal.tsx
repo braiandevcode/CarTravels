@@ -126,6 +126,7 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps): ReactNode => {
           <Button
             variant="primary"
             onClick={handleDownload}
+            className='flex items-center justify-center gap-2'
             disabled={!result.isPercentValid || exporting}
           >
             <Download className="h-4 w-4" aria-hidden="true" />
@@ -138,6 +139,7 @@ const ReceiptModal = ({ isOpen, onClose }: ReceiptModalProps): ReactNode => {
           <Button
             variant="secondary"
             onClick={handleShare}
+            className='flex items-center justify-center gap-2'
             disabled={!result.isPercentValid || exporting}
           >
             <Share2 className="h-4 w-4" aria-hidden="true" />
